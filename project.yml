@@ -1,0 +1,120 @@
+name: ApexFlow
+options:
+  bundleIdPrefix: com.woodsee-digi
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  defaultConfig: Debug
+
+configs:
+  Debug:
+    type: debug
+    settings:
+      CODE_SIGN_IDENTITY: "-"
+      CODE_SIGN_STYLE: Manual
+      DEVELOPMENT_TEAM: ""
+  Release:
+    type: release
+    settings:
+      CODE_SIGN_IDENTITY: "-"
+      CODE_SIGN_STYLE: Manual
+      DEVELOPMENT_TEAM: ""
+  AppStore:
+    type: release
+    settings:
+      CODE_SIGN_STYLE: Automatic
+      DEVELOPMENT_TEAM: YM9493SBXE
+
+targets:
+
+  # ── Main application ───────────────────────────────────────────────────────
+  ApexFlow:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Apex
+        excludes:
+          - "**/.ai-context"
+          - "**/.ai-context/**"
+          - "Collectors/ACTION_PLAN.md"
+          - "Collectors/APP_STORE_GUIDE.md"
+          - "Collectors/.gitignore"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.woodsee-digi.ApexFlow
+        SWIFT_VERSION: 6.0
+        SWIFT_STRICT_CONCURRENCY: complete
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        ENABLE_HARDENED_RUNTIME: YES
+        INFOPLIST_FILE: Apex/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Apex/Apex.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      Debug:
+        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+        DEBUG_INFORMATION_FORMAT: dwarf
+      Release:
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      AppStore:
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+        # Switch to sandboxed entitlements for Mac App Store submission
+        CODE_SIGN_ENTITLEMENTS: Apex/Apex-AppStore.entitlements
+    dependencies:
+      - sdk: CoreWLAN.framework
+      - sdk: IOBluetooth.framework
+      - sdk: IOKit.framework
+      - sdk: CoreFoundation.framework
+      - sdk: CoreMIDI.framework
+      - sdk: Network.framework
+      - sdk: ServiceManagement.framework
+      - target: com.woodsee-digi.ApexFlowHelper
+        embed: false
+    postBuildScripts:
+      - name: "Embed ApexHelper + LaunchDaemon plist"
+        shell: /bin/bash
+        outputFiles:
+          - $(BUILT_PRODUCTS_DIR)/$(WRAPPER_NAME)/Contents/MacOS/com.woodsee-digi.ApexFlowHelper
+          - $(BUILT_PRODUCTS_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchDaemons/com.woodsee-digi.ApexFlowHelper.plist
+        script: |
+          set -e
+          HELPER="${BUILT_PRODUCTS_DIR}/com.woodsee-digi.ApexFlowHelper"
+          MACOS_DIR="${BUILT_PRODUCTS_DIR}/ApexFlow.app/Contents/MacOS"
+          if [ -f "$HELPER" ]; then
+            cp "$HELPER" "$MACOS_DIR/com.woodsee-digi.ApexFlowHelper"
+            echo "Embedded helper at $MACOS_DIR/com.woodsee-digi.ApexFlowHelper"
+          else
+            echo "warning: Helper binary not found at $HELPER — build ApexHelper target first"
+          fi
+          PLIST_SRC="${SRCROOT}/Apex/Library/LaunchDaemons/com.woodsee-digi.ApexFlowHelper.plist"
+          PLIST_DIR="${BUILT_PRODUCTS_DIR}/ApexFlow.app/Contents/Library/LaunchDaemons"
+          mkdir -p "$PLIST_DIR"
+          cp "$PLIST_SRC" "$PLIST_DIR/com.woodsee-digi.ApexFlowHelper.plist"
+          echo "Embedded plist at $PLIST_DIR"
+
+  # ── Privileged helper daemon ────────────────────────────────────────────────
+  com.woodsee-digi.ApexFlowHelper:
+    type: tool
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: ApexHelper
+      # Shared XPC protocol (compiled into both targets)
+      - path: Apex/Shared/HelperProtocol.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.woodsee-digi.ApexFlowHelper
+        SWIFT_VERSION: 6.0
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_ENTITLEMENTS: ApexHelper/ApexHelper.entitlements
+        # Install alongside the main Apex binary inside the app bundle
+        INSTALL_PATH: "$(BUILT_PRODUCTS_DIR)/ApexFlow.app/Contents/MacOS"
+        SKIP_INSTALL: NO
+      Debug:
+        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+      Release:
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+      AppStore:
+        SWIFT_OPTIMIZATION_LEVEL: "-O"

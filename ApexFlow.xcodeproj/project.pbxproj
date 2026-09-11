@@ -1,0 +1,753 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01CB41CD292EC0417E2EFC68 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DC415CD2D202EBC690D875 /* IOBluetooth.framework */; };
+		029692205975A3A9C941FA15 /* DiskHealthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560DD1FEBF814EF7BC5E1BF9 /* DiskHealthService.swift */; };
+		08F3C520E92D34569859E5B5 /* DiskCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */; };
+		09403A5D1930DC9C229F444B /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64D97B18E4D18BB5FB0DDA /* ThemeStore.swift */; };
+		0DCA83E2A95B8D83EACECAD9 /* AIModelCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */; };
+		1227167994917FD9166E711C /* HelperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537FD002B2A17E7FDA0894F /* HelperManager.swift */; };
+		155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */; };
+		163E0302AA4821372E5E2BD9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B597857C4D86B4287CEE4BF /* main.swift */; };
+		273915CB7B994CFA9D384E17 /* CPUView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */; };
+		275A7E97159F2F03C4FB7575 /* MIDICollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23201D5FB3BA5E35F7447616 /* MIDICollector.swift */; };
+		2E7A7910C86E6126EFD9C9F5 /* ApexWorkspaceLayoutState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */; };
+		2E92C484E1E6A7AC265E7264 /* ProcessData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */; };
+		2F71513A3FC652548B436DEA /* ProcessCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */; };
+		30D7588BFD8C58BD8FAABBD1 /* ConnCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */; };
+		3246894483BDB26DBFD80224 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 883D801C6AFE8CA4B7CE1E02 /* Network.framework */; };
+		36BEB3EFA8DF9693291B4490 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76364981C638AC0D963FDF2A /* ServiceManagement.framework */; };
+		37465073A4EEA363C927DFA9 /* OSCCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FB254EC2EB524CB22AD66B /* OSCCollector.swift */; };
+		3A503BE205B4B8E04769ECA2 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83EA8C6EFCE2CF01A1DDA499 /* CoreFoundation.framework */; };
+		3C92C71D80BB49B91D1014C5 /* ApexApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41E1E0C4FCE4CC7AEAC250C /* ApexApp.swift */; };
+		421A42C50072362B0D41B579 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC033E8540F88B0A1AC42561 /* Theme.swift */; };
+		43955068F8F820CFB8466247 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BAFB1702EB7E564167DC9EF /* CoreWLAN.framework */; };
+		46D5C72F6A2474873D76DE63 /* ApexPanelKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F07B13509E0B8B39E31A5B /* ApexPanelKind.swift */; };
+		4A16968A98D14F8868211C5C /* AIModelRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9B4DBCEFD2C901EFBDC929 /* AIModelRegistry.swift */; };
+		4C0F07C938F5B74BF4C9BB6B /* ApexCanvasWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949A1DE7B6D006C0ED111834 /* ApexCanvasWorkspaceView.swift */; };
+		5397A99AAC252B2B44096A97 /* ThemeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2A8D1363E025A334E316D0 /* ThemeSettingsView.swift */; };
+		547BEB203F2BED198AB518D8 /* SANDBOX_FIXES.md in Resources */ = {isa = PBXBuildFile; fileRef = 5C345A3D17CA73A02CED6F82 /* SANDBOX_FIXES.md */; };
+		643BC9EE70684837683A0BC7 /* DiskHealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C8F3AE7808050528600A0B /* DiskHealth.swift */; };
+		65EF0DEE43D7A1B3E6333A9B /* MemoryCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */; };
+		75515351378A3B5D859403D4 /* CPUCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C61E09FEB6EF4AD4C1EC4 /* CPUCollector.swift */; };
+		764F0D253A4BADBD578AFF98 /* build-appstore.sh in Resources */ = {isa = PBXBuildFile; fileRef = 603103A7164954939A7AB6D0 /* build-appstore.sh */; };
+		7730275F238FC91571782815 /* AIModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4961B12D2BE79647FD9737EC /* AIModelView.swift */; };
+		7BDC7DA92B3875F3CC353916 /* ThemePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4347F6E48246CFAFB831E39C /* ThemePreset.swift */; };
+		7D9392C324C8F42F3A759D92 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F00BFCEDE97A5192880BA118 /* CoreMIDI.framework */; };
+		84C5F3D52B1429360087CA3E /* SwiftMaestroIntegration.md in Resources */ = {isa = PBXBuildFile; fileRef = C6AB36708BDE86FD57F7AAE7 /* SwiftMaestroIntegration.md */; };
+		869D781525446160C2854E29 /* APP_STORE_READY.md in Resources */ = {isa = PBXBuildFile; fileRef = 06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */; };
+		89BAF7D6886D4DEAAF19E8AA /* ConnData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0809B6E239B24B9F342CACB /* ConnData.swift */; };
+		91D8A02C534A37941E4094B6 /* RESUME_HERE.md in Resources */ = {isa = PBXBuildFile; fileRef = A6F6A0A62DCBFC3E0D4B1AE5 /* RESUME_HERE.md */; };
+		92D4B1B8FE450BF2DFB683AF /* com.woodsee-digi.ApexFlowHelper.plist in Resources */ = {isa = PBXBuildFile; fileRef = FCD109D4B0E669CF5F137131 /* com.woodsee-digi.ApexFlowHelper.plist */; };
+		92E44BC0C75091A9565BEC03 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CCF18C782E91DBE0E470CD /* ContentView.swift */; };
+		96DCB844D35B340B70AFC372 /* MemoryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5702AD032DC496F1B1789F10 /* MemoryData.swift */; };
+		987930B41D070B693BE366E6 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */; };
+		A0734FD6E63549CAFE76A378 /* test-thunderbolt.sh in Resources */ = {isa = PBXBuildFile; fileRef = 4B7A8C7EB1CF4D0A30796A2C /* test-thunderbolt.sh */; };
+		A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28730CC0CD85C0CB18C148A2 /* NetworkView.swift */; };
+		AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC4A47C24F1E2643338678F /* NetworkCollector.swift */; };
+		B1BD26FFADC654AED4438C5A /* DiskData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22124BCE3012710EAA2F3CE /* DiskData.swift */; };
+		B753701ED649C5A9A0076CEE /* ApexPanelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3EDAA5A32BE674F2738435 /* ApexPanelContainer.swift */; };
+		BF4F0F82D6AD3D6BA4B097F5 /* ConnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB8823279479366FB5E0938 /* ConnView.swift */; };
+		C3508A8FCA3DC6942FB28CC0 /* NetworkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9340E22D8A312200C735505F /* NetworkData.swift */; };
+		C3EE237F67EA2DE65880B2C7 /* AIModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3CDEB478054658257FF3B9 /* AIModelData.swift */; };
+		C7D0649EA3E20B8203E07E20 /* MCPToolCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00444EADC962755E59AAA56 /* MCPToolCall.swift */; };
+		C880F64CA185E0AFA737125F /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */; };
+		CA8577B1327DEFB3DAFF8B98 /* CHECKLIST.md in Resources */ = {isa = PBXBuildFile; fileRef = 3F537B3E6B42CD2BBC22A2DD /* CHECKLIST.md */; };
+		CB2311282FD6CCC5992DD9AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26B2C5FF63661A4B069D512F /* Assets.xcassets */; };
+		CD7EFC8F7D5C731D16D1DC0E /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48E1D8348E548E199892BA /* SharedViews.swift */; };
+		D3776807216C943B8CEC7108 /* ApexPanelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */; };
+		DE47C3CC9C24A6C9B209095F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD20992547C0F4DA981CB9E /* IOKit.framework */; };
+		E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F741FA34705451DDB01BCC8 /* MemoryView.swift */; };
+		F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D5E3623F4524F97BABBB59 /* ProcessView.swift */; };
+		F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */; };
+		FAA8C023B55B629DBA0E4F43 /* CPUData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0AE68DC4E22CC645240621 /* CPUData.swift */; };
+		FD4FDEEBC98F702F99389ABF /* exportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1A833296B7FB6FF34395FEF /* exportOptions.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CEFFE253D4C9E6F08D26FE49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04D38D2A21E059CC8F8677B0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EDE118BBC1A1373535C2D100;
+			remoteInfo = "com.woodsee-digi.ApexFlowHelper";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = APP_STORE_READY.md; sourceTree = "<group>"; };
+		0D48E1D8348E548E199892BA /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
+		0F741FA34705451DDB01BCC8 /* MemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryView.swift; sourceTree = "<group>"; };
+		1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUView.swift; sourceTree = "<group>"; };
+		22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelCollector.swift; sourceTree = "<group>"; };
+		23201D5FB3BA5E35F7447616 /* MIDICollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDICollector.swift; sourceTree = "<group>"; };
+		26B2C5FF63661A4B069D512F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		28730CC0CD85C0CB18C148A2 /* NetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkView.swift; sourceTree = "<group>"; };
+		292C61E09FEB6EF4AD4C1EC4 /* CPUCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUCollector.swift; sourceTree = "<group>"; };
+		2BAFB1702EB7E564167DC9EF /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
+		3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
+		3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexPanelContentView.swift; sourceTree = "<group>"; };
+		3F537B3E6B42CD2BBC22A2DD /* CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHECKLIST.md; sourceTree = "<group>"; };
+		4347F6E48246CFAFB831E39C /* ThemePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreset.swift; sourceTree = "<group>"; };
+		448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskHealthView.swift; sourceTree = "<group>"; };
+		4961B12D2BE79647FD9737EC /* AIModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelView.swift; sourceTree = "<group>"; };
+		4B7A8C7EB1CF4D0A30796A2C /* test-thunderbolt.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "test-thunderbolt.sh"; sourceTree = "<group>"; };
+		4E64D97B18E4D18BB5FB0DDA /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		4F2A8D1363E025A334E316D0 /* ThemeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSettingsView.swift; sourceTree = "<group>"; };
+		560DD1FEBF814EF7BC5E1BF9 /* DiskHealthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskHealthService.swift; sourceTree = "<group>"; };
+		5702AD032DC496F1B1789F10 /* MemoryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryData.swift; sourceTree = "<group>"; };
+		59F07B13509E0B8B39E31A5B /* ApexPanelKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexPanelKind.swift; sourceTree = "<group>"; };
+		5B3EDAA5A32BE674F2738435 /* ApexPanelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexPanelContainer.swift; sourceTree = "<group>"; };
+		5C345A3D17CA73A02CED6F82 /* SANDBOX_FIXES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SANDBOX_FIXES.md; sourceTree = "<group>"; };
+		5D9B4DBCEFD2C901EFBDC929 /* AIModelRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelRegistry.swift; sourceTree = "<group>"; };
+		5FB8823279479366FB5E0938 /* ConnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnView.swift; sourceTree = "<group>"; };
+		603103A7164954939A7AB6D0 /* build-appstore.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-appstore.sh"; sourceTree = "<group>"; };
+		68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
+		76364981C638AC0D963FDF2A /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessCollector.swift; sourceTree = "<group>"; };
+		7AC4A47C24F1E2643338678F /* NetworkCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCollector.swift; sourceTree = "<group>"; };
+		7E0AE68DC4E22CC645240621 /* CPUData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUData.swift; sourceTree = "<group>"; };
+		83EA8C6EFCE2CF01A1DDA499 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		84FDE8A37E218748E81C050E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8537FD002B2A17E7FDA0894F /* HelperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperManager.swift; sourceTree = "<group>"; };
+		880795B487D99B8322670F1C /* Apex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Apex.entitlements; sourceTree = "<group>"; };
+		883D801C6AFE8CA4B7CE1E02 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		9340E22D8A312200C735505F /* NetworkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkData.swift; sourceTree = "<group>"; };
+		949A1DE7B6D006C0ED111834 /* ApexCanvasWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexCanvasWorkspaceView.swift; sourceTree = "<group>"; };
+		97FB254EC2EB524CB22AD66B /* OSCCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSCCollector.swift; sourceTree = "<group>"; };
+		980FC2072EBD76FF90D354AB /* com.woodsee-digi.ApexFlowHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = "com.woodsee-digi.ApexFlowHelper"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A52005BE92E34654129D805 /* ApexHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApexHelper.entitlements; sourceTree = "<group>"; };
+		9B597857C4D86B4287CEE4BF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A1A833296B7FB6FF34395FEF /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = exportOptions.plist; sourceTree = "<group>"; };
+		A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnCollector.swift; sourceTree = "<group>"; };
+		A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCollector.swift; sourceTree = "<group>"; };
+		A4D5E3623F4524F97BABBB59 /* ProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessView.swift; sourceTree = "<group>"; };
+		A6F6A0A62DCBFC3E0D4B1AE5 /* RESUME_HERE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RESUME_HERE.md; sourceTree = "<group>"; };
+		AAD20992547C0F4DA981CB9E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		AD3CDEB478054658257FF3B9 /* AIModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelData.swift; sourceTree = "<group>"; };
+		BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessData.swift; sourceTree = "<group>"; };
+		C0809B6E239B24B9F342CACB /* ConnData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnData.swift; sourceTree = "<group>"; };
+		C6AB36708BDE86FD57F7AAE7 /* SwiftMaestroIntegration.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SwiftMaestroIntegration.md; sourceTree = "<group>"; };
+		CC033E8540F88B0A1AC42561 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		D8CCF18C782E91DBE0E470CD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E22124BCE3012710EAA2F3CE /* DiskData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskData.swift; sourceTree = "<group>"; };
+		E41E1E0C4FCE4CC7AEAC250C /* ApexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexApp.swift; sourceTree = "<group>"; };
+		E5C8F3AE7808050528600A0B /* DiskHealth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskHealth.swift; sourceTree = "<group>"; };
+		E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCollector.swift; sourceTree = "<group>"; };
+		E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexWorkspaceLayoutState.swift; sourceTree = "<group>"; };
+		EB208F8FEEDCAB9D67363C34 /* Apex-AppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Apex-AppStore.entitlements"; sourceTree = "<group>"; };
+		F00444EADC962755E59AAA56 /* MCPToolCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPToolCall.swift; sourceTree = "<group>"; };
+		F00BFCEDE97A5192880BA118 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		F1C7EFFE225005C357614EE3 /* ApexFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApexFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3DC415CD2D202EBC690D875 /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		FCD109D4B0E669CF5F137131 /* com.woodsee-digi.ApexFlowHelper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "com.woodsee-digi.ApexFlowHelper.plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		85A0589A89AF2C3025C8BC73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43955068F8F820CFB8466247 /* CoreWLAN.framework in Frameworks */,
+				01CB41CD292EC0417E2EFC68 /* IOBluetooth.framework in Frameworks */,
+				DE47C3CC9C24A6C9B209095F /* IOKit.framework in Frameworks */,
+				3A503BE205B4B8E04769ECA2 /* CoreFoundation.framework in Frameworks */,
+				7D9392C324C8F42F3A759D92 /* CoreMIDI.framework in Frameworks */,
+				3246894483BDB26DBFD80224 /* Network.framework in Frameworks */,
+				36BEB3EFA8DF9693291B4490 /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06F1CBF8283A44B2C4004087 /* Apex */ = {
+			isa = PBXGroup;
+			children = (
+				EB208F8FEEDCAB9D67363C34 /* Apex-AppStore.entitlements */,
+				880795B487D99B8322670F1C /* Apex.entitlements */,
+				26B2C5FF63661A4B069D512F /* Assets.xcassets */,
+				84FDE8A37E218748E81C050E /* Info.plist */,
+				C6AB36708BDE86FD57F7AAE7 /* SwiftMaestroIntegration.md */,
+				D5EDBF2DF877EF0AF8B1D755 /* App */,
+				15431EC42AD956ACA3F75524 /* Collectors */,
+				E3B418CBBABBDCE2A20CBFE4 /* Library */,
+				695CBE04095B8D82C0B8D191 /* Models */,
+				A6A34E7F14B7CD01460C7DEF /* Services */,
+				A4BC4F7F0DC0D84F326BCE33 /* Shared */,
+				9F0C1C8EED5ECDF94FDAE8DF /* Views */,
+			);
+			path = Apex;
+			sourceTree = "<group>";
+		};
+		15431EC42AD956ACA3F75524 /* Collectors */ = {
+			isa = PBXGroup;
+			children = (
+				22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */,
+				06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */,
+				603103A7164954939A7AB6D0 /* build-appstore.sh */,
+				3F537B3E6B42CD2BBC22A2DD /* CHECKLIST.md */,
+				A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */,
+				292C61E09FEB6EF4AD4C1EC4 /* CPUCollector.swift */,
+				E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */,
+				A1A833296B7FB6FF34395FEF /* exportOptions.plist */,
+				A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */,
+				23201D5FB3BA5E35F7447616 /* MIDICollector.swift */,
+				7AC4A47C24F1E2643338678F /* NetworkCollector.swift */,
+				97FB254EC2EB524CB22AD66B /* OSCCollector.swift */,
+				79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */,
+				A6F6A0A62DCBFC3E0D4B1AE5 /* RESUME_HERE.md */,
+				5C345A3D17CA73A02CED6F82 /* SANDBOX_FIXES.md */,
+				4B7A8C7EB1CF4D0A30796A2C /* test-thunderbolt.sh */,
+			);
+			path = Collectors;
+			sourceTree = "<group>";
+		};
+		334E6A638542509015CE36D5 /* ApexHelper */ = {
+			isa = PBXGroup;
+			children = (
+				9A52005BE92E34654129D805 /* ApexHelper.entitlements */,
+				9B597857C4D86B4287CEE4BF /* main.swift */,
+			);
+			path = ApexHelper;
+			sourceTree = "<group>";
+		};
+		42181FE73645392B7DEC998D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1C7EFFE225005C357614EE3 /* ApexFlow.app */,
+				980FC2072EBD76FF90D354AB /* com.woodsee-digi.ApexFlowHelper */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		695CBE04095B8D82C0B8D191 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AD3CDEB478054658257FF3B9 /* AIModelData.swift */,
+				5D9B4DBCEFD2C901EFBDC929 /* AIModelRegistry.swift */,
+				59F07B13509E0B8B39E31A5B /* ApexPanelKind.swift */,
+				E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */,
+				C0809B6E239B24B9F342CACB /* ConnData.swift */,
+				7E0AE68DC4E22CC645240621 /* CPUData.swift */,
+				E22124BCE3012710EAA2F3CE /* DiskData.swift */,
+				E5C8F3AE7808050528600A0B /* DiskHealth.swift */,
+				F00444EADC962755E59AAA56 /* MCPToolCall.swift */,
+				5702AD032DC496F1B1789F10 /* MemoryData.swift */,
+				9340E22D8A312200C735505F /* NetworkData.swift */,
+				BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */,
+				4347F6E48246CFAFB831E39C /* ThemePreset.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9D9D0890DF1DDEC28B5D73AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				83EA8C6EFCE2CF01A1DDA499 /* CoreFoundation.framework */,
+				F00BFCEDE97A5192880BA118 /* CoreMIDI.framework */,
+				2BAFB1702EB7E564167DC9EF /* CoreWLAN.framework */,
+				F3DC415CD2D202EBC690D875 /* IOBluetooth.framework */,
+				AAD20992547C0F4DA981CB9E /* IOKit.framework */,
+				883D801C6AFE8CA4B7CE1E02 /* Network.framework */,
+				76364981C638AC0D963FDF2A /* ServiceManagement.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9F0C1C8EED5ECDF94FDAE8DF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4961B12D2BE79647FD9737EC /* AIModelView.swift */,
+				949A1DE7B6D006C0ED111834 /* ApexCanvasWorkspaceView.swift */,
+				5B3EDAA5A32BE674F2738435 /* ApexPanelContainer.swift */,
+				3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */,
+				5FB8823279479366FB5E0938 /* ConnView.swift */,
+				1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */,
+				448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */,
+				0F741FA34705451DDB01BCC8 /* MemoryView.swift */,
+				28730CC0CD85C0CB18C148A2 /* NetworkView.swift */,
+				A4D5E3623F4524F97BABBB59 /* ProcessView.swift */,
+				4F2A8D1363E025A334E316D0 /* ThemeSettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A4BC4F7F0DC0D84F326BCE33 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */,
+				0D48E1D8348E548E199892BA /* SharedViews.swift */,
+				CC033E8540F88B0A1AC42561 /* Theme.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A6A34E7F14B7CD01460C7DEF /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				560DD1FEBF814EF7BC5E1BF9 /* DiskHealthService.swift */,
+				4E64D97B18E4D18BB5FB0DDA /* ThemeStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BE3C5CA282D88E7F4872442B = {
+			isa = PBXGroup;
+			children = (
+				06F1CBF8283A44B2C4004087 /* Apex */,
+				334E6A638542509015CE36D5 /* ApexHelper */,
+				9D9D0890DF1DDEC28B5D73AE /* Frameworks */,
+				42181FE73645392B7DEC998D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D5EDBF2DF877EF0AF8B1D755 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E41E1E0C4FCE4CC7AEAC250C /* ApexApp.swift */,
+				D8CCF18C782E91DBE0E470CD /* ContentView.swift */,
+				8537FD002B2A17E7FDA0894F /* HelperManager.swift */,
+				68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E3B418CBBABBDCE2A20CBFE4 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				E6272F9B1BDBDFF298031714 /* LaunchDaemons */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		E6272F9B1BDBDFF298031714 /* LaunchDaemons */ = {
+			isa = PBXGroup;
+			children = (
+				FCD109D4B0E669CF5F137131 /* com.woodsee-digi.ApexFlowHelper.plist */,
+			);
+			path = LaunchDaemons;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8A81446BC95898DDAF1CB963 /* ApexFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0B50502B7135B7FA550F7FD3 /* Build configuration list for PBXNativeTarget "ApexFlow" */;
+			buildPhases = (
+				8DBA07841D10F4C237F7F9A1 /* Sources */,
+				159F02A7C4E78069DE098F86 /* Resources */,
+				85A0589A89AF2C3025C8BC73 /* Frameworks */,
+				ECFC3F4325FCB250FB79A3B7 /* Embed ApexHelper + LaunchDaemon plist */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F7E3AAD680AD386049A7D47 /* PBXTargetDependency */,
+			);
+			name = ApexFlow;
+			packageProductDependencies = (
+			);
+			productName = ApexFlow;
+			productReference = F1C7EFFE225005C357614EE3 /* ApexFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EDE118BBC1A1373535C2D100 /* com.woodsee-digi.ApexFlowHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48E270048F85553E4BF49F95 /* Build configuration list for PBXNativeTarget "com.woodsee-digi.ApexFlowHelper" */;
+			buildPhases = (
+				E6BD83739DCB9443D75BCDD7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "com.woodsee-digi.ApexFlowHelper";
+			packageProductDependencies = (
+			);
+			productName = "com.woodsee-digi.ApexFlowHelper";
+			productReference = 980FC2072EBD76FF90D354AB /* com.woodsee-digi.ApexFlowHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04D38D2A21E059CC8F8677B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = AA8024F52743A2A571EC0A1C /* Build configuration list for PBXProject "ApexFlow" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BE3C5CA282D88E7F4872442B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 42181FE73645392B7DEC998D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8A81446BC95898DDAF1CB963 /* ApexFlow */,
+				EDE118BBC1A1373535C2D100 /* com.woodsee-digi.ApexFlowHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		159F02A7C4E78069DE098F86 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				869D781525446160C2854E29 /* APP_STORE_READY.md in Resources */,
+				CB2311282FD6CCC5992DD9AE /* Assets.xcassets in Resources */,
+				CA8577B1327DEFB3DAFF8B98 /* CHECKLIST.md in Resources */,
+				91D8A02C534A37941E4094B6 /* RESUME_HERE.md in Resources */,
+				547BEB203F2BED198AB518D8 /* SANDBOX_FIXES.md in Resources */,
+				84C5F3D52B1429360087CA3E /* SwiftMaestroIntegration.md in Resources */,
+				764F0D253A4BADBD578AFF98 /* build-appstore.sh in Resources */,
+				92D4B1B8FE450BF2DFB683AF /* com.woodsee-digi.ApexFlowHelper.plist in Resources */,
+				FD4FDEEBC98F702F99389ABF /* exportOptions.plist in Resources */,
+				A0734FD6E63549CAFE76A378 /* test-thunderbolt.sh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ECFC3F4325FCB250FB79A3B7 /* Embed ApexHelper + LaunchDaemon plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed ApexHelper + LaunchDaemon plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(WRAPPER_NAME)/Contents/MacOS/com.woodsee-digi.ApexFlowHelper",
+				"$(BUILT_PRODUCTS_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchDaemons/com.woodsee-digi.ApexFlowHelper.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -e\nHELPER=\"${BUILT_PRODUCTS_DIR}/com.woodsee-digi.ApexFlowHelper\"\nMACOS_DIR=\"${BUILT_PRODUCTS_DIR}/ApexFlow.app/Contents/MacOS\"\nif [ -f \"$HELPER\" ]; then\n  cp \"$HELPER\" \"$MACOS_DIR/com.woodsee-digi.ApexFlowHelper\"\n  echo \"Embedded helper at $MACOS_DIR/com.woodsee-digi.ApexFlowHelper\"\nelse\n  echo \"warning: Helper binary not found at $HELPER — build ApexHelper target first\"\nfi\nPLIST_SRC=\"${SRCROOT}/Apex/Library/LaunchDaemons/com.woodsee-digi.ApexFlowHelper.plist\"\nPLIST_DIR=\"${BUILT_PRODUCTS_DIR}/ApexFlow.app/Contents/Library/LaunchDaemons\"\nmkdir -p \"$PLIST_DIR\"\ncp \"$PLIST_SRC\" \"$PLIST_DIR/com.woodsee-digi.ApexFlowHelper.plist\"\necho \"Embedded plist at $PLIST_DIR\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DBA07841D10F4C237F7F9A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DCA83E2A95B8D83EACECAD9 /* AIModelCollector.swift in Sources */,
+				C3EE237F67EA2DE65880B2C7 /* AIModelData.swift in Sources */,
+				4A16968A98D14F8868211C5C /* AIModelRegistry.swift in Sources */,
+				7730275F238FC91571782815 /* AIModelView.swift in Sources */,
+				3C92C71D80BB49B91D1014C5 /* ApexApp.swift in Sources */,
+				4C0F07C938F5B74BF4C9BB6B /* ApexCanvasWorkspaceView.swift in Sources */,
+				B753701ED649C5A9A0076CEE /* ApexPanelContainer.swift in Sources */,
+				D3776807216C943B8CEC7108 /* ApexPanelContentView.swift in Sources */,
+				46D5C72F6A2474873D76DE63 /* ApexPanelKind.swift in Sources */,
+				2E7A7910C86E6126EFD9C9F5 /* ApexWorkspaceLayoutState.swift in Sources */,
+				75515351378A3B5D859403D4 /* CPUCollector.swift in Sources */,
+				FAA8C023B55B629DBA0E4F43 /* CPUData.swift in Sources */,
+				273915CB7B994CFA9D384E17 /* CPUView.swift in Sources */,
+				30D7588BFD8C58BD8FAABBD1 /* ConnCollector.swift in Sources */,
+				89BAF7D6886D4DEAAF19E8AA /* ConnData.swift in Sources */,
+				BF4F0F82D6AD3D6BA4B097F5 /* ConnView.swift in Sources */,
+				92E44BC0C75091A9565BEC03 /* ContentView.swift in Sources */,
+				08F3C520E92D34569859E5B5 /* DiskCollector.swift in Sources */,
+				B1BD26FFADC654AED4438C5A /* DiskData.swift in Sources */,
+				643BC9EE70684837683A0BC7 /* DiskHealth.swift in Sources */,
+				029692205975A3A9C941FA15 /* DiskHealthService.swift in Sources */,
+				155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */,
+				1227167994917FD9166E711C /* HelperManager.swift in Sources */,
+				C880F64CA185E0AFA737125F /* HelperProtocol.swift in Sources */,
+				C7D0649EA3E20B8203E07E20 /* MCPToolCall.swift in Sources */,
+				275A7E97159F2F03C4FB7575 /* MIDICollector.swift in Sources */,
+				65EF0DEE43D7A1B3E6333A9B /* MemoryCollector.swift in Sources */,
+				96DCB844D35B340B70AFC372 /* MemoryData.swift in Sources */,
+				E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */,
+				AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */,
+				C3508A8FCA3DC6942FB28CC0 /* NetworkData.swift in Sources */,
+				A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */,
+				37465073A4EEA363C927DFA9 /* OSCCollector.swift in Sources */,
+				2F71513A3FC652548B436DEA /* ProcessCollector.swift in Sources */,
+				2E92C484E1E6A7AC265E7264 /* ProcessData.swift in Sources */,
+				F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */,
+				CD7EFC8F7D5C731D16D1DC0E /* SharedViews.swift in Sources */,
+				F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */,
+				421A42C50072362B0D41B579 /* Theme.swift in Sources */,
+				7BDC7DA92B3875F3CC353916 /* ThemePreset.swift in Sources */,
+				5397A99AAC252B2B44096A97 /* ThemeSettingsView.swift in Sources */,
+				09403A5D1930DC9C229F444B /* ThemeStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6BD83739DCB9443D75BCDD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				987930B41D070B693BE366E6 /* HelperProtocol.swift in Sources */,
+				163E0302AA4821372E5E2BD9 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3F7E3AAD680AD386049A7D47 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EDE118BBC1A1373535C2D100 /* com.woodsee-digi.ApexFlowHelper */;
+			targetProxy = CEFFE253D4C9E6F08D26FE49 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		080BDF933D5292B3E652C4AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ApexHelper/ApexHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)/ApexFlow.app/Contents/MacOS";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.woodsee-digi.ApexFlowHelper";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		25F9D9A0BA36C10498399429 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9020F5C365FCC64419692752 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Apex/Apex.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Apex/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.woodsee-digi.ApexFlow";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		9787E3D1E7EB2C38B616DD12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ApexHelper/ApexHelper.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)/ApexFlow.app/Contents/MacOS";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.woodsee-digi.ApexFlowHelper";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		9A03C310C8BE2A36846877DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A5159F97760E2466E4836018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Apex/Apex.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Apex/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.woodsee-digi.ApexFlow";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0B50502B7135B7FA550F7FD3 /* Build configuration list for PBXNativeTarget "ApexFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5159F97760E2466E4836018 /* Debug */,
+				9020F5C365FCC64419692752 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		48E270048F85553E4BF49F95 /* Build configuration list for PBXNativeTarget "com.woodsee-digi.ApexFlowHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				080BDF933D5292B3E652C4AB /* Debug */,
+				9787E3D1E7EB2C38B616DD12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA8024F52743A2A571EC0A1C /* Build configuration list for PBXProject "ApexFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A03C310C8BE2A36846877DB /* Debug */,
+				25F9D9A0BA36C10498399429 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 04D38D2A21E059CC8F8677B0 /* Project object */;
+}

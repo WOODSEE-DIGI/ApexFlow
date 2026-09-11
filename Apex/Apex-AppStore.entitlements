@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Sandbox required for Mac App Store -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+
+    <!-- Bluetooth device access -->
+    <key>com.apple.security.device.bluetooth</key>
+    <true/>
+
+    <!-- Network: outbound connections (CoreWLAN, general networking) -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- Network: inbound (OSC UDP listener on port 8000) -->
+    <key>com.apple.security.network.server</key>
+    <true/>
+
+    <!-- USB device enumeration via IOKit (ConnCollector.swift) -->
+    <key>com.apple.security.device.usb</key>
+    <true/>
+
+    <!-- Allow sandboxed app to connect to the helper daemon -->
+    <key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+    <array>
+        <string>com.woodsee-digi.ApexFlowHelper</string>
+    </array>
+</dict>
+</plist>

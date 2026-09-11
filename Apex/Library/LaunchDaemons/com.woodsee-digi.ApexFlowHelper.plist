@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.woodsee-digi.ApexFlowHelper</string>
+
+    <!-- XPC service name the daemon listens on -->
+    <key>MachServices</key>
+    <dict>
+        <key>com.woodsee-digi.ApexFlowHelper</key>
+        <true/>
+    </dict>
+
+    <!--
+        Program path: when installed via SMAppService this is where macOS
+        expects to find the helper binary. For App Store distribution the
+        app is always in /Applications. Update this path if distributing
+        outside the App Store to match your install location.
+    -->
+    <key>Program</key>
+    <string>/Applications/Apex Flow.app/Contents/MacOS/com.woodsee-digi.ApexFlowHelper</string>
+
+    <!-- User-domain LaunchDaemon; loaded on demand via SMAppService -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

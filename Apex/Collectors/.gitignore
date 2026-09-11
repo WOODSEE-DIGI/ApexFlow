@@ -1,0 +1,43 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Build products
+build/
+Builds/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Package.resolved
+
+# AI Context Bridge (development only)
+.ai-context/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# App Store / TestFlight
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+exportOptions.plist

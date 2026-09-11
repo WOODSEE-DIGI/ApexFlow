@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-////Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Apex Flow</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.woodsee-digi.ApexFlow</string>
+	<key>CFBundleName</key>
+	<string>Apex Flow</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Apex Flow displays connected Bluetooth devices and their signal strength.</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 WOODSEE-DIGI. All rights reserved.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Allows monitoring of ethernet and wifi on local network.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Apex Flow needs location access to display the connected WiFi network name.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>Allows speed monitoring of network volumes</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>Allows speed monitoring of removable volumes</string>
+</dict>
+</plist>
