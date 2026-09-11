@@ -29,32 +29,40 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 
 ### Canvas Workspace
 - **Draggable, resizable panels** — Arrange CPU, Memory & Disks, Network, Connectivity, AI Model, Processes, and Storage Health however you like
-- **Persistent layout** — Your panel positions and sizes are saved between launches
+- **Persistent layout** — Panel positions, sizes and visibility are saved between launches
 - **Lock / unlock** — Toggle editing mode to prevent accidental moves
 - **Panel picker** — Show or hide any panel from the toolbar
+- **Native hidden-title-bar window** — Clean, compact macOS chrome
 
-### Themes
-- **20 built-in presets** — Matrix, Cyberpunk Neon, Hello Kitty Pinks, Rainbows and Unicorns, Clean and Minimal, Professional, btop Tokyo Night, Nord, Solarized, One Dark, Monokai, and more
+### Themes & Appearance
+- **20 built-in presets** — Matrix Dark/Light, Cyberpunk Neon Dark/Light, Hello Kitty Pinks Dark/Light, Rainbows and Unicorns Dark/Light, Clean and Minimal Dark/Light, Professional Dark/Light, btop Tokyo Night, Nord Dark/Light, Solarized Dark/Light, One Dark, Monokai
 - **Custom colours** — Override accent, background, surface, text, and secondary text
 - **Data colours** — Adjust load indicators (high / medium / low) and semantic palette colours (blue, teal, sky, mauve, pink, peach)
-- **Light and dark appearance** — Per-theme appearance mode or follow the system
+- **Light / dark / system appearance** — Each preset can pin a mode or follow the system
+- **Reset to defaults** — One click returns to the built-in Catppuccin/Mocha palette
 
 ### System Monitoring
-- **CPU** — Per-core usage grid with animated 60-second history chart, load averages (1/5/15 min), uptime, and CPU name
-- **Memory** — Stacked usage bar (used / cached / free / swap) with usage history
-- **Disks** — All drives with percentage meters, read/write rates, and dual-colour I/O sparklines. Supports Apple Software RAID sets, Thunderbolt RAID enclosures, and any connected storage (including DJI cameras)
-- **Network** — Per-interface area charts (download / upload mirrored). Compact interface picker filtered to real adapters only
-- **Processes** — Sortable, filterable process list with PID, CPU%, memory, threads and status. Right-click to send SIGTERM or SIGKILL
-- **Storage Health** — S.M.A.R.T. status, health scores, temperature, power-on hours, filesystem verification, FileVault/encryption status, and Time Machine backup age
-- **AI Model** — Real-time monitoring of SwiftMaestro/LM Studio token telemetry, streaming state, silent-period detection, and recent tool calls
+- **CPU** — Per-core usage grid with animated 60-second history chart, 1/5/15-minute load averages, uptime, CPU name, and temperature when available
+- **Memory & Disks** — Stacked RAM usage bar (used / cached / free / swap), live disk read/write sparklines, and a scrollable drive list
+- **Network** — Per-interface mirrored area charts for download/upload, live rate readout, and a compact interface picker filtered to real adapters
+- **Processes** — Sortable, filterable process list with PID, CPU%, memory, threads and status. Right-click to send SIGTERM or SIGKILL via the privileged helper bridge
+- **Storage Health** — S.M.A.R.T. status, health score badge, temperature, power-on hours, power cycles, load cycles, reallocated/pending/offline-uncorrectable sectors, wear level, filesystem verification, FileVault/encryption status, Time Machine backup age, bus protocol, and SSD vs HDD. Toggle which metrics appear for each drive
+- **AI Model Monitor** — Real-time monitoring of SwiftMaestro / LM Studio token telemetry (tokens/sec, streaming/processing/idle state, silent-period detection), a list of active AI processes with friendly-name mapping, and recent MCP tool calls
 
 ### Connectivity Panel
-- **WiFi** — SSID, signal bars, RSSI (dBm), link rate, channel, band (2.4 / 5 / 6 GHz), security
-- **Bluetooth** — Connected devices with type icons, RSSI signal bars
-- **Thunderbolt** — All ports enumerated via `system_profiler`, showing negotiated link speed (≤40G / 40G), protocol mode (TB3 / TB4 / USB4), connected device name, and live I/O activity sparklines
+- **WiFi** — SSID, signal bars, RSSI (dBm), link rate, channel, band (2.4 / 5 / 6 GHz), and security
+- **Bluetooth** — Connected devices with type icons and RSSI signal bars
+- **Thunderbolt** — All ports enumerated via `system_profiler`, showing negotiated link speed (≤40G / 40G), protocol mode (TB3 / TB4 / USB4), connected device name, and live aggregated I/O activity sparklines
 - **USB** — Full device list via `IOUSBHostDevice`, with speed-coded badges (USB4 / SS+ / SS / HS / FS / LS) and vendor names
-- **MIDI** — Live CoreMIDI monitoring with 16-channel activity grid per device and decoded message display (Note On/Off, CC, Program Change, Pitchbend)
-- **OSC** — Open Sound Control listener on UDP port 8000, with real-time decoded message log
+- **MIDI** — Live CoreMIDI monitoring with a 16-channel activity grid per device and decoded message display (Note On/Off, CC, Program Change, Pitchbend)
+- **OSC** — Open Sound Control listener on UDP port 8000, with a real-time decoded message log
+
+### Architecture & Engineering
+- **Swift 6 strict concurrency** — `async/await`, actors, and `@MainActor` observables throughout
+- **Collector pattern** — Each sensor runs in its own actor off the main thread; models are `@MainActor @Observable`
+- **Privileged helper daemon** — `ApexFlowHelper` registered via `SMAppService` so process termination can run with elevated privileges
+- **xcodegen project management** — `project.yml` drives `ApexFlow.xcodeproj`; regenerate after structural changes
+- **GitHub Actions CI** — Automated build workflow on every push
 
 ---
 
@@ -170,6 +178,7 @@ Actor Collectors ──await──► @MainActor @Observable Models ──► Sw
 | IOBluetooth | Connected BT device enumeration |
 | CoreMIDI | MIDI device discovery and message capture |
 | Network | OSC UDP listener (NWListener) |
+| ServiceManagement | SMAppService privileged helper registration |
 
 ---
 
