@@ -242,9 +242,12 @@ private extension CGRect {
                           width: max(80, width + delta.width),
                           height: max(60, height + delta.height))
         case .topLeading:
-            return CGRect(x: minX - delta.width, y: minY - delta.height,
-                          width: max(80, width + delta.width),
-                          height: max(60, height + delta.height))
+            // Dragging the top-leading handle right/down shrinks from the top/left,
+            // so the bottom-trailing corner stays anchored.
+            let newWidth = max(80, width - delta.width)
+            let newHeight = max(60, height - delta.height)
+            return CGRect(x: maxX - newWidth, y: maxY - newHeight,
+                          width: newWidth, height: newHeight)
         }
     }
 }
