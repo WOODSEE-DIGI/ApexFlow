@@ -28,8 +28,10 @@ enum ApexCanvasGrid {
 
     static func cell(at point: CGPoint, in canvas: CGSize) -> (col: Int, row: Int) {
         let cell = cellSize(in: canvas)
-        let col = Int((Double(point.x) - gap) / (cell.width + gap))
-        let row = Int((Double(point.y) - gap) / (cell.height + gap))
+        // Round to the nearest cell centre instead of flooring, so tiles snap
+        // to the closest grid position rather than always favouring the top/left.
+        let col = Int(((Double(point.x) - gap) / (cell.width + gap)).rounded())
+        let row = Int(((Double(point.y) - gap) / (cell.height + gap)).rounded())
         return (min(max(0, col), cols - 1), min(max(0, row), rows - 1))
     }
 

@@ -105,9 +105,13 @@ struct ApexCanvasWorkspaceView: View {
         let frame = tile.frame(in: size)
         let moved = frame.offsetBy(dx: canvasDrag.dragTranslation.width,
                                    dy: canvasDrag.dragTranslation.height)
-        let originCell = ApexCanvasGrid.cell(at: moved.origin, in: size)
-        let col = min(originCell.col, ApexCanvasGrid.cols - tile.colSpan)
-        let row = min(originCell.row, ApexCanvasGrid.rows - tile.rowSpan)
+        // Snap by the tile centre so the panel drops where its bulk is dragged,
+        // not where its top-left corner happens to be.
+        let centerCell = ApexCanvasGrid.cell(at: CGPoint(x: moved.midX, y: moved.midY), in: size)
+        let col = max(0, min(centerCell.col - tile.colSpan / 2,
+                             ApexCanvasGrid.cols - tile.colSpan))
+        let row = max(0, min(centerCell.row - tile.rowSpan / 2,
+                             ApexCanvasGrid.rows - tile.rowSpan))
         return ApexCanvasGrid.frame(col: col, row: row, colSpan: tile.colSpan, rowSpan: tile.rowSpan, in: size)
     }
 }
@@ -274,11 +278,13 @@ extension ApexCanvasTileView {
         let pointer = value.location
 
         let baseFrame = tile.frame(in: canvasSize)
-        let movedOrigin = CGPoint(x: baseFrame.minX + translation.width,
-                                  y: baseFrame.minY + translation.height)
-        let targetCell = ApexCanvasGrid.cell(at: movedOrigin, in: canvasSize)
-        let col = min(targetCell.col, ApexCanvasGrid.cols - tile.colSpan)
-        let row = min(targetCell.row, ApexCanvasGrid.rows - tile.rowSpan)
+        let moved = baseFrame.offsetBy(dx: translation.width, dy: translation.height)
+        // Snap by the tile centre, matching the ghost preview.
+        let centerCell = ApexCanvasGrid.cell(at: CGPoint(x: moved.midX, y: moved.midY), in: canvasSize)
+        let col = max(0, min(centerCell.col - tile.colSpan / 2,
+                             ApexCanvasGrid.cols - tile.colSpan))
+        let row = max(0, min(centerCell.row - tile.rowSpan / 2,
+                             ApexCanvasGrid.rows - tile.rowSpan))
         let candidate = (col: col, row: row, colSpan: tile.colSpan, rowSpan: tile.rowSpan)
         let overlapped = localTiles.filter { ApexCanvasGrid.spansIntersect($0.cellSpan, candidate) }
 
