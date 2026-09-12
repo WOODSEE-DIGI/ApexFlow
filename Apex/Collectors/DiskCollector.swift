@@ -144,14 +144,15 @@ actor DiskCollector {
     /// Walk the IOService tree from a media object up to find Thunderbolt or USB ancestry.
     private func transportFor(media: io_registry_entry_t) -> DiskTransport {
         var entry = media
-        // Keep our own reference so we can release the duplicated entries safely.
         // `media` itself is owned by the caller; do not release it.
-        while true {
+        // Cap the walk depth to avoid infinite loops in the unlikely case of a registry cycle.
+        for _ in 0..<64 {
             var parent: io_registry_entry_t = IO_OBJECT_NULL
             let kr = IORegistryEntryGetParentEntry(entry, kIOServicePlane, &parent)
 
-            // If we duplicated entry (not the original media), release before moving on.
-            if entry != media { IOObjectRelease(entry) }
+            // Release duplicated entries (anything other than the original `media`).
+            let releasingEntry = entry != media
+            defer { if releasingEntry { IOObjectRelease(entry) } }
 
             guard kr == KERN_SUCCESS, parent != IO_OBJECT_NULL else { return .unknown }
 
@@ -172,23 +173,13 @@ actor DiskCollector {
 
             entry = parent
         }
+        return .unknown
     }
 
     private func className(of entry: io_registry_entry_t) -> String? {
-        var name: io_name_t = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        let kr = IOObjectGetClass(entry, &name)
-        guard kr == KERN_SUCCESS else { return nil }
-        return withUnsafePointer(to: &name) { ptr in
-            ptr.withMemoryRebound(to: CChar.self, capacity: MemoryLayout<io_name_t>.size) {
-                String(cString: $0)
-            }
-        }
+        // IOObjectCopyClass returns a retained CFString, avoiding the unsafe pointer dance
+        // that triggered a runtime unsafeBitCast failure in optimized Release builds.
+        guard let unmanaged = IOObjectCopyClass(entry) else { return nil }
+        return unmanaged.takeRetainedValue() as String
     }
 }
