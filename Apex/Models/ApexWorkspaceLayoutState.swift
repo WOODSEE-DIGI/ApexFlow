@@ -78,10 +78,14 @@ final class ApexWorkspaceLayoutState {
 
     private(set) var tiles: [ApexCanvasTile] = []
     var isLocked = false
+    private(set) var savedLayoutNames: [String] = []
+    private(set) var currentLayoutName: String? = nil
 
     private let defaultsKey = "apex.workspace.layout.v2"
+    private let savedLayoutsKey = "apex.workspace.savedLayouts.v1"
 
     init() {
+        loadSavedLayoutNames()
         load()
         if tiles.isEmpty {
             resetDefaultLayout()
@@ -98,14 +102,21 @@ final class ApexWorkspaceLayoutState {
         }
 
         tiles = [
+            // Top: full-width CPU graph
             tile(.cpu, col: 0, row: 0, colSpan: 12, rowSpan: 2),
-            tile(.memory, col: 0, row: 2, colSpan: 6, rowSpan: 2),
-            tile(.network, col: 6, row: 2, colSpan: 6, rowSpan: 2),
-            tile(.connectivity, col: 0, row: 4, colSpan: 12, rowSpan: 4),
-            tile(.aiModel, col: 0, row: 8, colSpan: 6, rowSpan: 3),
-            tile(.diskHealth, col: 6, row: 8, colSpan: 6, rowSpan: 3),
-            tile(.processes, col: 0, row: 11, colSpan: 12, rowSpan: 3)
+            // Row 2: network + memory/disks
+            tile(.network, col: 0, row: 2, colSpan: 6, rowSpan: 2),
+            tile(.memory, col: 6, row: 2, colSpan: 6, rowSpan: 2),
+            // Row 4: WAN leaks + storage health
+            tile(.networkLeak, col: 0, row: 4, colSpan: 6, rowSpan: 2),
+            tile(.diskHealth, col: 6, row: 4, colSpan: 6, rowSpan: 2),
+            // Left column: connectivity (tall)
+            tile(.connectivity, col: 0, row: 6, colSpan: 6, rowSpan: 4),
+            // Right column: AI model + processes
+            tile(.aiModel, col: 6, row: 6, colSpan: 6, rowSpan: 3),
+            tile(.processes, col: 6, row: 9, colSpan: 6, rowSpan: 5)
         ]
+        currentLayoutName = nil
         clampTilesToCanvas(CGSize(width: 1200, height: 1000))
         save()
     }
@@ -232,6 +243,47 @@ final class ApexWorkspaceLayoutState {
             }
         }
         return nil
+    }
+
+    // MARK: - Saved layouts
+
+    func saveCurrentLayout(as name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard let data = try? JSONEncoder().encode(tiles) else { return }
+        var layouts = savedLayoutsDictionary()
+        layouts[trimmed] = data
+        UserDefaults.standard.set(layouts, forKey: savedLayoutsKey)
+        loadSavedLayoutNames()
+        currentLayoutName = trimmed
+    }
+
+    func loadLayout(named name: String) {
+        let layouts = savedLayoutsDictionary()
+        guard let data = layouts[name],
+              let decoded = try? JSONDecoder().decode([ApexCanvasTile].self, from: data)
+        else { return }
+        tiles = decoded
+        currentLayoutName = name
+        save()
+    }
+
+    func deleteLayout(named name: String) {
+        var layouts = savedLayoutsDictionary()
+        layouts.removeValue(forKey: name)
+        UserDefaults.standard.set(layouts, forKey: savedLayoutsKey)
+        loadSavedLayoutNames()
+        if currentLayoutName == name {
+            currentLayoutName = nil
+        }
+    }
+
+    private func savedLayoutsDictionary() -> [String: Data] {
+        (UserDefaults.standard.object(forKey: savedLayoutsKey) as? [String: Data]) ?? [:]
+    }
+
+    private func loadSavedLayoutNames() {
+        savedLayoutNames = Array(savedLayoutsDictionary().keys).sorted()
     }
 
     // MARK: - Persistence
