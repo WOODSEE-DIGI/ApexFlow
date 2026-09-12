@@ -12,6 +12,7 @@ enum ApexPanelKind: String, CaseIterable, Identifiable, Codable, Hashable, Senda
     case aiModel
     case processes
     case diskHealth
+    case networkLeak
 
     var id: String { rawValue }
 
@@ -24,6 +25,7 @@ enum ApexPanelKind: String, CaseIterable, Identifiable, Codable, Hashable, Senda
         case .aiModel: return "AI Model"
         case .processes: return "Processes"
         case .diskHealth: return "Storage Health"
+        case .networkLeak: return "WAN Leaks"
         }
     }
 
@@ -36,6 +38,7 @@ enum ApexPanelKind: String, CaseIterable, Identifiable, Codable, Hashable, Senda
         case .aiModel: return "sparkles"
         case .processes: return "list.bullet.rectangle"
         case .diskHealth: return "externaldrive.badge.checkmark"
+        case .networkLeak: return "shield.lefthalf.filled"
         }
     }
 
@@ -45,6 +48,7 @@ enum ApexPanelKind: String, CaseIterable, Identifiable, Codable, Hashable, Senda
         case .cpu, .processes: return 360
         case .connectivity, .aiModel: return 420
         case .diskHealth: return 400
+        case .networkLeak: return 400
         default: return 320
         }
     }
@@ -59,6 +63,7 @@ enum ApexPanelKind: String, CaseIterable, Identifiable, Codable, Hashable, Senda
         case .aiModel: return (6, 2)
         case .processes: return (12, 2)
         case .diskHealth: return (12, 2)
+        case .networkLeak: return (6, 2)
         }
     }
 }

@@ -11,6 +11,7 @@ final class SystemMonitor {
     let processes  = ProcessData()
     let conn       = ConnData()
     let aiModel    = AIModelData()  // AI model monitoring
+    let networkLeak = NetworkLeakData()
 
     private let cpuCollector      = CPUCollector()
     private let memCollector      = MemoryCollector()
@@ -22,6 +23,7 @@ final class SystemMonitor {
     private let midiCollector     = MIDICollector()
     private let oscCollector      = OSCCollector()
     private let aiModelCollector  = AIModelCollector()  // AI process collector
+    private let leakMonitor       = NetworkLeakMonitor()
 
     private var tasks: [Task<Void, Never>] = []
 
@@ -160,6 +162,9 @@ final class SystemMonitor {
             }
         })
 
+        // WAN Leak Monitor — lightweight outbound-connection watcher (1s poll)
+        Task { await leakMonitor.start(reportingTo: networkLeak) }
+
         // MARK: - SwiftMaestro Distributed Notifications
         // Observe AI activity broadcasts from SwiftMaestro via NSDistributedNotificationCenter.
         // These notifications carry token rates, request lifecycle, and tool call events
@@ -282,6 +287,7 @@ final class SystemMonitor {
         tasks.removeAll()
         oscCollector.stop()
         stopObservingSwiftMaestroNotifications()
+        Task { await leakMonitor.stop() }
     }
 
     // MARK: - TB/USB/Disk correlation

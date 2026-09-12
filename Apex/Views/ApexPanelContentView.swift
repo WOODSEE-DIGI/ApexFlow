@@ -22,6 +22,8 @@ struct ApexPanelContentView: View {
             ProcessView(processes: monitor.processes)
         case .diskHealth:
             DiskHealthView(disk: monitor.disk)
+        case .networkLeak:
+            NetworkLeakView(leakData: monitor.networkLeak)
         }
     }
 }

@@ -15,12 +15,14 @@
 		1227167994917FD9166E711C /* HelperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537FD002B2A17E7FDA0894F /* HelperManager.swift */; };
 		155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */; };
 		163E0302AA4821372E5E2BD9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B597857C4D86B4287CEE4BF /* main.swift */; };
+		1C39179B21F631B52372CE35 /* NetworkLeakData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC10C21BB8AF22F23AFA7301 /* NetworkLeakData.swift */; };
 		273915CB7B994CFA9D384E17 /* CPUView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */; };
 		275A7E97159F2F03C4FB7575 /* MIDICollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23201D5FB3BA5E35F7447616 /* MIDICollector.swift */; };
 		2E7A7910C86E6126EFD9C9F5 /* ApexWorkspaceLayoutState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */; };
 		2E92C484E1E6A7AC265E7264 /* ProcessData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */; };
 		2F71513A3FC652548B436DEA /* ProcessCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */; };
 		30D7588BFD8C58BD8FAABBD1 /* ConnCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */; };
+		310DB9F55E3692F72D679CBB /* NetworkLeakMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60019682F09D27BCA0531CDA /* NetworkLeakMonitor.swift */; };
 		3246894483BDB26DBFD80224 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 883D801C6AFE8CA4B7CE1E02 /* Network.framework */; };
 		36BEB3EFA8DF9693291B4490 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76364981C638AC0D963FDF2A /* ServiceManagement.framework */; };
 		37465073A4EEA363C927DFA9 /* OSCCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FB254EC2EB524CB22AD66B /* OSCCollector.swift */; };
@@ -62,6 +64,7 @@
 		CB2311282FD6CCC5992DD9AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26B2C5FF63661A4B069D512F /* Assets.xcassets */; };
 		CD7EFC8F7D5C731D16D1DC0E /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D48E1D8348E548E199892BA /* SharedViews.swift */; };
 		D3776807216C943B8CEC7108 /* ApexPanelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */; };
+		DC95884996013958BE27FD19 /* NetworkLeakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */; };
 		DE47C3CC9C24A6C9B209095F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD20992547C0F4DA981CB9E /* IOKit.framework */; };
 		E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F741FA34705451DDB01BCC8 /* MemoryView.swift */; };
 		F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D5E3623F4524F97BABBB59 /* ProcessView.swift */; };
@@ -107,6 +110,7 @@
 		5C345A3D17CA73A02CED6F82 /* SANDBOX_FIXES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SANDBOX_FIXES.md; sourceTree = "<group>"; };
 		5D9B4DBCEFD2C901EFBDC929 /* AIModelRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelRegistry.swift; sourceTree = "<group>"; };
 		5FB8823279479366FB5E0938 /* ConnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnView.swift; sourceTree = "<group>"; };
+		60019682F09D27BCA0531CDA /* NetworkLeakMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakMonitor.swift; sourceTree = "<group>"; };
 		603103A7164954939A7AB6D0 /* build-appstore.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-appstore.sh"; sourceTree = "<group>"; };
 		68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
 		76364981C638AC0D963FDF2A /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
@@ -124,6 +128,7 @@
 		980FC2072EBD76FF90D354AB /* com.woodsee-digi.ApexFlowHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = "com.woodsee-digi.ApexFlowHelper"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A52005BE92E34654129D805 /* ApexHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApexHelper.entitlements; sourceTree = "<group>"; };
 		9B597857C4D86B4287CEE4BF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakView.swift; sourceTree = "<group>"; };
 		A1A833296B7FB6FF34395FEF /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = exportOptions.plist; sourceTree = "<group>"; };
 		A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnCollector.swift; sourceTree = "<group>"; };
 		A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCollector.swift; sourceTree = "<group>"; };
@@ -142,6 +147,7 @@
 		E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCollector.swift; sourceTree = "<group>"; };
 		E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexWorkspaceLayoutState.swift; sourceTree = "<group>"; };
 		EB208F8FEEDCAB9D67363C34 /* Apex-AppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Apex-AppStore.entitlements"; sourceTree = "<group>"; };
+		EC10C21BB8AF22F23AFA7301 /* NetworkLeakData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakData.swift; sourceTree = "<group>"; };
 		F00444EADC962755E59AAA56 /* MCPToolCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPToolCall.swift; sourceTree = "<group>"; };
 		F00BFCEDE97A5192880BA118 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		F1C7EFFE225005C357614EE3 /* ApexFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApexFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,6 +206,7 @@
 				A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */,
 				23201D5FB3BA5E35F7447616 /* MIDICollector.swift */,
 				7AC4A47C24F1E2643338678F /* NetworkCollector.swift */,
+				60019682F09D27BCA0531CDA /* NetworkLeakMonitor.swift */,
 				97FB254EC2EB524CB22AD66B /* OSCCollector.swift */,
 				79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */,
 				A6F6A0A62DCBFC3E0D4B1AE5 /* RESUME_HERE.md */,
@@ -241,6 +248,7 @@
 				F00444EADC962755E59AAA56 /* MCPToolCall.swift */,
 				5702AD032DC496F1B1789F10 /* MemoryData.swift */,
 				9340E22D8A312200C735505F /* NetworkData.swift */,
+				EC10C21BB8AF22F23AFA7301 /* NetworkLeakData.swift */,
 				BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */,
 				4347F6E48246CFAFB831E39C /* ThemePreset.swift */,
 			);
@@ -272,6 +280,7 @@
 				1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */,
 				448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */,
 				0F741FA34705451DDB01BCC8 /* MemoryView.swift */,
+				9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */,
 				28730CC0CD85C0CB18C148A2 /* NetworkView.swift */,
 				A4D5E3623F4524F97BABBB59 /* ProcessView.swift */,
 				4F2A8D1363E025A334E316D0 /* ThemeSettingsView.swift */,
@@ -492,6 +501,9 @@
 				E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */,
 				AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */,
 				C3508A8FCA3DC6942FB28CC0 /* NetworkData.swift in Sources */,
+				1C39179B21F631B52372CE35 /* NetworkLeakData.swift in Sources */,
+				310DB9F55E3692F72D679CBB /* NetworkLeakMonitor.swift in Sources */,
+				DC95884996013958BE27FD19 /* NetworkLeakView.swift in Sources */,
 				A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */,
 				37465073A4EEA363C927DFA9 /* OSCCollector.swift in Sources */,
 				2F71513A3FC652548B436DEA /* ProcessCollector.swift in Sources */,
