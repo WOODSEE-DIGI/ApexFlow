@@ -12,11 +12,15 @@ actor DiskCollector {
         "/System/Volumes/",
         "/Library/Developer/",
         "/Volumes/.timemachine/",
+        "/Volumes/com.apple.TimeMachine.localsnapshots/",
         "/private/var/run/com.apple.security.cryptexd/"
     ]
 
     /// Names that are clearly Apple internal volumes, not user drives.
     private let excludeNamePrefixes = ["com.apple."]
+
+    /// Hide tiny transient volumes (e.g. temporary DMGs created during app builds).
+    private let minimumVolumeBytes: UInt64 = 100_000_000  // 100 MB
 
     func collect() -> [DiskSnapshot] {
         let now = Date()
@@ -60,6 +64,9 @@ actor DiskCollector {
             let total = UInt64(vfs.f_blocks) * blockSize
             let free  = UInt64(vfs.f_bfree)  * blockSize
             let used  = total - free
+
+            // Drop tiny transient volumes (temp DMGs, installers, etc.).
+            if total < minimumVolumeBytes { continue }
 
             // I/O rates
             var readRate = 0.0, writeRate = 0.0
