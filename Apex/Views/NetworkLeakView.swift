@@ -45,6 +45,16 @@ struct NetworkLeakView: View {
             } else {
                 alertList
             }
+
+            HStack(spacing: 4) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 8))
+                Text("Observer-only: WAN Leaks shows connections but cannot block them.")
+                    .font(.system(size: 8))
+            }
+            .foregroundStyle(Theme.overlay1)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 4)
         }
         .padding(Theme.panelPadding)
         .sheet(item: $reportToShow) { report in
@@ -139,6 +149,7 @@ private struct LeakAlertCard: View {
                 .buttonStyle(.borderless)
                 .font(.system(size: 8, weight: .semibold))
                 .foregroundStyle(Theme.green)
+                .help("Stop alerting for this app. Does not block traffic.")
 
                 Button("Silence endpoint") {
                     leakData.silenceEndpoint(alert)
@@ -146,6 +157,7 @@ private struct LeakAlertCard: View {
                 .buttonStyle(.borderless)
                 .font(.system(size: 8, weight: .semibold))
                 .foregroundStyle(Theme.yellow)
+                .help("Stop alerting for this destination. Does not block traffic.")
 
                 Button("Dismiss") {
                     leakData.dismiss(alert)
@@ -153,6 +165,7 @@ private struct LeakAlertCard: View {
                 .buttonStyle(.borderless)
                 .font(.system(size: 8))
                 .foregroundStyle(Theme.overlay1)
+                .help("Remove this single alert.")
 
                 Spacer()
 
