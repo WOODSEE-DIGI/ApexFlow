@@ -185,6 +185,10 @@ actor DiskCollector {
                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         let kr = IOObjectGetClass(entry, &name)
         guard kr == KERN_SUCCESS else { return nil }
-        return String(cString: unsafeBitCast(name, to: [CChar].self))
+        return withUnsafePointer(to: &name) { ptr in
+            ptr.withMemoryRebound(to: CChar.self, capacity: MemoryLayout<io_name_t>.size) {
+                String(cString: $0)
+            }
+        }
     }
 }
