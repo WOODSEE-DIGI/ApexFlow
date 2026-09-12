@@ -39,17 +39,47 @@ actor NetworkLeakMonitor {
         let newKeys = connections.subtracting(previousConnections)
         defer { previousConnections = connections }
 
+        #if DEBUG
+        print("[WAN] scan found \(connections.count) established connections, \(newKeys.count) new")
+        #endif
+
         guard await data.isEnabled else { return }
 
         for key in newKeys {
-            guard let conn = parseConnectionKey(key) else { continue }
-            guard !isPrivateAddress(conn.remoteAddress) else { continue }
-            guard await !data.ignoredPrivate || !isPrivateAddress(conn.localAddress) else { continue }
+            guard let conn = parseConnectionKey(key) else {
+                #if DEBUG
+                print("[WAN] failed to parse: \(key)")
+                #endif
+                continue
+            }
+            #if DEBUG
+            print("[WAN] candidate: \(conn.command) \(conn.remoteAddress):\(conn.remotePort)")
+            #endif
+            guard !isPrivateAddress(conn.remoteAddress) else {
+                #if DEBUG
+                print("[WAN] ignored private remote: \(conn.remoteAddress)")
+                #endif
+                continue
+            }
+            guard await !data.ignoredPrivate || !isPrivateAddress(conn.localAddress) else {
+                #if DEBUG
+                print("[WAN] ignored private local: \(conn.localAddress)")
+                #endif
+                continue
+            }
 
             let alert = buildAlert(conn)
-            guard await !data.isApproved(alert) else { continue }
+            guard await !data.isApproved(alert) else {
+                #if DEBUG
+                print("[WAN] approved/ignored: \(conn.command)")
+                #endif
+                continue
+            }
 
             await MainActor.run { data.add(alert) }
+            #if DEBUG
+            print("[WAN] alert added: \(conn.command) -> \(conn.remoteAddress):\(conn.remotePort)")
+            #endif
 
             // Resolve the remote hostname in the background so the UI updates
             // when the PTR record comes back.
@@ -107,15 +137,34 @@ actor NetworkLeakMonitor {
 
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
+
+        #if DEBUG
+        print("[WAN] lsof termination status: \(task.terminationStatus)")
+        #endif
+
         guard task.terminationStatus == 0,
-              let output = String(data: data, encoding: .utf8) else { return [] }
+              let output = String(data: data, encoding: .utf8) else {
+            #if DEBUG
+            print("[WAN] lsof failed or produced no output")
+            #endif
+            return []
+        }
+
+        let lines = output.components(separatedBy: .newlines)
+        #if DEBUG
+        print("[WAN] lsof raw lines: \(lines.count)")
+        if let first = lines.first { print("[WAN] lsof header: \(first)") }
+        #endif
 
         var result = Set<String>()
-        for line in output.components(separatedBy: .newlines).dropFirst() {
+        for line in lines.dropFirst() {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
             guard !trimmed.isEmpty else { continue }
             result.insert(trimmed)
         }
+        #if DEBUG
+        print("[WAN] lsof parsed connections: \(result.count)")
+        #endif
         return result
     }
 
