@@ -66,6 +66,7 @@
 		D3776807216C943B8CEC7108 /* ApexPanelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */; };
 		DC95884996013958BE27FD19 /* NetworkLeakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */; };
 		DE47C3CC9C24A6C9B209095F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD20992547C0F4DA981CB9E /* IOKit.framework */; };
+		E3DCBB9F740014D9F736ED5D /* NetworkLeakInvestigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4126D557FAA2A14EC90B5C /* NetworkLeakInvestigator.swift */; };
 		E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F741FA34705451DDB01BCC8 /* MemoryView.swift */; };
 		F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D5E3623F4524F97BABBB59 /* ProcessView.swift */; };
 		F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */; };
@@ -129,6 +130,7 @@
 		9A52005BE92E34654129D805 /* ApexHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApexHelper.entitlements; sourceTree = "<group>"; };
 		9B597857C4D86B4287CEE4BF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakView.swift; sourceTree = "<group>"; };
+		9D4126D557FAA2A14EC90B5C /* NetworkLeakInvestigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakInvestigator.swift; sourceTree = "<group>"; };
 		A1A833296B7FB6FF34395FEF /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = exportOptions.plist; sourceTree = "<group>"; };
 		A30C40CBCE1EDDBE975B216A /* ConnCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnCollector.swift; sourceTree = "<group>"; };
 		A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCollector.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */,
 				23201D5FB3BA5E35F7447616 /* MIDICollector.swift */,
 				7AC4A47C24F1E2643338678F /* NetworkCollector.swift */,
+				9D4126D557FAA2A14EC90B5C /* NetworkLeakInvestigator.swift */,
 				60019682F09D27BCA0531CDA /* NetworkLeakMonitor.swift */,
 				97FB254EC2EB524CB22AD66B /* OSCCollector.swift */,
 				79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */,
@@ -502,6 +505,7 @@
 				AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */,
 				C3508A8FCA3DC6942FB28CC0 /* NetworkData.swift in Sources */,
 				1C39179B21F631B52372CE35 /* NetworkLeakData.swift in Sources */,
+				E3DCBB9F740014D9F736ED5D /* NetworkLeakInvestigator.swift in Sources */,
 				310DB9F55E3692F72D679CBB /* NetworkLeakMonitor.swift in Sources */,
 				DC95884996013958BE27FD19 /* NetworkLeakView.swift in Sources */,
 				A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */,

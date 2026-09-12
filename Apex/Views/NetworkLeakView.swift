@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NetworkLeakView: View {
     let leakData: NetworkLeakData
+    @State private var reportToShow: InvestigationReport?
 
     var body: some View {
         VStack(spacing: 6) {
@@ -46,6 +47,9 @@ struct NetworkLeakView: View {
             }
         }
         .padding(Theme.panelPadding)
+        .sheet(item: $reportToShow) { report in
+            InvestigationReportSheet(report: report)
+        }
     }
 
     private var emptyState: some View {
@@ -69,7 +73,17 @@ struct NetworkLeakView: View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVStack(spacing: 4) {
                 ForEach(leakData.alerts.prefix(50)) { alert in
-                    LeakAlertCard(alert: alert, leakData: leakData)
+                    LeakAlertCard(
+                        alert: alert,
+                        leakData: leakData,
+                        onShowInvestigation: { reportToShow = alert.investigation },
+                        onInvestigate: {
+                            Task {
+                                await leakData.investigate(alert)
+                                reportToShow = alert.investigation
+                            }
+                        }
+                    )
                 }
             }
             .padding(.horizontal, 4)
@@ -80,6 +94,8 @@ struct NetworkLeakView: View {
 private struct LeakAlertCard: View {
     let alert: WANConnectionAlert
     let leakData: NetworkLeakData
+    let onShowInvestigation: () -> Void
+    let onInvestigate: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -140,6 +156,22 @@ private struct LeakAlertCard: View {
 
                 Spacer()
 
+                if alert.investigation != nil {
+                    Button("View findings") {
+                        onShowInvestigation()
+                    }
+                    .buttonStyle(.borderless)
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundStyle(Theme.blue)
+                } else {
+                    Button("Investigate") {
+                        onInvestigate()
+                    }
+                    .buttonStyle(.borderless)
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundStyle(Theme.blue)
+                }
+
                 Text(timeAgo)
                     .font(.system(size: 8, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
@@ -179,5 +211,71 @@ private struct LeakAlertCard: View {
         let minutes = seconds / 60
         if minutes < 60 { return "\(minutes)m ago" }
         return "\(minutes / 60)h ago"
+    }
+}
+
+// MARK: - Investigation Report Sheet
+
+private struct InvestigationReportSheet: View {
+    let report: InvestigationReport
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Investigation findings")
+                    .font(.system(size: 14, weight: .bold))
+                Spacer()
+                Button("Close") { dismiss() }
+                    .buttonStyle(.borderless)
+            }
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(report.summary)
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.text)
+
+                    if let path = report.executablePath {
+                        detailRow(title: "Executable", value: path)
+                    }
+                    if let name = report.bundleName {
+                        detailRow(title: "Bundle name", value: name)
+                    }
+                    if let id = report.bundleIdentifier {
+                        detailRow(title: "Bundle ID", value: id)
+                    }
+                    if let cl = report.commandLine {
+                        detailRow(title: "Command line", value: cl)
+                    }
+
+                    ForEach(report.configFindings) { finding in
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(finding.source)
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(Theme.blue)
+                            Text(finding.detail)
+                                .font(.system(size: 10))
+                                .foregroundStyle(Theme.subtext1)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .frame(minWidth: 420, idealWidth: 480, minHeight: 220, idealHeight: 320)
+        .background(Theme.base)
+    }
+
+    private func detailRow(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(Theme.overlay0)
+            Text(value)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(Theme.subtext1)
+                .textSelection(.enabled)
+        }
     }
 }

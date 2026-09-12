@@ -34,6 +34,8 @@ struct WANConnectionAlert: Identifiable, Codable, Sendable, Hashable {
     let advice: String
     let reason: String
     var resolvedHostname: String?
+    var commandLine: String?
+    var investigation: InvestigationReport?
 
     var displayName: String {
         bundleID?.components(separatedBy: ".").last?.localizedCapitalized
@@ -47,6 +49,32 @@ struct WANConnectionAlert: Identifiable, Codable, Sendable, Hashable {
             return "\(host):\(remotePort)"
         }
         return remoteEndpoint
+    }
+}
+
+// MARK: - Investigation Report
+
+/// Evidence gathered by reading files associated with a process to explain a connection.
+struct InvestigationReport: Identifiable, Codable, Sendable, Hashable {
+    let id: String
+    let alertID: String
+    let executablePath: String?
+    let bundleIdentifier: String?
+    let bundleName: String?
+    let commandLine: String?
+    let configFindings: [ConfigFinding]
+    let summary: String
+}
+
+struct ConfigFinding: Identifiable, Codable, Sendable, Hashable {
+    let id: String
+    let source: String
+    let detail: String
+
+    init(id: String = UUID().uuidString, source: String, detail: String) {
+        self.id = id
+        self.source = source
+        self.detail = detail
     }
 }
 
@@ -113,6 +141,17 @@ final class NetworkLeakData {
     func setResolvedHostname(id: String, hostname: String?) {
         guard let idx = alerts.firstIndex(where: { $0.id == id }) else { return }
         alerts[idx].resolvedHostname = hostname
+    }
+
+    func setInvestigation(_ report: InvestigationReport) {
+        guard let idx = alerts.firstIndex(where: { $0.id == report.alertID }) else { return }
+        alerts[idx].investigation = report
+    }
+
+    func investigate(_ alert: WANConnectionAlert) async {
+        let investigator = NetworkLeakInvestigator()
+        let report = await investigator.investigate(alert: alert)
+        await MainActor.run { setInvestigation(report) }
     }
 
     func approve(_ alert: WANConnectionAlert) {
