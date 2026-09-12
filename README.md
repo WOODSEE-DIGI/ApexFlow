@@ -85,11 +85,7 @@ brew tap WOODSEE-DIGI/tap
 brew install --cask apex-flow
 ```
 
-Because the app is ad-hoc signed, macOS Gatekeeper will quarantine it on first launch. Either right-click the app and choose **Open**, or remove the quarantine attribute:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/ApexFlow.app
-```
+Apex Flow is signed with a Developer ID certificate and notarized by Apple. On first launch you may still see a Gatekeeper prompt because the app was downloaded from the internet; click **Open** to allow it.
 
 ### Build from Source
 
