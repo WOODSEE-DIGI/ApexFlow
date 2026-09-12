@@ -33,6 +33,7 @@ struct WANConnectionAlert: Identifiable, Codable, Sendable, Hashable {
     let risk: WANAlertRisk
     let advice: String
     let reason: String
+    var resolvedHostname: String?
 
     var displayName: String {
         bundleID?.components(separatedBy: ".").last?.localizedCapitalized
@@ -40,6 +41,13 @@ struct WANConnectionAlert: Identifiable, Codable, Sendable, Hashable {
     }
 
     var remoteEndpoint: String { "\(remoteAddress):\(remotePort)" }
+
+    var displayEndpoint: String {
+        if let host = resolvedHostname, !host.isEmpty {
+            return "\(host):\(remotePort)"
+        }
+        return remoteEndpoint
+    }
 }
 
 // MARK: - Leak Monitor Settings
@@ -100,6 +108,11 @@ final class NetworkLeakData {
 
     func dismiss(_ alert: WANConnectionAlert) {
         alerts.removeAll { $0.id == alert.id }
+    }
+
+    func setResolvedHostname(id: String, hostname: String?) {
+        guard let idx = alerts.firstIndex(where: { $0.id == id }) else { return }
+        alerts[idx].resolvedHostname = hostname
     }
 
     func approve(_ alert: WANConnectionAlert) {

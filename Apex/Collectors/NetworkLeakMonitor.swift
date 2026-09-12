@@ -1,6 +1,7 @@
 import Foundation
 import Network
 import AppKit
+import Darwin
 
 // MARK: - Network Leak Monitor
 
@@ -13,6 +14,7 @@ import AppKit
 actor NetworkLeakMonitor {
     private var previousConnections: Set<String> = []
     private var isRunning = false
+    private var hostnameCache: [String: String?] = [:]
 
     func start(reportingTo data: NetworkLeakData) {
         guard !isRunning else { return }
@@ -48,7 +50,43 @@ actor NetworkLeakMonitor {
             guard await !data.isApproved(alert) else { continue }
 
             await MainActor.run { data.add(alert) }
+
+            // Resolve the remote hostname in the background so the UI updates
+            // when the PTR record comes back.
+            Task {
+                let hostname = await resolveHostname(for: conn.remoteAddress)
+                await MainActor.run {
+                    data.setResolvedHostname(id: alert.id, hostname: hostname)
+                }
+            }
         }
+    }
+
+    /// Reverse DNS lookup for an IP address, cached to avoid hammering the resolver.
+    private func resolveHostname(for address: String) async -> String? {
+        if let cached = hostnameCache[address] { return cached }
+
+        let result = await Task.detached(priority: .utility) { () -> String? in
+            var hints = addrinfo()
+            hints.ai_flags = AI_NUMERICHOST
+            hints.ai_family = AF_UNSPEC
+            hints.ai_socktype = SOCK_STREAM
+
+            var info: UnsafeMutablePointer<addrinfo>?
+            guard getaddrinfo(address, nil, &hints, &info) == 0 else { return nil }
+            defer { freeaddrinfo(info) }
+
+            var hostBuffer = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+            guard let addr = info?.pointee.ai_addr,
+                  let addrlen = info?.pointee.ai_addrlen else { return nil }
+            guard getnameinfo(addr, addrlen, &hostBuffer, socklen_t(NI_MAXHOST), nil, 0, NI_NAMEREQD) == 0 else { return nil }
+            let bytes = hostBuffer.map(UInt8.init)
+            let terminator = bytes.firstIndex(of: 0) ?? bytes.endIndex
+            return String(decoding: bytes[..<terminator], as: UTF8.self)
+        }.value
+
+        hostnameCache[address] = result
+        return result
     }
 
     /// Runs `lsof -iTCP -sTCP:ESTABLISHED` and returns a set of raw connection strings.
@@ -169,6 +207,8 @@ actor NetworkLeakMonitor {
     // MARK: - Risk assessment
 
     private func assessRisk(processName: String, bundleID: String?, port: Int) -> WANAlertRisk {
+        let lower = processName.lowercased()
+
         if let bundle = bundleID {
             if bundle.hasPrefix("com.apple.") {
                 return .low
@@ -178,7 +218,10 @@ actor NetworkLeakMonitor {
             }
         }
 
-        let lower = processName.lowercased()
+        if let known = ConnectionAdvisor.knownApps[lower] {
+            return known.risk
+        }
+
         if lower.contains("helper") || lower.contains("agent") || lower.contains("daemon") {
             return .medium
         }
@@ -213,9 +256,9 @@ actor NetworkLeakMonitor {
             return false
         }
 
-        // IPv6 link-local / unique-local / loopback / multicast
-        if trimmed.hasPrefix("fe80:") || trimmed.hasPrefix("fc00:") ||
-           trimmed.hasPrefix("fd00:") || trimmed.hasPrefix("ff00:") ||
+        // IPv6 link-local / unique-local (fc00::/7) / loopback / multicast
+        if trimmed.hasPrefix("fe80:") || trimmed.hasPrefix("fc") ||
+           trimmed.hasPrefix("fd") || trimmed.hasPrefix("ff00:") ||
            trimmed == "::1" {
             return true
         }
@@ -258,7 +301,20 @@ private enum ConnectionAdvisor {
         "com.apple.dt.Xcode"
     ]
 
+    struct KnownApp {
+        let description: String
+        let risk: WANAlertRisk
+    }
+
+    static let knownApps: [String: KnownApp] = [
+        "syncthing": KnownApp(description: "Syncthing peer-to-peer file sync", risk: .low)
+    ]
+
     static func reason(process: String, port: Int) -> String {
+        let lower = process.lowercased()
+        if let known = knownApps[lower] {
+            return "\(known.description)."
+        }
         if let portReason = portReasons[port] {
             return "\(process) is using \(portReason)."
         }
@@ -268,28 +324,31 @@ private enum ConnectionAdvisor {
     static func advice(risk: WANAlertRisk, process: String, endpoint: String) -> String {
         switch risk {
         case .low:
-            return "This is a first-party or explicitly trusted process contacting a well-known service. You can usually allow it."
+            return "\(process) is contacting \(endpoint). This is a recognised app or service and is usually expected."
         case .medium:
             return "\(process) is contacting \(endpoint). If you recognise the app and were expecting it to use the network, this is normal. Otherwise you can silence this endpoint."
         case .high:
-            return "\(process) is making an unusual outbound connection. If you did not recently launch or authorise this app, consider investigating it in the Processes panel."
+            return "\(process) is making an unusual outbound connection to \(endpoint). If you did not recently launch or authorise this app, consider investigating it in the Processes panel."
         }
     }
 
     private static let portReasons: [Int: String] = [
-        53:   "DNS to look up a domain name",
-        80:   "unencrypted HTTP web traffic",
-        443:  "encrypted HTTPS web traffic",
-        123:  "NTP to synchronise the system clock",
-        25:   "SMTP to send email",
-        110:  "POP3 to receive email",
-        143:  "IMAP to sync email",
-        465:  "SMTPS (encrypted email sending)",
-        587:  "SMTP submission (encrypted email sending)",
-        993:  "IMAPS (encrypted email sync)",
-        995:  "POP3S (encrypted email retrieval)",
-        22:   "SSH for remote shell access",
-        3389: "Remote Desktop Protocol",
-        5900: "VNC screen sharing"
+        53:    "DNS to look up a domain name",
+        80:    "unencrypted HTTP web traffic",
+        443:   "encrypted HTTPS web traffic",
+        123:   "NTP to synchronise the system clock",
+        25:    "SMTP to send email",
+        110:   "POP3 to receive email",
+        143:   "IMAP to sync email",
+        465:   "SMTPS (encrypted email sending)",
+        587:   "SMTP submission (encrypted email sending)",
+        993:   "IMAPS (encrypted email sync)",
+        995:   "POP3S (encrypted email retrieval)",
+        22:    "SSH for remote shell access",
+        3389:  "Remote Desktop Protocol",
+        5900:  "VNC screen sharing",
+        22000: "Syncthing sync protocol (peer-to-peer file sync)",
+        21027: "Syncthing local discovery",
+        8384:  "Syncthing web GUI"
     ]
 }

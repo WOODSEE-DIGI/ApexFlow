@@ -93,9 +93,16 @@ private struct LeakAlertCard: View {
 
                 Spacer()
 
-                Text(alert.remoteEndpoint)
+                Text(alert.displayEndpoint)
                     .font(.system(size: 9, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
+                    .lineLimit(1)
+            }
+
+            if alert.resolvedHostname != nil {
+                Text(alert.remoteEndpoint)
+                    .font(.system(size: 8, design: .monospaced))
+                    .foregroundStyle(Theme.overlay1)
                     .lineLimit(1)
             }
 
