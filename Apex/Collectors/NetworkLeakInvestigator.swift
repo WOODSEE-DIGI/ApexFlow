@@ -7,6 +7,12 @@ import Darwin
 /// is making a network connection when simple heuristics don't explain it.
 actor NetworkLeakInvestigator {
 
+    private let profiles: [any InvestigationProfile]
+
+    init(profiles: [any InvestigationProfile] = InvestigationProfiles.default) {
+        self.profiles = profiles
+    }
+
     func investigate(alert: WANConnectionAlert) async -> InvestigationReport {
         let pid = alert.pid
         let executablePath = Self.executablePath(forPID: pid)
@@ -14,9 +20,9 @@ actor NetworkLeakInvestigator {
 
         var configFindings: [ConfigFinding] = []
 
-        // Syncthing: read config.xml to show devices/folders.
-        if alert.processName.lowercased() == "syncthing" {
-            if let finding = await syncthingFinding(commandLine: commandLine) {
+        // Run every matching profile to collect evidence.
+        for profile in profiles where profile.matches(alert: alert, executablePath: executablePath) {
+            if let finding = await profile.finding(for: alert, commandLine: commandLine, executablePath: executablePath) {
                 configFindings.append(finding)
             }
         }
@@ -108,81 +114,6 @@ actor NetworkLeakInvestigator {
         return info
     }
 
-    // MARK: - Syncthing config
-
-    private func syncthingFinding(commandLine: String?) async -> ConfigFinding? {
-        let configURL: URL
-
-        if let customHome = Self.extractHome(from: commandLine) {
-            configURL = customHome.appendingPathComponent("config.xml")
-        } else {
-            // Default macOS Syncthing config locations
-            let defaults = [
-                FileManager.default.homeDirectoryForCurrentUser
-                    .appendingPathComponent("Library/Application Support/Syncthing/config.xml"),
-                FileManager.default.homeDirectoryForCurrentUser
-                    .appendingPathComponent(".config/syncthing/config.xml")
-            ]
-            guard let found = defaults.first(where: { FileManager.default.fileExists(atPath: $0.path) }) else {
-                return ConfigFinding(
-                    source: "Syncthing config",
-                    detail: "No Syncthing config.xml found in the default locations."
-                )
-            }
-            configURL = found
-        }
-
-        guard FileManager.default.fileExists(atPath: configURL.path) else {
-            return ConfigFinding(
-                source: "Syncthing config",
-                detail: "Expected config at \(configURL.path) but it does not exist."
-            )
-        }
-
-        do {
-            let xml = try XMLDocument(contentsOf: configURL)
-            let deviceCount = try? xml.nodes(forXPath: "//device").count
-            let folderCount = try? xml.nodes(forXPath: "//folder").count
-            let deviceNames = (try? xml.nodes(forXPath: "//device/@name").compactMap { $0.stringValue }) ?? []
-
-            var detail = "Config found at \(configURL.path)."
-            if let devices = deviceCount {
-                detail += " It defines \(devices) device(s)"
-                if !deviceNames.isEmpty {
-                    detail += ": \(deviceNames.joined(separator: ", "))."
-                } else {
-                    detail += "."
-                }
-            }
-            if let folders = folderCount {
-                detail += " There are \(folders) shared folder(s)."
-            }
-            detail += " A connection on port 22000 is usually direct sync with one of these devices."
-            return ConfigFinding(source: "Syncthing config", detail: detail)
-        } catch {
-            return ConfigFinding(
-                source: "Syncthing config",
-                detail: "Found config at \(configURL.path) but could not parse it: \(error.localizedDescription)"
-            )
-        }
-    }
-
-    private static func extractHome(from commandLine: String?) -> URL? {
-        guard let cl = commandLine else { return nil }
-        // Syncthing supports -home=<path> and -home <path>
-        if let range = cl.range(of: "-home=") {
-            let after = cl[range.upperBound...]
-            let token = String(after.split(separator: " ").first ?? "")
-            return URL(fileURLWithPath: (token as NSString).expandingTildeInPath)
-        }
-        if let range = cl.range(of: "-home ") {
-            let after = cl[range.upperBound...]
-            let token = String(after.split(separator: " ").first ?? "")
-            return URL(fileURLWithPath: (token as NSString).expandingTildeInPath)
-        }
-        return nil
-    }
-
     // MARK: - Summary
 
     private static func summary(
@@ -210,5 +141,26 @@ actor NetworkLeakInvestigator {
 
         parts.append("The remote endpoint is \(alert.displayEndpoint).")
         return parts.joined(separator: " ")
+    }
+}
+
+// MARK: - Profile matching helpers
+
+extension InvestigationProfile {
+    func matches(alert: WANConnectionAlert, executablePath: String?) -> Bool {
+        let procLower = alert.processName.lowercased()
+        if processNames.contains(where: { procLower.contains($0.lowercased()) || $0.lowercased().contains(procLower) }) {
+            return true
+        }
+        if let bid = alert.bundleID?.lowercased(),
+           bundleIDs.contains(where: { bid == $0.lowercased() || bid.hasPrefix($0.lowercased() + ".") }) {
+            return true
+        }
+        if let path = executablePath?.lowercased() {
+            for name in processNames {
+                if path.contains(name.lowercased()) { return true }
+            }
+        }
+        return false
     }
 }

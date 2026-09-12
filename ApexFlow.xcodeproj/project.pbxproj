@@ -70,6 +70,7 @@
 		E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F741FA34705451DDB01BCC8 /* MemoryView.swift */; };
 		F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D5E3623F4524F97BABBB59 /* ProcessView.swift */; };
 		F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */; };
+		F6129DA32C565E33C680C850 /* InvestigationProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054C79F2DB75F358B4098143 /* InvestigationProfiles.swift */; };
 		FAA8C023B55B629DBA0E4F43 /* CPUData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0AE68DC4E22CC645240621 /* CPUData.swift */; };
 		FD4FDEEBC98F702F99389ABF /* exportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1A833296B7FB6FF34395FEF /* exportOptions.plist */; };
 /* End PBXBuildFile section */
@@ -85,6 +86,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		054C79F2DB75F358B4098143 /* InvestigationProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestigationProfiles.swift; sourceTree = "<group>"; };
 		06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = APP_STORE_READY.md; sourceTree = "<group>"; };
 		0D48E1D8348E548E199892BA /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		0F741FA34705451DDB01BCC8 /* MemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryView.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				292C61E09FEB6EF4AD4C1EC4 /* CPUCollector.swift */,
 				E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */,
 				A1A833296B7FB6FF34395FEF /* exportOptions.plist */,
+				054C79F2DB75F358B4098143 /* InvestigationProfiles.swift */,
 				A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */,
 				23201D5FB3BA5E35F7447616 /* MIDICollector.swift */,
 				7AC4A47C24F1E2643338678F /* NetworkCollector.swift */,
@@ -497,6 +500,7 @@
 				155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */,
 				1227167994917FD9166E711C /* HelperManager.swift in Sources */,
 				C880F64CA185E0AFA737125F /* HelperProtocol.swift in Sources */,
+				F6129DA32C565E33C680C850 /* InvestigationProfiles.swift in Sources */,
 				C7D0649EA3E20B8203E07E20 /* MCPToolCall.swift in Sources */,
 				275A7E97159F2F03C4FB7575 /* MIDICollector.swift in Sources */,
 				65EF0DEE43D7A1B3E6333A9B /* MemoryCollector.swift in Sources */,
