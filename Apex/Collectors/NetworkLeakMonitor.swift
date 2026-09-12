@@ -61,12 +61,6 @@ actor NetworkLeakMonitor {
                 #endif
                 continue
             }
-            guard await !data.ignoredPrivate || !isPrivateAddress(conn.localAddress) else {
-                #if DEBUG
-                print("[WAN] ignored private local: \(conn.localAddress)")
-                #endif
-                continue
-            }
 
             let alert = buildAlert(conn)
             guard await !data.isApproved(alert) else {
