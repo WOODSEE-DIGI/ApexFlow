@@ -16,14 +16,18 @@ configs:
   Release:
     type: release
     settings:
-      CODE_SIGN_IDENTITY: "-"
+      CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
       CODE_SIGN_STYLE: Manual
-      DEVELOPMENT_TEAM: ""
+      DEVELOPMENT_TEAM: "3BMZ2ULZ54"
   AppStore:
     type: release
     settings:
       CODE_SIGN_STYLE: Automatic
-      DEVELOPMENT_TEAM: YM9493SBXE
+      DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+
+settings:
+  base:
+    ENABLE_HARDENED_RUNTIME: YES
 
 targets:
 
@@ -50,17 +54,19 @@ targets:
         INFOPLIST_FILE: Apex/Info.plist
         CODE_SIGN_ENTITLEMENTS: Apex/Apex.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-      Debug:
-        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
-        DEBUG_INFORMATION_FORMAT: dwarf
-      Release:
-        SWIFT_OPTIMIZATION_LEVEL: "-O"
-        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
-      AppStore:
-        SWIFT_OPTIMIZATION_LEVEL: "-O"
-        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
-        # Switch to sandboxed entitlements for Mac App Store submission
-        CODE_SIGN_ENTITLEMENTS: Apex/Apex-AppStore.entitlements
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+          DEBUG_INFORMATION_FORMAT: dwarf
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGN_STYLE: Manual
+          DEVELOPMENT_TEAM: ""
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+          CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
+          CODE_SIGN_STYLE: Manual
+          DEVELOPMENT_TEAM: "3BMZ2ULZ54"
     dependencies:
       - sdk: CoreWLAN.framework
       - sdk: IOBluetooth.framework
@@ -112,9 +118,14 @@ targets:
         # Install alongside the main Apex binary inside the app bundle
         INSTALL_PATH: "$(BUILT_PRODUCTS_DIR)/ApexFlow.app/Contents/MacOS"
         SKIP_INSTALL: NO
-      Debug:
-        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
-      Release:
-        SWIFT_OPTIMIZATION_LEVEL: "-O"
-      AppStore:
-        SWIFT_OPTIMIZATION_LEVEL: "-O"
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGN_STYLE: Manual
+          DEVELOPMENT_TEAM: ""
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+          CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
+          CODE_SIGN_STYLE: Manual
+          DEVELOPMENT_TEAM: "3BMZ2ULZ54"
