@@ -104,17 +104,14 @@ final class ApexWorkspaceLayoutState {
         tiles = [
             // Top: full-width CPU graph
             tile(.cpu, col: 0, row: 0, colSpan: 12, rowSpan: 2),
-            // Row 2: network + memory/disks
-            tile(.network, col: 0, row: 2, colSpan: 6, rowSpan: 2),
-            tile(.memory, col: 6, row: 2, colSpan: 6, rowSpan: 2),
-            // Row 4: WAN leaks + storage health
-            tile(.networkLeak, col: 0, row: 4, colSpan: 6, rowSpan: 2),
-            tile(.diskHealth, col: 6, row: 4, colSpan: 6, rowSpan: 2),
-            // Left column: connectivity (tall)
-            tile(.connectivity, col: 0, row: 6, colSpan: 6, rowSpan: 4),
-            // Right column: AI model + processes
-            tile(.aiModel, col: 6, row: 6, colSpan: 6, rowSpan: 3),
-            tile(.processes, col: 6, row: 9, colSpan: 6, rowSpan: 5)
+            // Left column
+            tile(.network, col: 0, row: 2, colSpan: 6, rowSpan: 3),
+            tile(.networkLeak, col: 0, row: 5, colSpan: 6, rowSpan: 3),
+            tile(.connectivity, col: 0, row: 8, colSpan: 6, rowSpan: 6),
+            // Right column
+            tile(.memory, col: 6, row: 2, colSpan: 6, rowSpan: 5),
+            tile(.diskHealth, col: 6, row: 7, colSpan: 6, rowSpan: 3),
+            tile(.processes, col: 6, row: 10, colSpan: 6, rowSpan: 4)
         ]
         currentLayoutName = nil
         clampTilesToCanvas(CGSize(width: 1200, height: 1000))
