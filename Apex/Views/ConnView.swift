@@ -275,7 +275,7 @@ private struct USBDeviceRow: View {
     let device: USBDevice
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 5) {
             SpeedBadge(label: device.speed.rawValue, color: speedColor)
             VStack(alignment: .leading, spacing: 0) {
                 Text(device.name)
@@ -285,6 +285,11 @@ private struct USBDeviceRow: View {
                     Text(device.vendor).font(.system(size: 7, design: .monospaced))
                         .foregroundStyle(Theme.overlay0).lineLimit(1)
                 }
+            }
+            Spacer()
+            // I/O sparkline for USB mass-storage devices
+            if device.isStorageLike && !device.readHistory.isEmpty {
+                USBSparkline(readHistory: device.readHistory, writeHistory: device.writeHistory)
             }
         }
     }
@@ -296,6 +301,33 @@ private struct USBDeviceRow: View {
         case .highSpeed:             return Theme.blue
         default:                     return Theme.overlay1
         }
+    }
+}
+
+private struct USBSparkline: View {
+    let readHistory: [DataPoint]
+    let writeHistory: [DataPoint]
+
+    private var peak: Double {
+        max(readHistory.map(\.value).max() ?? 0,
+            writeHistory.map(\.value).max() ?? 0,
+            1_048_576)
+    }
+
+    var body: some View {
+        Chart {
+            ForEach(readHistory) { p in
+                AreaMark(x: .value("t", p.time), y: .value("r", p.value))
+                    .foregroundStyle(Theme.diskRead.opacity(0.5))
+            }
+            ForEach(writeHistory) { p in
+                LineMark(x: .value("t", p.time), y: .value("w", p.value))
+                    .foregroundStyle(Theme.diskWrite).lineStyle(StrokeStyle(lineWidth: 1))
+            }
+        }
+        .chartXAxis(.hidden).chartYAxis(.hidden)
+        .chartYScale(domain: 0...peak)
+        .frame(width: 45, height: 14)
     }
 }
 

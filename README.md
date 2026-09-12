@@ -52,8 +52,8 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 ### Connectivity Panel
 - **WiFi** — SSID, signal bars, RSSI (dBm), link rate, channel, band (2.4 / 5 / 6 GHz), and security
 - **Bluetooth** — Connected devices with type icons and RSSI signal bars
-- **Thunderbolt** — All ports enumerated via `system_profiler`, showing negotiated link speed (≤40G / 40G), protocol mode (TB3 / TB4 / USB4), connected device name, and live aggregated I/O activity sparklines
-- **USB** — Full device list via `IOUSBHostDevice`, with speed-coded badges (USB4 / SS+ / SS / HS / FS / LS) and vendor names
+- **Thunderbolt** — All ports enumerated via `system_profiler`, showing negotiated link speed (≤40G / 40G), protocol mode (TB3 / TB4 / USB4), connected device name, and live per-port I/O activity sparklines
+- **USB** — Full device list via `IOUSBHostDevice`, with speed-coded badges (USB4 / SS+ / SS / HS / FS / LS), vendor names, and live per-device throughput sparklines for USB mass-storage devices
 - **MIDI** — Live CoreMIDI monitoring with a 16-channel activity grid per device and decoded message display (Note On/Off, CC, Program Change, Pitchbend)
 - **OSC** — Open Sound Control listener on UDP port 8000, with a real-time decoded message log
 
@@ -199,8 +199,8 @@ Supported type tags: `i` (int32), `f` (float32), `d` (float64), `s` (string), `b
 
 - **Process kill** requires the app to run unsandboxed. This prevents Mac App Store distribution in the current build (see [App Store Roadmap](#app-store-roadmap))
 - **WiFi SSID** requires location services — macOS 14+ enforces this for CoreWLAN
-- **Thunderbolt I/O sparklines** show aggregated external disk throughput distributed across storage ports, not per-port exact throughput (macOS does not expose per-TB-port bandwidth in user space)
-- **USB throughput** is not available per-device from user space; speed badges show negotiated bus speed only
+- **Per-port Thunderbolt I/O** is estimated by attributing each external disk's I/O to the Thunderbolt controller it is attached to. It is accurate for a single storage device per port, but multiple storage devices on the same controller (e.g., a Thunderbolt dock with two drives) will be summed.
+- **Per-device USB throughput** is shown only for USB mass-storage devices. Non-storage USB devices do not report throughput in user space.
 
 ---
 

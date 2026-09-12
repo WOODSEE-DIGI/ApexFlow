@@ -63,13 +63,14 @@ actor DiskCollector {
 
             // I/O rates
             var readRate = 0.0, writeRate = 0.0
-            if let (curRead, curWrite) = ioMap[device], elapsed > 0 {
-                let prevR = previousBytesRead[device] ?? curRead
-                let prevW = previousBytesWritten[device] ?? curWrite
-                readRate  = max(0, Double(curRead  - prevR) / elapsed)
-                writeRate = max(0, Double(curWrite - prevW) / elapsed)
-                previousBytesRead[device]    = curRead
-                previousBytesWritten[device] = curWrite
+            let transport = ioMap[device]?.transport ?? .unknown
+            if let info = ioMap[device], elapsed > 0 {
+                let prevR = previousBytesRead[device] ?? info.readBytes
+                let prevW = previousBytesWritten[device] ?? info.writeBytes
+                readRate  = max(0, Double(info.readBytes  - prevR) / elapsed)
+                writeRate = max(0, Double(info.writeBytes - prevW) / elapsed)
+                previousBytesRead[device]    = info.readBytes
+                previousBytesWritten[device] = info.writeBytes
             }
 
             snapshots.append(DiskSnapshot(
@@ -80,6 +81,7 @@ actor DiskCollector {
                 freeBytes: free,
                 readRate: readRate,
                 writeRate: writeRate,
+                transport: transport,
                 timestamp: now
             ))
         }
@@ -88,8 +90,14 @@ actor DiskCollector {
     }
 
     // MARK: - IOKit I/O stats
-    private func collectDiskIO() -> [String: (UInt64, UInt64)] {
-        var result: [String: (UInt64, UInt64)] = [:]
+    private struct DiskIOInfo {
+        let readBytes: UInt64
+        let writeBytes: UInt64
+        let transport: DiskTransport
+    }
+
+    private func collectDiskIO() -> [String: DiskIOInfo] {
+        var result: [String: DiskIOInfo] = [:]
 
         let matchDict = IOServiceMatching("IOMediaBSDClient")
         var iterator: io_iterator_t = 0
@@ -106,6 +114,8 @@ actor DiskCollector {
             IORegistryEntryGetParentEntry(service, kIOServicePlane, &parent)
 
             if parent != IO_OBJECT_NULL {
+                defer { IOObjectRelease(parent) }
+
                 // Get BSD name
                 let bsdKey = "BSD Name" as CFString
                 if let bsdRef = IORegistryEntryCreateCFProperty(parent, bsdKey, kCFAllocatorDefault, 0),
@@ -118,10 +128,10 @@ actor DiskCollector {
                        let stats = p["Statistics"] as? [String: Any] {
                         let read  = (stats["Bytes read from block device"]  as? UInt64) ?? 0
                         let write = (stats["Bytes written to block device"] as? UInt64) ?? 0
-                        result[device] = (read, write)
+                        let transport = transportFor(media: parent)
+                        result[device] = DiskIOInfo(readBytes: read, writeBytes: write, transport: transport)
                     }
                 }
-                IOObjectRelease(parent)
             }
 
             // Release CURRENT service before advancing
@@ -129,5 +139,52 @@ actor DiskCollector {
             service = IOIteratorNext(iterator)
         }
         return result
+    }
+
+    /// Walk the IOService tree from a media object up to find Thunderbolt or USB ancestry.
+    private func transportFor(media: io_registry_entry_t) -> DiskTransport {
+        var entry = media
+        // Keep our own reference so we can release the duplicated entries safely.
+        // `media` itself is owned by the caller; do not release it.
+        while true {
+            var parent: io_registry_entry_t = IO_OBJECT_NULL
+            let kr = IORegistryEntryGetParentEntry(entry, kIOServicePlane, &parent)
+
+            // If we duplicated entry (not the original media), release before moving on.
+            if entry != media { IOObjectRelease(entry) }
+
+            guard kr == KERN_SUCCESS, parent != IO_OBJECT_NULL else { return .unknown }
+
+            if let cls = className(of: parent) {
+                if cls == "IOThunderboltController" {
+                    var id: UInt64 = 0
+                    IORegistryEntryGetRegistryEntryID(parent, &id)
+                    IOObjectRelease(parent)
+                    return .thunderbolt(controllerID: id)
+                }
+                if cls == "IOUSBHostDevice" || cls == "IOUSBDevice" {
+                    var id: UInt64 = 0
+                    IORegistryEntryGetRegistryEntryID(parent, &id)
+                    IOObjectRelease(parent)
+                    return .usb(registryID: id)
+                }
+            }
+
+            entry = parent
+        }
+    }
+
+    private func className(of entry: io_registry_entry_t) -> String? {
+        var name: io_name_t = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        let kr = IOObjectGetClass(entry, &name)
+        guard kr == KERN_SUCCESS else { return nil }
+        return String(cString: unsafeBitCast(name, to: [CChar].self))
     }
 }

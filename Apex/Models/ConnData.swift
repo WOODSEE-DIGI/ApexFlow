@@ -58,6 +58,9 @@ struct BTDevice: Identifiable, Sendable {
 // MARK: - Thunderbolt
 struct TBDevice: Identifiable, Sendable {
     let id: String
+    /// Stable registry ID of the parent IOThunderboltController. Used to correlate
+    /// disk I/O with the correct physical port.
+    let controllerID: UInt64
     var portNumber: Int
     var linkSpeed: String       // e.g. "40 Gb/s", "Up to 40 Gb/s"
     var isConnected: Bool
@@ -134,6 +137,9 @@ enum USBSpeed: String, Sendable {
 
 struct USBDevice: Identifiable, Sendable {
     let id: String
+    /// Stable IOKit registry ID of the IOUSBHostDevice/IOUSBDevice service.
+    /// Used to correlate disk I/O with this specific USB device.
+    let registryID: UInt64
     var name: String
     var vendor: String
     var speed: USBSpeed
@@ -142,9 +148,17 @@ struct USBDevice: Identifiable, Sendable {
     var lastSeen: Date = .now
     var children: [USBDevice] = []
 
+    // Live I/O activity for USB mass-storage devices (populated by SystemMonitor)
+    var ioReadRate: Double = 0
+    var ioWriteRate: Double = 0
+    var readHistory: [DataPoint] = []
+    var writeHistory: [DataPoint] = []
+
     var isStorageLike: Bool {
         speed == .superSpeed || speed == .superSpeedPlus || speed == .usb4
     }
+
+    static let historyLength = 60
 }
 
 // MARK: - MIDI
@@ -200,11 +214,12 @@ final class ConnData {
     func update(from snapshot: ConnSnapshot) {
         wifi = snapshot.wifi
         bluetoothDevices = snapshot.bluetoothDevices
-        // Preserve TB I/O history when updating from connectivity snapshot
-        let prevTB = Dictionary(uniqueKeysWithValues: thunderboltDevices.map { ($0.id, $0) })
+
+        // Preserve TB I/O history when refreshing the device list
+        let prevTB = Dictionary(uniqueKeysWithValues: thunderboltDevices.map { ($0.controllerID, $0) })
         thunderboltDevices = snapshot.thunderboltDevices.map { dev in
             var updated = dev
-            if let prev = prevTB[dev.id] {
+            if let prev = prevTB[dev.controllerID] {
                 updated.ioReadRate   = prev.ioReadRate
                 updated.ioWriteRate  = prev.ioWriteRate
                 updated.readHistory  = prev.readHistory
@@ -212,27 +227,56 @@ final class ConnData {
             }
             return updated
         }
-        usbDevices = snapshot.usbDevices
+
+        // Preserve USB I/O history when refreshing the device list
+        let prevUSB = Dictionary(uniqueKeysWithValues: usbDevices.map { ($0.registryID, $0) })
+        usbDevices = snapshot.usbDevices.map { dev in
+            var updated = dev
+            if let prev = prevUSB[dev.registryID] {
+                updated.ioReadRate   = prev.ioReadRate
+                updated.ioWriteRate  = prev.ioWriteRate
+                updated.readHistory  = prev.readHistory
+                updated.writeHistory = prev.writeHistory
+            }
+            return updated
+        }
+
         midiDevices = snapshot.midiDevices
     }
 
-    /// Called by SystemMonitor on every disk poll to push I/O into TB port histories
-    func updateTBActivity(totalReadRate: Double, totalWriteRate: Double) {
-        let storagePorts = thunderboltDevices.filter { $0.isStoragePort }
-        guard !storagePorts.isEmpty else { return }
-        let portRead  = totalReadRate  / Double(storagePorts.count)
-        let portWrite = totalWriteRate / Double(storagePorts.count)
+    /// Called by SystemMonitor on every disk poll to push per-port I/O into
+    /// Thunderbolt port histories. Only disks whose transport matches a port's
+    /// controllerID are attributed to that port.
+    func updateTBActivity(perPort readRates: [UInt64: Double], writeRates: [UInt64: Double]) {
         let now = Date()
         for i in thunderboltDevices.indices {
-            let isStorage = thunderboltDevices[i].isStoragePort
-            let r = isStorage ? portRead  : 0
-            let w = isStorage ? portWrite : 0
+            let id = thunderboltDevices[i].controllerID
+            let r = readRates[id] ?? 0
+            let w = writeRates[id] ?? 0
             thunderboltDevices[i].ioReadRate  = r
             thunderboltDevices[i].ioWriteRate = w
             thunderboltDevices[i].readHistory.append(DataPoint(time: now, value: r))
             thunderboltDevices[i].writeHistory.append(DataPoint(time: now, value: w))
             if thunderboltDevices[i].readHistory.count  > Self.tbHistoryLength { thunderboltDevices[i].readHistory.removeFirst() }
             if thunderboltDevices[i].writeHistory.count > Self.tbHistoryLength { thunderboltDevices[i].writeHistory.removeFirst() }
+        }
+    }
+
+    /// Called by SystemMonitor on every disk poll to push per-device I/O into
+    /// USB device histories. Only disks whose transport matches a USB device's
+    /// registryID are attributed to that device.
+    func updateUSBActivity(perDevice readRates: [UInt64: Double], writeRates: [UInt64: Double]) {
+        let now = Date()
+        for i in usbDevices.indices {
+            let id = usbDevices[i].registryID
+            let r = readRates[id] ?? 0
+            let w = writeRates[id] ?? 0
+            usbDevices[i].ioReadRate  = r
+            usbDevices[i].ioWriteRate = w
+            usbDevices[i].readHistory.append(DataPoint(time: now, value: r))
+            usbDevices[i].writeHistory.append(DataPoint(time: now, value: w))
+            if usbDevices[i].readHistory.count  > USBDevice.historyLength { usbDevices[i].readHistory.removeFirst() }
+            if usbDevices[i].writeHistory.count > USBDevice.historyLength { usbDevices[i].writeHistory.removeFirst() }
         }
     }
 

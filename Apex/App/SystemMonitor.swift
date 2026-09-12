@@ -283,13 +283,31 @@ final class SystemMonitor {
         stopObservingSwiftMaestroNotifications()
     }
 
-    // MARK: - TB/Disk correlation
-    /// Aggregate I/O from all non-internal disks and push into Thunderbolt port histories.
+    // MARK: - TB/USB/Disk correlation
+    /// Attribute disk I/O to the Thunderbolt port or USB device it is connected to.
+    /// Internal disk I/O is ignored here because it is not relevant to the
+    /// connectivity panels.
     private func correlateTBActivity() {
-        let externalDisks = disk.disks.filter { $0.mountpoint != "/" }
-        let totalRead  = externalDisks.reduce(0.0) { $0 + $1.readRate  }
-        let totalWrite = externalDisks.reduce(0.0) { $0 + $1.writeRate }
-        conn.updateTBActivity(totalReadRate: totalRead, totalWriteRate: totalWrite)
+        var tbRead:  [UInt64: Double] = [:]
+        var tbWrite: [UInt64: Double] = [:]
+        var usbRead:  [UInt64: Double] = [:]
+        var usbWrite: [UInt64: Double] = [:]
+
+        for d in disk.disks where d.mountpoint != "/" {
+            switch d.transport {
+            case .thunderbolt(let controllerID):
+                tbRead[controllerID, default: 0]  += d.readRate
+                tbWrite[controllerID, default: 0] += d.writeRate
+            case .usb(let registryID):
+                usbRead[registryID, default: 0]  += d.readRate
+                usbWrite[registryID, default: 0] += d.writeRate
+            default:
+                break
+            }
+        }
+
+        conn.updateTBActivity(perPort: tbRead, writeRates: tbWrite)
+        conn.updateUSBActivity(perDevice: usbRead, writeRates: usbWrite)
     }
 
     // MARK: - Disk health refresh

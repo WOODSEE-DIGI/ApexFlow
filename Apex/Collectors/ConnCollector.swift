@@ -110,8 +110,11 @@ actor ConnCollector {
 
         var service = IOIteratorNext(iter)
         while service != IO_OBJECT_NULL {
+            var controllerID: UInt64 = 0
+            IORegistryEntryGetRegistryEntryID(service, &controllerID)
+
             // Controller → Port@7 (host interface) → Switch → Port@1 (physical)
-            if let switchPort = findUserFacingPort(controller: service, portIndex: portIndex) {
+            if let switchPort = findUserFacingPort(controller: service, portIndex: portIndex, controllerID: controllerID) {
                 devices.append(switchPort)
                 portIndex += 1
             }
@@ -124,7 +127,7 @@ actor ConnCollector {
 
     /// Walks from a controller down to its Port@1 (user-facing connector)
     /// and returns a TBDevice with connection state and device info.
-    private func findUserFacingPort(controller: io_service_t, portIndex: Int) -> TBDevice? {
+    private func findUserFacingPort(controller: io_service_t, portIndex: Int, controllerID: UInt64) -> TBDevice? {
         // Step 1: Find the controller's child IOThunderboltPort (the host interface port@7)
         guard let hostPort = findFirstChild(of: controller, matching: { _, props in
             (props["Port Number"] as? Int) == 7
@@ -194,6 +197,7 @@ actor ConnCollector {
 
         return TBDevice(
             id: "tb_\(portIndex)",
+            controllerID: controllerID,
             portNumber: portIndex + 1,  // P1-P6
             linkSpeed: speedString,
             isConnected: isConnected,
@@ -247,6 +251,9 @@ actor ConnCollector {
                 // NOTE: Do NOT use defer { IOObjectRelease(service) } here.
                 // defer fires AFTER service = IOIteratorNext(...), releasing the NEXT
                 // device's reference and corrupting the iterator. Release manually instead.
+                var registryID: UInt64 = 0
+                IORegistryEntryGetRegistryEntryID(service, &registryID)
+
                 var props: Unmanaged<CFMutableDictionary>? = nil
                 IORegistryEntryCreateCFProperties(service, &props, kCFAllocatorDefault, 0)
 
@@ -267,7 +274,7 @@ actor ConnCollector {
                     let isGenericHub = name.contains("Hub") && hubChipVendors.contains(vendor)
 
                     if !isGenericHub, seen.insert(id).inserted {
-                        devices.append(USBDevice(id: id, name: name, vendor: vendor,
+                        devices.append(USBDevice(id: id, registryID: registryID, name: name, vendor: vendor,
                                                  speed: speed, vendorID: vid, productID: pid))
                     }
                 }

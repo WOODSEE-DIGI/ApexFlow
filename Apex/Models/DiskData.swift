@@ -1,6 +1,16 @@
 import Foundation
 import Observation
 
+// MARK: - Transport classification for I/O correlation
+enum DiskTransport: Sendable, Equatable {
+    case unknown
+    case `internal`
+    /// Thunderbolt storage attached to a specific controller (matched by registry ID).
+    case thunderbolt(controllerID: UInt64)
+    /// USB mass-storage attached to a specific USB device (matched by registry ID).
+    case usb(registryID: UInt64)
+}
+
 struct DiskSnapshot: Sendable {
     let mountpoint: String
     let name: String
@@ -9,6 +19,7 @@ struct DiskSnapshot: Sendable {
     let freeBytes: UInt64
     let readRate: Double    // bytes/sec
     let writeRate: Double
+    let transport: DiskTransport
     let timestamp: Date
 }
 
@@ -23,6 +34,7 @@ struct DiskInfo: Identifiable {
     var writeRate: Double = 0
     var readHistory: [DataPoint] = []
     var writeHistory: [DataPoint] = []
+    var transport: DiskTransport = .unknown
 
     // S.M.A.R.T. / diskutil health snapshot (refreshed periodically)
     var health: DiskHealth?
@@ -38,6 +50,7 @@ struct DiskInfo: Identifiable {
         freeBytes = snapshot.freeBytes
         readRate = snapshot.readRate
         writeRate = snapshot.writeRate
+        transport = snapshot.transport
 
         readHistory.append(DataPoint(time: snapshot.timestamp, value: snapshot.readRate))
         writeHistory.append(DataPoint(time: snapshot.timestamp, value: snapshot.writeRate))
