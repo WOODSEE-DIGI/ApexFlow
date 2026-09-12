@@ -76,7 +76,22 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 
 ---
 
-## Building from Source
+## Install
+
+### Homebrew (recommended)
+
+```bash
+brew tap WOODSEE-DIGI/tap
+brew install --cask apex-flow
+```
+
+Because the app is ad-hoc signed, macOS Gatekeeper will quarantine it on first launch. Either right-click the app and choose **Open**, or remove the quarantine attribute:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/ApexFlow.app
+```
+
+### Build from Source
 
 ```bash
 # Clone
