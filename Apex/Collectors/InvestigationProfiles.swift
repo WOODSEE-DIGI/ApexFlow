@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 
 // MARK: - Investigation Profile Protocol
 
@@ -25,7 +26,13 @@ enum InvestigationProfiles {
         DropboxProfile(),
         ChromeProfile(),
         VSCodeProfile(),
-        SpotifyProfile()
+        SpotifyProfile(),
+        NextcloudProfile(),
+        BackblazeProfile(),
+        iCloudProfile(),
+        VPNProfile(),
+        SteamProfile(),
+        DiscordProfile()
     ]
 }
 
@@ -365,5 +372,189 @@ struct SpotifyProfile: InvestigationProfile {
             source: "Spotify",
             detail: "Spotify is running. Connections to Spotify's CDN, search, social, or Spotify Connect devices are expected."
         )
+    }
+}
+
+// MARK: - Nextcloud
+
+struct NextcloudProfile: InvestigationProfile {
+    let processNames = ["nextcloud", "nextcloudcmd"]
+    let bundleIDs = ["com.nextcloud.desktopclient"]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let configURL = firstExisting([
+            homeRelative("Library/Preferences/Nextcloud/nextcloud.cfg"),
+            homeRelative("Library/Application Support/Nextcloud/nextcloud.cfg"),
+            homeRelative(".config/Nextcloud/nextcloud.cfg")
+        ])
+
+        guard let url = configURL,
+              let text = try? String(contentsOf: url, encoding: .utf8) else {
+            return ConfigFinding(
+                source: "Nextcloud",
+                detail: "Nextcloud client is running. This connection is likely sync traffic to a configured Nextcloud server."
+            )
+        }
+
+        var servers: [String] = []
+        var users: [String] = []
+        let lines = text.components(separatedBy: .newlines)
+        for line in lines {
+            if line.contains("\\url="), let value = line.components(separatedBy: "\\url=").last, !value.isEmpty {
+                servers.append(value)
+            }
+            if line.contains("\\user="), let value = line.components(separatedBy: "\\user=").last, !value.isEmpty {
+                users.append(value)
+            }
+        }
+
+        var detail = "Nextcloud config found."
+        if !servers.isEmpty {
+            detail += " Configured server(s): \(servers.joined(separator: ", "))."
+        }
+        if !users.isEmpty {
+            detail += " Account: \(users.joined(separator: ", "))."
+        }
+        detail += " This connection is likely file sync traffic."
+        return ConfigFinding(source: "Nextcloud", detail: detail)
+    }
+}
+
+// MARK: - Backblaze
+
+struct BackblazeProfile: InvestigationProfile {
+    let processNames = ["bzbmenu", "bzbzserv", "bzbui", "backblaze"]
+    let bundleIDs = ["com.backblaze.Backblaze"]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let plistURL = homeRelative("Library/Preferences/com.backblaze.Backblaze.plist")
+        let hasPlist = FileManager.default.fileExists(atPath: plistURL.path)
+
+        let detail = hasPlist
+            ? "Backblaze is configured on this Mac. This connection is likely backup traffic to Backblaze's servers."
+            : "Backblaze process is running. This connection is likely backup traffic to Backblaze's servers."
+        return ConfigFinding(source: "Backblaze", detail: detail)
+    }
+}
+
+// MARK: - iCloud / CloudKit
+
+struct iCloudProfile: InvestigationProfile {
+    let processNames = ["cloudd", "cloudphotod", "bird", "akd", "fmfd", "findmydevice-useragent", "fileproviderd"]
+    let bundleIDs = ["com.apple.cloudd", "com.apple.cloudphotosd", "com.apple.bird", "com.apple.akd", "com.apple.findmy"]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let service: String
+        switch alert.processName.lowercased() {
+        case "cloudd", "bird":
+            service = "iCloud Drive file sync"
+        case "cloudphotod":
+            service = "iCloud Photos sync"
+        case "akd":
+            service = "Apple ID authentication / iCloud account validation"
+        case "fmfd", "findmydevice-useragent":
+            service = "Find My / device location services"
+        case "fileproviderd":
+            service = "Cloud file provider (iCloud Drive or third-party cloud storage)"
+        default:
+            service = "Apple iCloud / CloudKit service"
+        }
+
+        return ConfigFinding(
+            source: "iCloud / CloudKit",
+            detail: "This is an Apple system daemon responsible for \(service). Traffic to *.icloud.com, *.apple.com, or push notification servers is expected."
+        )
+    }
+}
+
+// MARK: - VPN clients
+
+struct VPNProfile: InvestigationProfile {
+    let processNames = [
+        "protonvpn", "protonvpn helper", "nordvpn", "nordvpnd", "nordvpn helper",
+        "wireguard", "wireguard-go", "openvpn", "tunnelblick", "windscribe",
+        "pia", "private internet access", "expressvpn", "surfshark"
+    ]
+    let bundleIDs = [
+        "ch.protonvpn.mac", "com.nordvpn.osx-app", "com.wireguard.macos",
+        "net.tunnelblick.tunnelblick", "com.windscribe.gui", "com.privateinternetaccess.vpn",
+        "com.expressvpn.ExpressVPN", "com.surfshark.vpn"
+    ]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let tunnels = activeVPNTunnelInterfaces()
+        if tunnels.isEmpty {
+            return ConfigFinding(
+                source: "VPN client",
+                detail: "A VPN client is running. If a tunnel is not yet active, this may be the app checking for updates or logging in."
+            )
+        }
+        return ConfigFinding(
+            source: "VPN client",
+            detail: "Active VPN tunnel interface(s): \(tunnels.joined(separator: ", ")). Traffic is routing through the VPN."
+        )
+    }
+
+    private func activeVPNTunnelInterfaces() -> [String] {
+        var interfaces: [String] = []
+        var ifaddrsPtr: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddrsPtr) == 0 else { return interfaces }
+        defer { freeifaddrs(ifaddrsPtr) }
+
+        var ptr = ifaddrsPtr
+        while let ifa = ptr {
+            let name = String(cString: ifa.pointee.ifa_name)
+            if name.hasPrefix("utun") || name.hasPrefix("ipsec") || name.hasPrefix("ppp") || name.hasPrefix("tun") {
+                interfaces.append(name)
+            }
+            ptr = ifa.pointee.ifa_next
+        }
+        return interfaces
+    }
+}
+
+// MARK: - Steam
+
+struct SteamProfile: InvestigationProfile {
+    let processNames = ["steam", "steam helper", "steam_osx"]
+    let bundleIDs = ["com.valvesoftware.steam"]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let libraryFolders = homeRelative("Library/Application Support/Steam/steamapps/libraryfolders.vdf")
+        var libraryCount = 0
+        if FileManager.default.fileExists(atPath: libraryFolders.path),
+           let text = try? String(contentsOf: libraryFolders, encoding: .utf8) {
+            libraryCount = text.components(separatedBy: .newlines).filter { $0.contains("\"path\"") }.count
+        }
+
+        var detail = "Steam client is running."
+        if libraryCount > 0 {
+            detail += " It has \(libraryCount) game library folder(s)."
+        }
+        detail += " This connection is likely Steam downloads, friends/chat, matchmaking, or cloud saves."
+        return ConfigFinding(source: "Steam", detail: detail)
+    }
+}
+
+// MARK: - Discord
+
+struct DiscordProfile: InvestigationProfile {
+    let processNames = ["discord", "discord helper", "discord ptb", "discord canary"]
+    let bundleIDs = [
+        "com.hnc.Discord",
+        "com.hnc.DiscordPTB",
+        "com.hnc.DiscordCanary"
+    ]
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        let prefsURL = homeRelative("Library/Preferences/com.hnc.Discord.plist")
+        let hasPrefs = FileManager.default.fileExists(atPath: prefsURL.path)
+
+        var detail = "Discord is running."
+        if hasPrefs {
+            detail += " User preferences found."
+        }
+        detail += " This connection is likely Discord gateway, voice, media, or update traffic."
+        return ConfigFinding(source: "Discord", detail: detail)
     }
 }
