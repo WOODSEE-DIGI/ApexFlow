@@ -67,6 +67,8 @@ targets:
           CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
           CODE_SIGN_STYLE: Manual
           DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+          OTHER_CODE_SIGN_FLAGS: "--timestamp"
     dependencies:
       - sdk: CoreWLAN.framework
       - sdk: IOBluetooth.framework
@@ -129,3 +131,5 @@ targets:
           CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
           CODE_SIGN_STYLE: Manual
           DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+          OTHER_CODE_SIGN_FLAGS: "--timestamp"
