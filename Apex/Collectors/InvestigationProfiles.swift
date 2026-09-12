@@ -32,7 +32,8 @@ enum InvestigationProfiles {
         iCloudProfile(),
         VPNProfile(),
         SteamProfile(),
-        DiscordProfile()
+        DiscordProfile(),
+        OnidelProfile()
     ]
 }
 
@@ -556,5 +557,44 @@ struct DiscordProfile: InvestigationProfile {
         }
         detail += " This connection is likely Discord gateway, voice, media, or update traffic."
         return ConfigFinding(source: "Discord", detail: detail)
+    }
+}
+
+// MARK: - Onidel Cloud
+
+/// Onidel is an S3-compatible cloud provider. This profile triggers when the
+/// remote endpoint's hostname contains "onidel", which usually means traffic
+/// is going to an Onidel Object Storage bucket or VM.
+struct OnidelProfile: InvestigationProfile {
+    let processNames: [String] = []
+    let bundleIDs: [String] = []
+
+    /// Run this check for every alert; it only returns a finding when the
+    /// resolved hostname points at Onidel.
+    func matches(alert: WANConnectionAlert, executablePath: String?) -> Bool {
+        true
+    }
+
+    func finding(for alert: WANConnectionAlert, commandLine: String?, executablePath: String?) async -> ConfigFinding? {
+        guard let host = alert.resolvedHostname?.lowercased(), host.contains("onidel") else {
+            return nil
+        }
+
+        let processNote: String
+        switch alert.processName.lowercased() {
+        case "syncthing":
+            processNote = "This matches a Syncthing connection, so it is likely your Syncthing data landing in an Onidel Object Storage bucket."
+        case let name where name.contains("rclone"):
+            processNote = "rclone is an S3/sync tool; this is likely an rclone transfer to Onidel Object Storage."
+        case let name where name.contains("transmit") || name.contains("cyberduck") || name.contains("expandrive"):
+            processNote = "A file-transfer client is connecting to Onidel Object Storage."
+        default:
+            processNote = "This looks like traffic to Onidel Cloud (S3-compatible object storage or a VM)."
+        }
+
+        return ConfigFinding(
+            source: "Onidel Cloud",
+            detail: "Remote host \(host) resolves to Onidel. \(processNote)"
+        )
     }
 }
