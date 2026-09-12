@@ -106,8 +106,8 @@ final class ApexWorkspaceLayoutState {
             tile(.cpu, col: 0, row: 0, colSpan: 12, rowSpan: 2),
             // Left column
             tile(.network, col: 0, row: 2, colSpan: 6, rowSpan: 3),
-            tile(.networkLeak, col: 0, row: 5, colSpan: 6, rowSpan: 3),
-            tile(.connectivity, col: 0, row: 8, colSpan: 6, rowSpan: 6),
+            tile(.networkLeak, col: 0, row: 5, colSpan: 6, rowSpan: 4),
+            tile(.connectivity, col: 0, row: 9, colSpan: 6, rowSpan: 5),
             // Right column
             tile(.memory, col: 6, row: 2, colSpan: 6, rowSpan: 5),
             tile(.diskHealth, col: 6, row: 7, colSpan: 6, rowSpan: 3),
