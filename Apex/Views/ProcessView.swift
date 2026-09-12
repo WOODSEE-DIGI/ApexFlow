@@ -116,10 +116,28 @@ private struct ProcessRow: View {
         HStack(spacing: 0) {
             Text("\(proc.id)")
                 .frame(width: 50, alignment: .leading)
-            Text(proc.name)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+            HStack(spacing: 4) {
+                if proc.isAI {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 8))
+                        .foregroundStyle(Theme.sky)
+                }
+                Text(proc.name)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                if let role = proc.aiRole {
+                    Text(role)
+                        .font(.system(size: 7, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .background(roleBadgeColor)
+                        .clipShape(Capsule())
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
             Text(proc.user)
                 .lineLimit(1)
                 .frame(width: 70, alignment: .leading)
@@ -135,9 +153,11 @@ private struct ProcessRow: View {
                 .frame(width: 45, alignment: .leading)
         }
         .font(.system(size: 10, design: .monospaced))
-        .foregroundStyle(Theme.subtext1)
+        .foregroundStyle(proc.isAI ? Theme.sky : Theme.subtext1)
         .padding(.vertical, 1)
+        .background(proc.isAI ? Theme.sky.opacity(0.08) : Color.clear)
         .contentShape(Rectangle())
+        .help(proc.isAI ? "AI-related process\(proc.aiRole.map { " (\($0))" } ?? "")" : "")
     }
 
     private var statusColor: Color {
@@ -146,6 +166,17 @@ private struct ProcessRow: View {
         case "Zombie": return Theme.red
         case "Stop":   return Theme.yellow
         default:       return Theme.overlay1
+        }
+    }
+
+    private var roleBadgeColor: Color {
+        switch proc.aiRole?.lowercased() {
+        case "mcp":      return Theme.mauve
+        case "daemon":   return Theme.peach
+        case "model":    return Theme.sky
+        case "online":   return Theme.blue
+        case "helper":   return Theme.teal
+        default:         return Theme.overlay1
         }
     }
 }

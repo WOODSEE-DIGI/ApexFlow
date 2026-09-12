@@ -91,7 +91,8 @@ final class SystemMonitor {
             while !Task.isCancelled {
                 guard let self else { continue }
                 let snaps = await self.procCollector.collect()
-                self.processes.update(from: snaps)
+                let flagged = self.flagAIFamily(in: snaps)
+                self.processes.update(from: flagged.snapshots, aiPIDs: flagged.aiPIDs, aiRoles: flagged.aiRoles)
                 try? await Task.sleep(for: .seconds(2))
             }
         })
@@ -325,8 +326,56 @@ final class SystemMonitor {
         }
     }
 
+    // MARK: - AI Process Family Highlighting
+
+    /// Walks the process tree to mark every AI model process, MCP server,
+    /// and any descendant daemon/child spawned by them. The main process
+    /// list can then highlight AI-related rows.
+    private func flagAIFamily(in snapshots: [ProcessSnapshot]) -> (snapshots: [ProcessSnapshot], aiPIDs: Set<Int32>, aiRoles: [Int32: String]) {
+        let aiProcesses = aiModel.aiProcesses
+        var aiPIDs = Set(aiProcesses.map(\.id))
+
+        // Propagate AI ancestry through the process tree (direct children only,
+        // repeated until stable, to catch grandchildren).
+        let pidToPPID = Dictionary(uniqueKeysWithValues: snapshots.map { ($0.id, $0.ppid) })
+        var changed = true
+        while changed {
+            let before = aiPIDs.count
+            for (pid, ppid) in pidToPPID where !aiPIDs.contains(pid) && aiPIDs.contains(ppid) {
+                aiPIDs.insert(pid)
+            }
+            changed = aiPIDs.count > before
+        }
+
+        // Build role labels from the AI collector, and label descendants as daemons.
+        var aiRoles: [Int32: String] = [:]
+        for proc in aiProcesses {
+            aiRoles[proc.id] = proc.kind.label
+        }
+        for pid in aiPIDs where aiRoles[pid] == nil {
+            aiRoles[pid] = "AI daemon"
+        }
+
+        let flagged = snapshots.map { snap in
+            ProcessSnapshot(
+                id: snap.id,
+                ppid: snap.ppid,
+                name: snap.name,
+                user: snap.user,
+                cpuPercent: snap.cpuPercent,
+                memoryBytes: snap.memoryBytes,
+                threads: snap.threads,
+                status: snap.status,
+                isAI: aiPIDs.contains(snap.id),
+                aiRole: aiRoles[snap.id]
+            )
+        }
+
+        return (flagged, aiPIDs, aiRoles)
+    }
+
     // MARK: - AI Model Helper Methods
-    
+
     /// Record that a token was received (call this when streaming tokens from AI)
     func recordAIToken() {
         aiModel.recordToken()

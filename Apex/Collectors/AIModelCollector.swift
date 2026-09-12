@@ -15,7 +15,31 @@ final actor AIModelCollector {
         "llama.cpp", "vllm", "text-generation-webui", "gpt4all",
         "open-webui", "anything-llm", "localai", "koboldcpp",
         "lmstudio", "inference", "omlx", "deltafin",
-        "vision_proxy_server", "modelmanagerd"
+        "vision_proxy_server", "modelmanagerd", "siriinferenced",
+        "tgondeviceinferenceproviderservice"
+    ]
+
+    /// Command-line tokens that strongly indicate an MCP server.
+    private static let mcpMarkers: Set<String> = [
+        "mcp-server", "mcp_server", "swiftmaestro-mcp", "mcp-servers",
+        "--mcp", "@modelcontextprotocol"
+    ]
+
+    /// Tokens that indicate a local/online model inference engine.
+    private static let modelEngineMarkers: Set<String> = [
+        "--model", ".gguf", "mlx", "omlx", "llama-server", "llama.cpp",
+        "ollama", "lm studio", "lmstudio", "vllm", "text-generation-webui",
+        "gpt4all", "open-webui", "anything-llm", "localai", "koboldcpp",
+        "swiftmaestro", "deltafin", "vision_proxy", "modelmanagerd",
+        "siriinferenced", "tgondeviceinferenceproviderservice"
+    ]
+
+    /// Host substrings that indicate a connection to an online AI service.
+    private static let onlineServiceHosts: Set<String> = [
+        "api.openai.com", "api.anthropic.com", "generativelanguage.googleapis.com",
+        "api.groq.com", "api.together.xyz", "api.perplexity.ai",
+        "api.mistral.ai", "api.cohere.com", "api.ai21.com",
+        "openrouter.ai", "api.replicate.com", "api.deepseek.com"
     ]
 
     /// Xcode-launched apps get truncated args like "-NSDocumentRevisionsDebugMode YES".
@@ -25,57 +49,46 @@ final actor AIModelCollector {
     // MARK: - Public
 
     func collect() async -> [AIModelSnapshot] {
+        let allProcesses = processList()
+        let listeningPorts = portMap()
+
+        // First pass: identify processes that are AI-related by their own name/cmdline.
+        var aiPIDs = Set<Int32>()
+        for process in allProcesses {
+            if isAIProcess(process) {
+                aiPIDs.insert(process.pid)
+            }
+        }
+
         var snapshots = [AIModelSnapshot]()
         var nameCounts: [String: Int] = [:]
 
-        for process in processList() {
+        for process in allProcesses {
             let lowerName = process.name.lowercased()
-
-            // Match if the process name contains any watched name,
-            // OR if it looks like a model-server (ports in args, --model flag, etc.)
-            let isWatched = Self.watchedProcessNames.contains { lowerName.contains($0) }
-
-            // Match AI model servers by command line content.
-            // NOTE: macOS truncates `ps -args` to ~80 chars, so we can't rely on
-            // seeing the full path. Match on what IS visible.
             let cl = process.commandLine ?? ""
-            let looksLikeModelServer = cl.contains("--model")
-                || cl.contains("mlx")
-                || cl.contains(".gguf")
-                || cl.contains("omlx")
-                || cl.contains("vision_proxy")
-                || cl.contains("deltafin")
-                || cl.contains("SwiftMaestro")
 
-            // Xcode-launched apps get truncated to just the launch flags.
-            // Detect them by the Xcode debug flag and flag as "needs name resolution".
+            // Include direct AI processes and children spawned by them (MCP servers, helpers).
+            let isDirectAI = isAIProcess(process)
+            let isChildOfAI = aiPIDs.contains(process.parentPID)
             let isXcodeLaunch = cl.hasPrefix("-NSDocument")
                 || cl.hasPrefix("-NS")
                 || cl == Self.xcodeLaunchMarker
 
-            guard isWatched || looksLikeModelServer || isXcodeLaunch else { continue }
+            guard isDirectAI || isChildOfAI || isXcodeLaunch else { continue }
 
-            // Resolve a human-readable name for the process.
-            // For Xcode-launched processes, always try NSRunningApplication first
-            // (ps args are truncated and don't contain the executable path).
-            // For generic executables (node, Python), extract the actual service
-            // name from the command line instead of showing "node" or "Python".
             let displayName: String
             if isXcodeLaunch {
-                // Xcode-launched processes have truncated args like
-                // "-NSDocumentRevisionsDebugMode YES" — the real name must
-                // come from NSRunningApplication or proc_pidpath.
                 displayName = resolveAppName(pid: process.pid) ?? resolveProcessName(
                     baseName: process.name,
-                    commandLine: process.commandLine ?? ""
+                    commandLine: cl
                 )
             } else {
                 displayName = resolveProcessName(
                     baseName: process.name,
-                    commandLine: process.commandLine ?? ""
+                    commandLine: cl
                 )
             }
-            
+
             // Disambiguate duplicate names
             let key = displayName
             let finalName: String
@@ -86,32 +99,78 @@ final actor AIModelCollector {
             }
             nameCounts[key, default: 0] += 1
 
-            let status: AIModelSnapshot.ProcessStatus
-            switch process.state {
-            case "R":  status = .running
-            case "S":  status = .sleeping
-            case "T":  status = .stopped
-            case "Z":  status = .zombie
-            default:   status = .idle
-            }
+            let kind = classify(process: process, isChildOfAI: isChildOfAI)
+            let status = status(from: process.state)
 
             snapshots.append(AIModelSnapshot(
                 id: process.pid,
+                parentPID: process.parentPID,
                 name: finalName,
+                commandLine: cl,
                 cpuPercent: process.cpuPercent,
                 memoryBytes: process.residentMemoryBytes,
-                threads: 0,  // Not available from ps on macOS
-                status: status
+                threads: 0,
+                status: status,
+                kind: kind,
+                ports: listeningPorts[process.pid] ?? []
             ))
         }
 
         return snapshots.sorted { $0.name < $1.name }
     }
 
+    private func isAIProcess(_ process: ProcessInfo) -> Bool {
+        let lowerName = process.name.lowercased()
+        let isWatched = Self.watchedProcessNames.contains { lowerName.contains($0) }
+        let cl = process.commandLine ?? ""
+        let looksLikeModelServer = Self.modelEngineMarkers.contains { marker in
+            lowerName.contains(marker) || cl.lowercased().contains(marker)
+        }
+        return isWatched || looksLikeModelServer
+    }
+
+    private func classify(process: ProcessInfo, isChildOfAI: Bool) -> AIModelSnapshot.ProcessKind {
+        let lowerName = process.name.lowercased()
+        let cl = process.commandLine?.lowercased() ?? ""
+
+        if Self.mcpMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
+            return .mcpServer
+        }
+        if isOnlineService(process) {
+            return .onlineService
+        }
+        if Self.modelEngineMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
+            return .modelEngine
+        }
+        if isChildOfAI {
+            return process.name.hasSuffix("d") ? .daemon : .helper
+        }
+        return .unknown
+    }
+
+    private func isOnlineService(_ process: ProcessInfo) -> Bool {
+        // Quick heuristic: a node/Python helper that connects to a known AI API host.
+        let cl = process.commandLine?.lowercased() ?? ""
+        let genericHosts = Self.onlineServiceHosts.contains { cl.contains($0) }
+        let genericExecutables = ["node", "python", "python3", "application"].contains(process.name.lowercased())
+        return genericHosts && genericExecutables
+    }
+
+    private func status(from state: String) -> AIModelSnapshot.ProcessStatus {
+        switch state {
+        case "R":  return .running
+        case "S":  return .sleeping
+        case "T":  return .stopped
+        case "Z":  return .zombie
+        default:   return .idle
+        }
+    }
+
     // MARK: - Process Scanning
 
     private struct ProcessInfo {
         let pid: Int32
+        let parentPID: Int32
         let name: String
         let state: String       // R, S, T, Z, etc.
         let cpuPercent: Double
@@ -119,15 +178,15 @@ final actor AIModelCollector {
         let commandLine: String?
     }
 
-    /// Uses `ps` to get all processes with CPU%, memory, state, and command line.
+    /// Uses `ps` to get all processes with parent PID, CPU%, memory, state, and command line.
     /// NOTE: We intentionally skip the `comm` column because macOS truncates it
     /// to 15 characters (e.g. "SwiftMaestro" → "SwiftMaest"), making name
     /// matching impossible. Instead we parse the executable basename from `args`.
     private func processList() -> [ProcessInfo] {
         let task = Process()
         task.executableURL = URL(fileURLWithPath: "/bin/ps")
-        // -args gives the full command line without truncation
-        task.arguments = ["-eo", "pid,stat,%cpu,rss,args"]
+        // ppid lets us spot MCP servers / daemons spawned by a model host.
+        task.arguments = ["-eo", "pid,ppid,stat,%cpu,rss,args"]
 
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -140,9 +199,6 @@ final actor AIModelCollector {
         }
 
         // IMPORTANT: Read pipe data BEFORE waitUntilExit() to avoid deadlock.
-        // ps output on this system is ~144KB, but macOS pipe buffers are only 64KB.
-        // If we wait for the process to exit first, it blocks on write when the
-        // buffer fills, and we block waiting for it to exit — classic deadlock.
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
         guard task.terminationStatus == 0 else { return [] }
@@ -157,24 +213,20 @@ final actor AIModelCollector {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
             guard !trimmed.isEmpty else { continue }
 
-            // Parse: PID STAT %CPU RSS ARGS...
-            // ps uses fixed-width columns with multiple spaces between fields.
-            // .components(separatedBy: .whitespaces) preserves empty strings for
-            // consecutive spaces, so we filter them out to get clean field access.
+            // Parse: PID PPID STAT %CPU RSS ARGS...
             let parts = trimmed.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-            guard parts.count >= 5 else { continue }
+            guard parts.count >= 6 else { continue }
 
-            guard let pid = Int32(parts[0]) else { continue }
-            let state = parts[1]
-            let cpuPercent = Double(parts[2]) ?? 0
-            let rssKB = UInt64(parts[3]) ?? 0
+            guard let pid = Int32(parts[0]),
+                  let ppid = Int32(parts[1]) else { continue }
+            let state = parts[2]
+            let cpuPercent = Double(parts[3]) ?? 0
+            let rssKB = UInt64(parts[4]) ?? 0
 
-            // Reconstruct args string (everything after RSS) using the same
-            // field-walking approach on the original trimmed string, which correctly
-            // handles variable-width whitespace between fixed-width columns.
+            // Reconstruct args string (everything after RSS).
             var fieldEnd = trimmed.startIndex
             var fieldCount = 0
-            while fieldEnd < trimmed.endIndex && fieldCount < 4 {
+            while fieldEnd < trimmed.endIndex && fieldCount < 5 {
                 while fieldEnd < trimmed.endIndex && !trimmed[fieldEnd].isWhitespace {
                     fieldEnd = trimmed.index(after: fieldEnd)
                 }
@@ -187,8 +239,6 @@ final actor AIModelCollector {
             guard !commandLine.isEmpty else { continue }
 
             // Extract executable basename from the command line.
-            // First token is the executable path (may have spaces if quoted, but
-            // rare for AI processes). Take the last path component.
             let execName: String
             if let spaceIdx = commandLine.firstIndex(of: " ") {
                 execName = String(commandLine[commandLine.startIndex..<spaceIdx])
@@ -199,6 +249,7 @@ final actor AIModelCollector {
 
             results.append(ProcessInfo(
                 pid: pid,
+                parentPID: ppid,
                 name: baseName,
                 state: state,
                 cpuPercent: cpuPercent,
@@ -208,6 +259,48 @@ final actor AIModelCollector {
         }
 
         return results
+    }
+
+    // MARK: - Listening Port Discovery
+
+    /// Map PID -> TCP listen ports by parsing `lsof -iTCP -sTCP:LISTEN`.
+    /// This lets us show that LM Studio is serving on :1234, ollama on :11434, etc.
+    private func portMap() -> [Int32: [Int]] {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/lsof")
+        task.arguments = ["-iTCP", "-sTCP:LISTEN", "-P", "-n"]
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = FileHandle.nullDevice
+
+        do {
+            try task.run()
+        } catch {
+            return [:]
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        task.waitUntilExit()
+        guard task.terminationStatus == 0,
+              let output = String(data: data, encoding: .utf8) else { return [:] }
+
+        var map: [Int32: [Int]] = [:]
+        for line in output.components(separatedBy: .newlines).dropFirst() {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty else { continue }
+            let parts = trimmed.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+            guard parts.count >= 9 else { continue }
+            guard let pid = Int32(parts[1]) else { continue }
+            let nameField = parts[8]
+            // NAME is like 127.0.0.1:1234 or *:1234 or [::]:1234
+            guard let colonIdx = nameField.lastIndex(of: ":") else { continue }
+            let portString = String(nameField[colonIdx...].dropFirst())
+                .trimmingCharacters(in: .whitespaces)
+            guard let port = Int(portString), port > 0 else { continue }
+            map[pid, default: []].append(port)
+        }
+        return map
     }
 
     /// Resolve the real app name for a process whose `ps` args were truncated.

@@ -262,32 +262,37 @@ private struct AIProcessListView: View {
                 Text("PID")
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
-                    .frame(width: 50, alignment: .leading)
-                
+                    .frame(width: 45, alignment: .leading)
+
                 Text("Name")
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
+                Text("Kind")
+                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(Theme.overlay0)
+                    .frame(width: 42, alignment: .leading)
+
                 Text("CPU%")
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
-                    .frame(width: 50, alignment: .leading)
-                
+                    .frame(width: 42, alignment: .leading)
+
                 Text("Memory")
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
-                    .frame(width: 70, alignment: .leading)
-                
-                Text("Status")
+                    .frame(width: 60, alignment: .leading)
+
+                Text("Ports")
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
-                    .frame(width: 80, alignment: .leading)
+                    .frame(width: 55, alignment: .leading)
             }
             .padding(.horizontal, 6)
-            
+
             Divider().background(Theme.surface1)
-            
+
             // Process list
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(spacing: 1) {
@@ -306,42 +311,59 @@ private struct AIProcessListView: View {
 private struct AIProcessRow: View {
     let proc: AIModelSnapshot
     let isSelected: Bool
-    
+
     var body: some View {
         HStack(spacing: 0) {
             Text("\(proc.id)")
-                .frame(width: 50, alignment: .leading)
-            
+                .frame(width: 45, alignment: .leading)
+
             Text(proc.name)
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
+
+            Text(proc.kind.label)
+                .font(.system(size: 8, weight: .semibold, design: .monospaced))
+                .foregroundStyle(kindColor)
+                .frame(width: 42, alignment: .leading)
+
             Text(String(format: "%.1f", proc.cpuPercent))
                 .foregroundStyle(Theme.loadColor(proc.cpuPercent / 100))
-                .frame(width: 50, alignment: .leading)
-            
+                .frame(width: 42, alignment: .leading)
+
             Text(proc.memoryBytes.formattedBytes)
-                .frame(width: 70, alignment: .leading)
-            
-            Text(proc.status.rawValue)
-                .foregroundStyle(statusColor)
-                .frame(width: 80, alignment: .leading)
+                .frame(width: 60, alignment: .leading)
+
+            Text(portSummary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .foregroundStyle(Theme.teal)
+                .frame(width: 55, alignment: .leading)
         }
         .font(.system(size: 10, design: .monospaced))
         .foregroundStyle(isSelected ? Theme.blue : Theme.subtext1)
         .padding(.vertical, 1)
         .background(isSelected ? Theme.surface1.opacity(0.3) : Color.clear)
         .contentShape(Rectangle())
+        .help(proc.commandLine ?? "")
     }
-    
-    private var statusColor: Color {
-        switch proc.status {
-        case .running: return Theme.green
-        case .sleeping, .idle: return Theme.overlay1
-        case .stopped: return Theme.yellow
-        case .zombie: return Theme.red
+
+    private var kindColor: Color {
+        switch proc.kind {
+        case .modelEngine:   return Theme.sky
+        case .mcpServer:     return Theme.mauve
+        case .daemon:        return Theme.peach
+        case .onlineService: return Theme.blue
+        case .helper:        return Theme.teal
+        case .unknown:       return Theme.overlay1
         }
+    }
+
+    private var portSummary: String {
+        guard !proc.ports.isEmpty else { return "-" }
+        let sorted = proc.ports.sorted()
+        if sorted.count == 1 { return "\(sorted[0])" }
+        return "\(sorted[0])+\(sorted.count - 1)"
     }
 }
 

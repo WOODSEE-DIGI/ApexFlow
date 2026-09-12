@@ -5,11 +5,15 @@ import Observation
 /// Represents an AI model process being monitored
 struct AIModelSnapshot: Identifiable, Hashable {
     let id: Int32               // PID
+    let parentPID: Int32?       // Parent PID (for spotting spawned daemons/MCP servers)
     let name: String            // Process name (e.g., "LM Studio", "ollama")
+    let commandLine: String?    // Full command line used for classification
     let cpuPercent: Double      // CPU usage percentage
     let memoryBytes: UInt64     // Memory usage in bytes
     let threads: Int            // Thread count
     let status: ProcessStatus   // Process state
+    let kind: ProcessKind       // AI-related role (model engine, MCP server, daemon, online)
+    let ports: [Int]            // TCP ports this process is listening on
     
     enum ProcessStatus: String, Codable {
         case running = "Running"
@@ -29,10 +33,32 @@ struct AIModelSnapshot: Identifiable, Hashable {
         }
     }
     
+    enum ProcessKind: String, Codable, Sendable {
+        case modelEngine = "Model"
+        case mcpServer = "MCP"
+        case daemon = "Daemon"
+        case onlineService = "Online"
+        case helper = "Helper"
+        case unknown = "AI"
+
+        var label: String { rawValue }
+
+        var colorName: String {
+            switch self {
+            case .modelEngine:   return "sky"
+            case .mcpServer:     return "mauve"
+            case .daemon:        return "peach"
+            case .onlineService: return "blue"
+            case .helper:        return "teal"
+            case .unknown:       return "subtext1"
+            }
+        }
+    }
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     static func == (lhs: AIModelSnapshot, rhs: AIModelSnapshot) -> Bool {
         lhs.id == rhs.id
     }

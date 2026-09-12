@@ -93,7 +93,9 @@ actor ProcessCollector {
                 cpuPercent: cpuPercent,
                 memoryBytes: memBytes,
                 threads: threads,
-                status: status
+                status: status,
+                isAI: false,
+                aiRole: nil
             ))
         }
 

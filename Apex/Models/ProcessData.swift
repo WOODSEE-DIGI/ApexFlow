@@ -10,6 +10,8 @@ struct ProcessSnapshot: Sendable, Identifiable {
     let memoryBytes: UInt64
     let threads: Int
     let status: String
+    let isAI: Bool          // True if this is an AI model/MCP/daemon/child
+    let aiRole: String?     // Short label for the AI role (e.g. "MCP", "Daemon")
 }
 
 @Observable
@@ -19,6 +21,8 @@ final class ProcessData {
     var filter: String = ""
     var sortKey: SortKey = .cpu
     var sortAscending: Bool = false
+    var aiPIDs: Set<Int32> = []
+    var aiRoles: [Int32: String] = [:]
 
     enum SortKey: String, CaseIterable {
         case pid = "PID"
@@ -29,8 +33,10 @@ final class ProcessData {
         case user = "User"
     }
 
-    func update(from snapshots: [ProcessSnapshot]) {
+    func update(from snapshots: [ProcessSnapshot], aiPIDs: Set<Int32> = [], aiRoles: [Int32: String] = [:]) {
         processes = sorted(snapshots)
+        self.aiPIDs = aiPIDs
+        self.aiRoles = aiRoles
     }
 
     var filtered: [ProcessSnapshot] {
