@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Apex-Flow-Icon.png" alt="Apex Flow icon" width="128" height="128">
+</p>
+
 # Apex Flow
 
 [![Build](https://github.com/WOODSEE-DIGI/ApexFlow/actions/workflows/build.yml/badge.svg)](https://github.com/WOODSEE-DIGI/ApexFlow/actions/workflows/build.yml)
