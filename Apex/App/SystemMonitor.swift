@@ -422,6 +422,11 @@ final class SystemMonitor {
         aiModel.cancelToolCall(id: id)
     }
 
+    /// Reset all transient AI model activity state.
+    func resetAIModel() {
+        aiModel.reset()
+    }
+
     /// Check if AI model is currently active
     var isAIActive: Bool {
         aiModel.isActive

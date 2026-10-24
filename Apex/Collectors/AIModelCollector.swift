@@ -14,9 +14,9 @@ final actor AIModelCollector {
         "swiftmaestro", "lm studio", "ollama", "llama-server",
         "llama.cpp", "vllm", "text-generation-webui", "gpt4all",
         "open-webui", "anything-llm", "localai", "koboldcpp",
-        "lmstudio", "inference", "omlx", "deltafin",
+        "lmstudio", "inference", "omlx", "omlx-server", "deltafin",
         "vision_proxy_server", "modelmanagerd", "siriinferenced",
-        "tgondeviceinferenceproviderservice"
+        "tgondeviceinferenceproviderservice", "opencode", "open code"
     ]
 
     /// Command-line tokens that strongly indicate an MCP server.
@@ -27,7 +27,7 @@ final actor AIModelCollector {
 
     /// Tokens that indicate a local/online model inference engine.
     private static let modelEngineMarkers: Set<String> = [
-        "--model", ".gguf", "mlx", "omlx", "llama-server", "llama.cpp",
+        "--model", ".gguf", "mlx", "omlx", "omlx-server", "llama-server", "llama.cpp",
         "ollama", "lm studio", "lmstudio", "vllm", "text-generation-webui",
         "gpt4all", "open-webui", "anything-llm", "localai", "koboldcpp",
         "swiftmaestro", "deltafin", "vision_proxy", "modelmanagerd",
@@ -42,6 +42,12 @@ final actor AIModelCollector {
         "openrouter.ai", "api.replicate.com", "api.deepseek.com"
     ]
 
+    /// Known local AI clients that connect to on-device model servers.
+    private static let knownAIClients: Set<String> = [
+        "opencode", "swiftmaestro", "lm studio", "lmstudio", "chatgpt",
+        "claude", "perplexity", "anything-llm", "open-webui"
+    ]
+
     /// Xcode-launched apps get truncated args like "-NSDocumentRevisionsDebugMode YES".
     /// This flag is passed by Xcode to every debug-launched app.
     private static let xcodeLaunchMarker = "-NSDocumentRevisionsDebugMode"
@@ -51,6 +57,8 @@ final actor AIModelCollector {
     func collect() async -> [AIModelSnapshot] {
         let allProcesses = processList()
         let listeningPorts = portMap()
+        let sockets = tcpSockets()
+        let clientMap = clientConnections(sockets: sockets)
 
         // First pass: identify processes that are AI-related by their own name/cmdline.
         var aiPIDs = Set<Int32>()
@@ -64,7 +72,6 @@ final actor AIModelCollector {
         var nameCounts: [String: Int] = [:]
 
         for process in allProcesses {
-            let lowerName = process.name.lowercased()
             let cl = process.commandLine ?? ""
 
             // Include direct AI processes and children spawned by them (MCP servers, helpers).
@@ -101,6 +108,9 @@ final actor AIModelCollector {
 
             let kind = classify(process: process, isChildOfAI: isChildOfAI)
             let status = status(from: process.state)
+            let procPorts = listeningPorts[process.pid] ?? []
+            let clients = clientMap[process.pid] ?? []
+            let activeServer = !procPorts.isEmpty && !clients.isEmpty
 
             snapshots.append(AIModelSnapshot(
                 id: process.pid,
@@ -112,7 +122,9 @@ final actor AIModelCollector {
                 threads: 0,
                 status: status,
                 kind: kind,
-                ports: listeningPorts[process.pid] ?? []
+                ports: procPorts,
+                connectedClients: clients,
+                isActiveServer: activeServer
             ))
         }
 
@@ -136,6 +148,9 @@ final actor AIModelCollector {
         if Self.mcpMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
             return .mcpServer
         }
+        if isKnownClient(process) {
+            return .client
+        }
         if isOnlineService(process) {
             return .onlineService
         }
@@ -146,6 +161,12 @@ final actor AIModelCollector {
             return process.name.hasSuffix("d") ? .daemon : .helper
         }
         return .unknown
+    }
+
+    private func isKnownClient(_ process: ProcessInfo) -> Bool {
+        let lowerName = process.name.lowercased()
+        let cl = process.commandLine?.lowercased() ?? ""
+        return Self.knownAIClients.contains { lowerName.contains($0) || cl.contains($0) }
     }
 
     private func isOnlineService(_ process: ProcessInfo) -> Bool {
@@ -301,6 +322,199 @@ final actor AIModelCollector {
             map[pid, default: []].append(port)
         }
         return map
+    }
+
+    // MARK: - Active connection / client detection
+
+    private struct TCPSocket {
+        let pid: Int32
+        let processName: String
+        let localAddr: String
+        let localPort: Int
+        let remoteAddr: String
+        let remotePort: Int
+        let state: String
+
+        var isListen: Bool { state == "LISTEN" }
+        var isEstablished: Bool { state == "ESTABLISHED" }
+
+        /// A normalized tuple that matches both halves of an established connection.
+        var connectionTuple: ConnectionTuple {
+            ConnectionTuple(localAddr: localAddr, localPort: localPort,
+                            remoteAddr: remoteAddr, remotePort: remotePort)
+        }
+    }
+
+    private struct ConnectionTuple: Hashable {
+        let aAddr: String
+        let aPort: Int
+        let bAddr: String
+        let bPort: Int
+
+        init(localAddr: String, localPort: Int, remoteAddr: String, remotePort: Int) {
+            let localEndpoint = "\(localAddr):\(localPort)"
+            let remoteEndpoint = "\(remoteAddr):\(remotePort)"
+            if localEndpoint < remoteEndpoint {
+                self.aAddr = localAddr
+                self.aPort = localPort
+                self.bAddr = remoteAddr
+                self.bPort = remotePort
+            } else {
+                self.aAddr = remoteAddr
+                self.aPort = remotePort
+                self.bAddr = localAddr
+                self.bPort = localPort
+            }
+        }
+    }
+
+    /// Parses `lsof -iTCP -n -P` to discover every TCP socket and its owning process.
+    private func tcpSockets() -> [TCPSocket] {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/lsof")
+        task.arguments = ["-iTCP", "-n", "-P"]
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = FileHandle.nullDevice
+
+        do {
+            try task.run()
+        } catch {
+            return []
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        task.waitUntilExit()
+        guard task.terminationStatus == 0,
+              let output = String(data: data, encoding: .utf8) else { return [] }
+
+        var sockets: [TCPSocket] = []
+        for line in output.components(separatedBy: .newlines).dropFirst() {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty else { continue }
+            let parts = trimmed.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+            guard parts.count >= 9 else { continue }
+
+            guard let pid = Int32(parts[1]) else { continue }
+            let processName = parts[0]
+            let nameField = parts[8]
+
+            // NAME formats:
+            //   *:1234 (LISTEN)
+            //   127.0.0.1:8010 (LISTEN)
+            //   127.0.0.1:1234->127.0.0.1:5678 (ESTABLISHED)
+            //   [::1]:1234->[::1]:5678 (ESTABLISHED)
+            guard let stateRange = nameField.range(of: "(", options: .backwards),
+                  let stateEndRange = nameField.range(of: ")", options: .backwards) else { continue }
+            let state = String(nameField[stateRange.upperBound..<stateEndRange.lowerBound])
+
+            let addressPart = String(nameField[..<stateRange.lowerBound]).trimmingCharacters(in: .whitespaces)
+            let arrowRange = addressPart.range(of: "->")
+
+            let localPart: String
+            let remotePart: String
+            if let arrow = arrowRange {
+                localPart = String(addressPart[..<arrow.lowerBound])
+                remotePart = String(addressPart[arrow.upperBound...])
+            } else {
+                localPart = addressPart
+                remotePart = "0.0.0.0:0"
+            }
+
+            guard let (localAddr, localPort) = parseAddrPort(localPart),
+                  let (remoteAddr, remotePort) = parseAddrPort(remotePart) else { continue }
+
+            sockets.append(TCPSocket(
+                pid: pid,
+                processName: processName,
+                localAddr: localAddr,
+                localPort: localPort,
+                remoteAddr: remoteAddr,
+                remotePort: remotePort,
+                state: state
+            ))
+        }
+        return sockets
+    }
+
+    /// Splits an address string like `127.0.0.1:8010` or `[::1]:1234` into (addr, port).
+    private func parseAddrPort(_ value: String) -> (String, Int)? {
+        let str = value
+        if str.hasPrefix("[") {
+            // IPv6 bracketed form: [::1]:1234
+            if let closing = str.firstIndex(of: "]") {
+                let after = str.index(after: closing)
+                let addr = String(str[str.startIndex...closing])
+                let portPart = String(str[after...]).trimmingCharacters(in: .whitespaces)
+                guard portPart.first == ":" else { return nil }
+                let portStr = String(portPart.dropFirst())
+                guard let port = Int(portStr), port >= 0 else { return nil }
+                return (addr, port)
+            }
+            return nil
+        }
+        guard let colon = str.lastIndex(of: ":") else { return nil }
+        let addr = String(str[..<colon])
+        let portStr = String(str[str.index(after: colon)...])
+        guard let port = Int(portStr), port >= 0 else { return nil }
+        return (addr, port)
+    }
+
+    /// Returns a map of server PID -> unique client app names connected to any of its ports.
+    private func clientConnections(sockets: [TCPSocket]) -> [Int32: [String]] {
+        // Build lookup table of listening sockets per PID.
+        var listenSockets: [Int32: [TCPSocket]] = [:]
+
+        for socket in sockets where socket.isListen {
+            listenSockets[socket.pid, default: []].append(socket)
+        }
+
+        // Map endpoint "addr:port" -> server PID for local listening sockets.
+        // We treat the local endpoint of a listen socket as the server endpoint.
+        var serverPIDByEndpoint: [String: Int32] = [:]
+        for (pid, listens) in listenSockets {
+            for listen in listens {
+                // Normalize localhost variants so client remote endpoints match.
+                let endpoints = [
+                    "\(listen.localAddr):\(listen.localPort)",
+                    "127.0.0.1:\(listen.localPort)",
+                    "[::1]:\(listen.localPort)",
+                    "[::]:\(listen.localPort)",
+                    "*:\(listen.localPort)"
+                ]
+                for ep in endpoints {
+                    serverPIDByEndpoint[ep] = pid
+                }
+            }
+        }
+
+        // For every established socket, if the remote endpoint belongs to a server
+        // we are monitoring, record this socket's PID as a client of that server.
+        var clientsByServer: [Int32: Set<String>] = [:]
+        for socket in sockets where socket.isEstablished {
+            let remoteEndpoint = "\(socket.remoteAddr):\(socket.remotePort)"
+            guard let serverPID = serverPIDByEndpoint[remoteEndpoint] else { continue }
+            guard socket.pid != serverPID else { continue }
+
+            let clientName = resolveClientName(pid: socket.pid, processName: socket.processName)
+            clientsByServer[serverPID, default: []].insert(clientName)
+        }
+
+        return clientsByServer.mapValues { Array($0).sorted() }
+    }
+
+    /// Resolve a client PID to a friendly app name. Uses NSRunningApplication
+    /// when available so Electron apps like OpenCode show as "OpenCode".
+    private func resolveClientName(pid: Int32, processName: String) -> String {
+        if let app = NSRunningApplication(processIdentifier: pid),
+           let name = app.localizedName, !name.isEmpty {
+            return name
+        }
+        if Self.knownAIClients.contains(processName.lowercased()) {
+            return processName.localizedCapitalized
+        }
+        return processName
     }
 
     /// Resolve the real app name for a process whose `ps` args were truncated.

@@ -142,6 +142,20 @@ struct ApexCanvasTileView: View {
                 kind: tile.kind,
                 isDraggable: !layout.isLocked,
                 content: { ApexPanelContentView(kind: tile.kind, monitor: monitor) },
+                headerTrailing: {
+                    if tile.kind == .aiModel {
+                        Button {
+                            monitor.resetAIModel()
+                        } label: {
+                            Image(systemName: "arrow.counterclockwise")
+                                .font(.caption)
+                                .foregroundStyle(theme.subtext0)
+                                .frame(width: 20, height: 20)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Reset AI activity state")
+                    }
+                },
                 onHeaderDragChanged: layout.isLocked ? nil : { value in headerDragChanged(value, tile: tile) },
                 onHeaderDragEnded: layout.isLocked ? nil : { value in headerDragEnded(value, tile: tile) }
             )

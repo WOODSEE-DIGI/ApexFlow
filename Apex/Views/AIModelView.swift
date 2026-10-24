@@ -12,7 +12,8 @@ struct AIModelView: View {
                                   hasSoftTimeout: aiModel.hasSoftTimeout,
                                   hasHardTimeout: aiModel.hasHardTimeout,
                                   isSilentProcessing: aiModel.isSilentProcessing,
-                                  silentDuration: aiModel.currentResponse.silentDuration,
+                                  responseState: aiModel.currentResponse,
+                                  localModelSummary: aiModel.localModelActivitySummary,
                                   idleTimeoutThreshold: aiModel.idleTimeoutThreshold,
                                   softTimeoutThreshold: aiModel.softTimeoutThreshold,
                                   hardTimeoutThreshold: aiModel.hardTimeoutThreshold)
@@ -44,11 +45,24 @@ private struct TokenActivityView: View {
     let hasSoftTimeout: Bool
     let hasHardTimeout: Bool
     let isSilentProcessing: Bool
-    let silentDuration: TimeInterval
+    let responseState: ModelResponseState
+    let localModelSummary: String?
     let idleTimeoutThreshold: TimeInterval
     let softTimeoutThreshold: TimeInterval
     let hardTimeoutThreshold: TimeInterval
-    
+
+    /// Consistent idle/silent duration in seconds.
+    /// Falls back to time since the last token when the current response has
+    /// not recorded any tokens yet, avoiding the confusing "NO RESPONSE (0s)"
+    /// state shown when a request timed out before first token.
+    private var displayedIdleSeconds: Int {
+        let tokenIdle = Int(Date().timeIntervalSince(tokenActivity.lastTokenTime))
+        if responseState.hasReceivedTokens {
+            return max(tokenIdle, Int(responseState.silentDuration))
+        }
+        return tokenIdle
+    }
+
     var body: some View {
         VStack(spacing: 6) {
             // Status Header Row
@@ -65,7 +79,7 @@ private struct TokenActivityView: View {
                             .stroke(currentStateColor.opacity(0.5), lineWidth: 2)
                             .frame(width: 24, height: 24)
                             .scaleEffect(1.5)
-                            .opacity(Double(silentDuration / 10.0).clamped(to: 0...1))
+                            .opacity(Double(responseState.silentDuration / 10.0).clamped(to: 0...1))
                     }
                     
                     Circle()
@@ -104,9 +118,9 @@ private struct TokenActivityView: View {
                                 .font(.system(size: 9, weight: hasHardTimeout ? .bold : .semibold, design: .monospaced))
                                 .foregroundStyle(silentPeriodColor)
                                 .help(silentPeriodHelp)
-                            
+
                             // Silent duration
-                            Text("Idle: \(Int(silentDuration))s")
+                            Text("Idle: \(displayedIdleSeconds)s")
                                 .font(.system(size: 9, design: .monospaced))
                                 .foregroundStyle(silentDurationColor)
                         } else {
@@ -125,7 +139,24 @@ private struct TokenActivityView: View {
                 }
                 
                 Spacer()
-                
+
+                // Local model activity badge (MLX, etc.)
+                if let summary = localModelSummary {
+                    HStack(spacing: 4) {
+                        Image(systemName: "cpu")
+                            .font(.system(size: 9, weight: .semibold))
+                        Text(summary)
+                            .font(.system(size: 8, weight: .medium, design: .monospaced))
+                            .lineLimit(1)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Theme.green.opacity(0.2))
+                    .foregroundStyle(Theme.green)
+                    .clipShape(Capsule())
+                    .help("A local model server has active client connections")
+                }
+
                 // Streaming State Badge
                 StreamingStateBadge(state: tokenActivity.streamingState)
             }
@@ -160,36 +191,37 @@ private struct TokenActivityView: View {
     
     private var silentPeriodLabel: String {
         if hasHardTimeout {
-            return "⚠️ NO RESPONSE (\(Int(silentDuration))s)"
+            return "⚠️ NO RESPONSE (\(displayedIdleSeconds)s)"
         } else if hasSoftTimeout {
-            return "⚠️ SLOW RESPONSE (\(Int(silentDuration))s)"
+            return "⚠️ SLOW RESPONSE (\(displayedIdleSeconds)s)"
         } else if isSilentProcessing {
             return "🧠 MODEL THINKING"
         } else {
             return ""
         }
     }
-    
+
     private var silentPeriodHelp: String {
         if hasHardTimeout {
-            return "No tokens received for \(Int(silentDuration))s. The model may be stuck or overloaded."
+            return "No tokens received for \(displayedIdleSeconds)s. The model may be stuck or overloaded."
         } else if hasSoftTimeout {
-            return "Response is slow (\(Int(silentDuration))s idle). The model may be processing a complex request."
+            return "Response is slow (\(displayedIdleSeconds)s idle). The model may be processing a complex request."
         } else {
             return "Model is generating a response silently (thinking/planning)."
         }
     }
-    
+
     private var silentPeriodColor: Color {
         if hasHardTimeout { return Theme.red }
         if hasSoftTimeout { return Theme.peach }
         return Theme.yellow
     }
-    
+
     private var silentDurationColor: Color {
-        if silentDuration >= 120 { return Theme.red }
-        if silentDuration >= 60 { return Theme.peach }
-        if silentDuration >= 30 { return Theme.yellow }
+        let duration = TimeInterval(displayedIdleSeconds)
+        if duration >= 120 { return Theme.red }
+        if duration >= 60 { return Theme.peach }
+        if duration >= 30 { return Theme.yellow }
         return Theme.overlay1
     }
     
@@ -288,6 +320,11 @@ private struct AIProcessListView: View {
                     .font(.system(size: 9, weight: .semibold, design: .monospaced))
                     .foregroundStyle(Theme.overlay0)
                     .frame(width: 55, alignment: .leading)
+
+                Text("Clients")
+                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(Theme.overlay0)
+                    .frame(width: 70, alignment: .leading)
             }
             .padding(.horizontal, 6)
 
@@ -339,6 +376,13 @@ private struct AIProcessRow: View {
                 .truncationMode(.tail)
                 .foregroundStyle(Theme.teal)
                 .frame(width: 55, alignment: .leading)
+
+            Text(clientSummary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .font(.system(size: 8, weight: proc.isActiveServer ? .bold : .regular, design: .monospaced))
+                .foregroundStyle(clientColor)
+                .frame(width: 70, alignment: .leading)
         }
         .font(.system(size: 10, design: .monospaced))
         .foregroundStyle(isSelected ? Theme.blue : Theme.subtext1)
@@ -355,6 +399,7 @@ private struct AIProcessRow: View {
         case .daemon:        return Theme.peach
         case .onlineService: return Theme.blue
         case .helper:        return Theme.teal
+        case .client:        return Theme.green
         case .unknown:       return Theme.overlay1
         }
     }
@@ -364,6 +409,15 @@ private struct AIProcessRow: View {
         let sorted = proc.ports.sorted()
         if sorted.count == 1 { return "\(sorted[0])" }
         return "\(sorted[0])+\(sorted.count - 1)"
+    }
+
+    private var clientSummary: String {
+        guard !proc.connectedClients.isEmpty else { return "-" }
+        return proc.connectedClients.joined(separator: ", ")
+    }
+
+    private var clientColor: Color {
+        proc.isActiveServer ? Theme.green : Theme.overlay1
     }
 }
 

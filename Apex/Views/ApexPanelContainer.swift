@@ -2,10 +2,11 @@ import SwiftUI
 
 // MARK: - Apex Panel Container
 /// Wraps a dashboard panel with a header: drag grip, icon, title, and close.
-struct ApexPanelContainer<Content: View>: View {
+struct ApexPanelContainer<Content: View, HeaderTrailing: View>: View {
     let kind: ApexPanelKind
     var isDraggable: Bool = true
     @ViewBuilder let content: () -> Content
+    @ViewBuilder let headerTrailing: () -> HeaderTrailing
 
     /// Canvas-mode drag callbacks forwarded from the hosting tile view.
     var onHeaderDragChanged: ((DragGesture.Value) -> Void)? = nil
@@ -13,6 +14,22 @@ struct ApexPanelContainer<Content: View>: View {
 
     @State private var layout = ApexWorkspaceLayoutState.shared
     @Environment(ThemeStore.self) private var theme
+
+    init(
+        kind: ApexPanelKind,
+        isDraggable: Bool = true,
+        @ViewBuilder content: @escaping () -> Content,
+        @ViewBuilder headerTrailing: @escaping () -> HeaderTrailing = { EmptyView() },
+        onHeaderDragChanged: ((DragGesture.Value) -> Void)? = nil,
+        onHeaderDragEnded: ((DragGesture.Value) -> Void)? = nil
+    ) {
+        self.kind = kind
+        self.isDraggable = isDraggable
+        self.content = content
+        self.headerTrailing = headerTrailing
+        self.onHeaderDragChanged = onHeaderDragChanged
+        self.onHeaderDragEnded = onHeaderDragEnded
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -54,6 +71,9 @@ struct ApexPanelContainer<Content: View>: View {
                 .lineLimit(1)
 
             Spacer()
+
+            headerTrailing()
+                .padding(.trailing, 4)
 
             Menu {
                 Button {

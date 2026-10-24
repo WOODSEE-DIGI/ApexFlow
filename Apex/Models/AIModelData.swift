@@ -14,7 +14,9 @@ struct AIModelSnapshot: Identifiable, Hashable {
     let status: ProcessStatus   // Process state
     let kind: ProcessKind       // AI-related role (model engine, MCP server, daemon, online)
     let ports: [Int]            // TCP ports this process is listening on
-    
+    let connectedClients: [String] // App names of clients connected to this server's ports
+    let isActiveServer: Bool    // True if the process has listening port(s) with established client connections
+
     enum ProcessStatus: String, Codable {
         case running = "Running"
         case sleeping = "Sleeping"
@@ -39,6 +41,7 @@ struct AIModelSnapshot: Identifiable, Hashable {
         case daemon = "Daemon"
         case onlineService = "Online"
         case helper = "Helper"
+        case client = "Client"
         case unknown = "AI"
 
         var label: String { rawValue }
@@ -50,6 +53,7 @@ struct AIModelSnapshot: Identifiable, Hashable {
             case .daemon:        return "peach"
             case .onlineService: return "blue"
             case .helper:        return "teal"
+            case .client:        return "green"
             case .unknown:       return "subtext1"
             }
         }
@@ -185,6 +189,23 @@ final class AIModelData {
     // MARK: - Internal state
     private var previousTokenCount: Int = 0
     private var lastTokenTimestamp: Date = .now
+    
+    // MARK: - Reset
+    
+    /// Resets all transient AI activity state (token counters, response lifecycle,
+    /// tool calls, and broadcast source) while keeping the process list and
+    /// configured thresholds intact. Call this when the panel appears frozen or
+    /// after a model session ends.
+    func reset() {
+        tokenActivity = TokenActivity()
+        tokenHistory.removeAll()
+        recentToolCalls.removeAll()
+        pendingTools.removeAll()
+        currentResponse = ModelResponseState()
+        broadcastingAppName = ""
+        previousTokenCount = 0
+        lastTokenTimestamp = .now
+    }
     
     // MARK: - Process updates
     func updateProcesses(from snapshots: [AIModelSnapshot]) {
@@ -332,12 +353,34 @@ final class AIModelData {
     var activeToolCalls: [MCPToolCall] {
         recentToolCalls.filter { $0.status == .pending }
     }
-    
+
     /// Get total pending tool count
     var pendingToolCount: Int {
         pendingTools.count
     }
-    
+
+    /// True if any local model engine (e.g. omlx-server, llama-server, LM Studio)
+    /// currently has an established client connection.
+    var hasActiveLocalServer: Bool {
+        aiProcesses.contains { $0.kind == .modelEngine && $0.isActiveServer }
+    }
+
+    /// Friendly names of apps currently using local model servers.
+    var activeLocalClients: [String] {
+        let clients = aiProcesses
+            .filter { $0.kind == .modelEngine && $0.isActiveServer }
+            .flatMap { $0.connectedClients }
+        return Array(Set(clients)).sorted()
+    }
+
+    /// Short summary for the header badge, e.g. "Local model · OpenCode".
+    var localModelActivitySummary: String? {
+        guard hasActiveLocalServer else { return nil }
+        let clients = activeLocalClients
+        let clientPart = clients.isEmpty ? "" : " · \(clients.joined(separator: ", "))"
+        return "Local model active\(clientPart)"
+    }
+
     // MARK: - Internal helpers
     
     private func updateStreamingState() {
