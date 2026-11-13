@@ -12,11 +12,18 @@ struct NationalSecurityWarningView: View {
     @State private var pulse = false
     @State private var flash = false
 
+    /// The visual theme for this warning. WAN leaks use an amber/blue alert
+    /// palette; system resource threats keep the original red.
+    private var theme: WarningTheme {
+        let wanOnly = threats.allSatisfy(\.isWANLeak)
+        return wanOnly ? .wanLeak : .systemThreat
+    }
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Flashing red alert background
-                Color.red.opacity(flash ? 0.25 : 0.05)
+                // Flashing alert background
+                theme.background.opacity(flash ? 0.25 : 0.05)
                     .animation(.easeInOut(duration: 0.35).repeatForever(autoreverses: true), value: flash)
                     .ignoresSafeArea()
 
@@ -25,36 +32,36 @@ struct NationalSecurityWarningView: View {
                     VStack(spacing: 6) {
                         Text("TOP SECRET // NOFORN")
                             .font(.system(size: 10, weight: .black, design: .monospaced))
-                            .foregroundStyle(.red)
+                            .foregroundStyle(theme.primary)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 3)
                             .overlay(
                                 Rectangle()
-                                    .stroke(.red, lineWidth: 1)
+                                    .stroke(theme.primary, lineWidth: 1)
                             )
 
-                        Text("SYSTEM HOG DETECTED")
+                        Text(theme.title)
                             .font(.system(size: 18, weight: .black, design: .monospaced))
-                            .foregroundStyle(.red)
+                            .foregroundStyle(theme.primary)
                             .tracking(3)
                     }
                     .padding(.top, 16)
                     .padding(.bottom, 10)
 
                     HStack(spacing: 16) {
-                        Image(systemName: "exclamationmark.triangle.fill")
+                        Image(systemName: theme.icon)
                             .font(.system(size: 54, weight: .bold))
-                            .foregroundStyle(.yellow)
+                            .foregroundStyle(theme.accent)
                             .scaleEffect(pulse ? 1.15 : 1.0)
-                            .shadow(color: .red, radius: pulse ? 20 : 6)
+                            .shadow(color: theme.primary, radius: pulse ? 20 : 6)
                             .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true), value: pulse)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("HOSTILE PROCESS DETECTED")
+                            Text(theme.headline)
                                 .font(.system(size: 24, weight: .black, design: .monospaced))
                                 .foregroundStyle(.white)
 
-                            Text("ApexFlow has identified system resource activity that requires your immediate attention.")
+                            Text(theme.subheadline)
                                 .font(.system(size: 12, weight: .medium, design: .monospaced))
                                 .foregroundStyle(.white.opacity(0.9))
                                 .lineLimit(nil)
@@ -71,7 +78,7 @@ struct NationalSecurityWarningView: View {
                                 HStack(spacing: 12) {
                                     Text(threat.reason.rawValue)
                                         .font(.system(size: 10, weight: .black, design: .monospaced))
-                                        .foregroundStyle(.red)
+                                        .foregroundStyle(theme.primary)
                                         .frame(width: 120, alignment: .leading)
                                         .fixedSize(horizontal: false, vertical: true)
 
@@ -82,7 +89,23 @@ struct NationalSecurityWarningView: View {
                                             .lineLimit(nil)
                                             .fixedSize(horizontal: false, vertical: true)
 
-                                        if threat.reason == .systemPressure {
+                                        if threat.isWANLeak {
+                                            VStack(alignment: .leading, spacing: 1) {
+                                                if let endpoint = threat.remoteEndpoint {
+                                                    Text("Endpoint: \(endpoint)")
+                                                }
+                                                if let risk = threat.wanRisk {
+                                                    Text("Risk: \(risk.rawValue)")
+                                                }
+                                                if let advice = threat.wanAdvice {
+                                                    Text(advice)
+                                                        .lineLimit(nil)
+                                                        .fixedSize(horizontal: false, vertical: true)
+                                                }
+                                            }
+                                            .font(.system(size: 10, design: .monospaced))
+                                            .foregroundStyle(.white.opacity(0.8))
+                                        } else if threat.reason == .systemPressure {
                                             Text("System memory usage: \(threat.formattedMemory) / \(threat.memoryPercent, specifier: "%.1f")%")
                                                 .font(.system(size: 10, design: .monospaced))
                                                 .foregroundStyle(.white.opacity(0.8))
@@ -97,7 +120,7 @@ struct NationalSecurityWarningView: View {
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                                    if threat.pid > 0 {
+                                    if threat.pid > 0 && !threat.isWANLeak {
                                         if isCriticalSystemProcess(name: threat.name) {
                                             Text("PROTECTED")
                                                 .font(.system(size: 10, weight: .black, design: .monospaced))
@@ -127,7 +150,7 @@ struct NationalSecurityWarningView: View {
                                 .background(.black.opacity(0.5))
                                 .overlay(
                                     Rectangle()
-                                        .stroke(.red, lineWidth: 2)
+                                        .stroke(theme.primary, lineWidth: 2)
                                 )
                             }
                         }
@@ -168,5 +191,65 @@ struct NationalSecurityWarningView: View {
             "dasd", "coreduetd", "powerd", "thermalmonitord", "watchdogd"
         ]
         return critical.contains(name)
+    }
+}
+
+// MARK: - Warning Theme
+
+private enum WarningTheme {
+    case systemThreat
+    case wanLeak
+
+    /// Primary theme color used for headers, borders, and flashing background.
+    var primary: Color {
+        switch self {
+        case .systemThreat: return .red
+        case .wanLeak:      return .orange
+        }
+    }
+
+    /// Accent color used for the large icon.
+    var accent: Color {
+        switch self {
+        case .systemThreat: return .yellow
+        case .wanLeak:      return .cyan
+        }
+    }
+
+    var background: Color {
+        switch self {
+        case .systemThreat: return .red
+        case .wanLeak:      return .orange
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .systemThreat: return "exclamationmark.triangle.fill"
+        case .wanLeak:      return "network.badge.shield.half.filled"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .systemThreat: return "SYSTEM HOG DETECTED"
+        case .wanLeak:      return "WAN LEAK DETECTED"
+        }
+    }
+
+    var headline: String {
+        switch self {
+        case .systemThreat: return "HOSTILE PROCESS DETECTED"
+        case .wanLeak:      return "OUTBOUND CONNECTION DETECTED"
+        }
+    }
+
+    var subheadline: String {
+        switch self {
+        case .systemThreat:
+            return "ApexFlow has identified system resource activity that requires your immediate attention."
+        case .wanLeak:
+            return "ApexFlow has detected an unexpected outbound connection to the public internet."
+        }
     }
 }

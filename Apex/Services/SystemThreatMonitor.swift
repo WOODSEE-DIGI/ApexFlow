@@ -21,14 +21,19 @@ final class SystemThreatMonitor {
     let systemPressureThresholdPercent: Double = 85.0
     /// Sample interval.
     let sampleInterval: TimeInterval = 5.0
-    /// How many consecutive samples a threat must appear in before warning.
-    let confirmationThreshold = 2
 
     // MARK: - State
 
     private var timer: Timer?
     private var seenThreats: [String: Int] = [:]
+    private var seenWANLeaks: [String: Int] = [:]
     private var warningPresented = false
+
+    /// Number of consecutive samples a resource threat must appear in.
+    let confirmationThreshold = 2
+    /// WAN leaks are event-based (each new outbound connection is reported once),
+    /// so a single report is enough to trigger the warning.
+    let wanConfirmationThreshold = 1
 
     private init() {}
 
@@ -158,6 +163,22 @@ final class SystemThreatMonitor {
         NationalSecurityWarningManager.shared.present(threats: threats) { [weak self] in
             self?.warningPresented = false
             self?.seenThreats.removeAll()
+            self?.seenWANLeaks.removeAll()
+        }
+    }
+
+    // MARK: - WAN leak reporting
+
+    /// Called by `NetworkLeakMonitor` when a medium/high-risk outbound WAN
+    /// connection is detected. The warning uses an amber/blue theme distinct
+    /// from the red system-hog theme.
+    func reportWANLeak(_ threat: ThreatAssessment) {
+        guard !warningPresented else { return }
+
+        let key = "\(threat.pid)-\(threat.remoteEndpoint ?? "unknown")"
+        seenWANLeaks[key, default: 0] += 1
+        if seenWANLeaks[key]! >= wanConfirmationThreshold {
+            presentWarning(threats: [threat])
         }
     }
 

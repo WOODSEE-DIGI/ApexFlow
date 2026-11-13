@@ -77,6 +77,22 @@ actor NetworkLeakMonitor {
             print("[WAN] alert added: \(conn.command) -> \(conn.remoteAddress):\(conn.remotePort)")
             #endif
 
+            // Elevate medium/high-risk WAN leaks to the full-screen warning system
+            // so they get the same dramatic, cannot-miss treatment as system hogs.
+            if alert.risk == .medium || alert.risk == .high {
+                let threat = ThreatAssessment(
+                    pid: alert.pid,
+                    name: alert.displayName,
+                    reason: .wanLeak,
+                    wanRisk: alert.risk,
+                    remoteEndpoint: "\(alert.remoteAddress):\(alert.remotePort)",
+                    wanAdvice: alert.advice
+                )
+                await MainActor.run {
+                    SystemThreatMonitor.shared.reportWANLeak(threat)
+                }
+            }
+
             // Resolve the remote hostname in the background so the UI updates
             // when the PTR record comes back.
             Task {
