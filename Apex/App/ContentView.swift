@@ -25,6 +25,16 @@ struct ContentView: View {
                 layoutMenu
 
                 Button {
+                    newLayoutName = ""
+                    showingSaveLayout = true
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundStyle(theme.subtext1)
+                }
+                .buttonStyle(.plain)
+                .help("Save current layout")
+
+                Button {
                     layout.isLocked.toggle()
                 } label: {
                     Image(systemName: layout.isLocked ? "lock" : "lock.open")
@@ -123,14 +133,20 @@ struct ContentView: View {
 
             Divider()
             Button {
-                newLayoutName = ""
-                showingSaveLayout = true
+                // Present the sheet after the menu closes to avoid SwiftUI
+                // menu hit-testing issues on macOS.
+                DispatchQueue.main.async {
+                    newLayoutName = ""
+                    showingSaveLayout = true
+                }
             } label: {
                 Label("Save Current Layout...", systemImage: "square.and.arrow.down")
             }
 
             Button {
-                showingDeleteLayout = true
+                DispatchQueue.main.async {
+                    showingDeleteLayout = true
+                }
             } label: {
                 Label("Delete Layout...", systemImage: "trash")
             }
