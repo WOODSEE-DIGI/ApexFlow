@@ -6,6 +6,11 @@ options:
   xcodeVersion: "16.0"
   defaultConfig: Debug
 
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.6.0
+
 configs:
   Debug:
     type: debug
@@ -77,6 +82,8 @@ targets:
       - sdk: CoreMIDI.framework
       - sdk: Network.framework
       - sdk: ServiceManagement.framework
+      - package: Sparkle
+        product: Sparkle
       - target: com.woodsee-digi.ApexFlowHelper
         embed: false
     postBuildScripts:

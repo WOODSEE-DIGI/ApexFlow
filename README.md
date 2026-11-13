@@ -122,6 +122,29 @@ On first launch, macOS will prompt for:
 
 ---
 
+## Automatic Updates
+
+Apex Flow uses [Sparkle 2](https://sparkle-project.org/) for automatic updates.
+
+1. Replace the placeholder feed URL in `Apex/Info.plist`:
+   ```xml
+   <key>SUFeedURL</key>
+   <string>https://your-server.com/ApexFlow/appcast.xml</string>
+   ```
+2. Build and sign a Release DMG:
+   ```bash
+   ./build-dmg.sh
+   ```
+3. Publish the update archive and appcast:
+   ```bash
+   ./publish-update.sh
+   ```
+4. Upload the generated files from `build/releases/` to the URL above.
+
+Users running an older version will be prompted to download and install the update automatically.
+
+---
+
 ## Architecture
 
 Apex Flow uses Swift 6 strict concurrency throughout.

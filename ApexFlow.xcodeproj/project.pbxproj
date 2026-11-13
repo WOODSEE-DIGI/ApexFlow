@@ -59,6 +59,7 @@
 		987930B41D070B693BE366E6 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */; };
 		A0734FD6E63549CAFE76A378 /* test-thunderbolt.sh in Resources */ = {isa = PBXBuildFile; fileRef = 4B7A8C7EB1CF4D0A30796A2C /* test-thunderbolt.sh */; };
 		A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28730CC0CD85C0CB18C148A2 /* NetworkView.swift */; };
+		A58F1326E1F2C3B2CADF160F /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F3947596B3521A5549D9B9C1 /* Sparkle */; };
 		A64ABD0AB5CDE906B462B711 /* AppHealthWatchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19679B0A7C856AE9FE12A3A5 /* AppHealthWatchdog.swift */; };
 		AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC4A47C24F1E2643338678F /* NetworkCollector.swift */; };
 		B1BD26FFADC654AED4438C5A /* DiskData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22124BCE3012710EAA2F3CE /* DiskData.swift */; };
@@ -189,6 +190,7 @@
 				7D9392C324C8F42F3A759D92 /* CoreMIDI.framework in Frameworks */,
 				3246894483BDB26DBFD80224 /* Network.framework in Frameworks */,
 				36BEB3EFA8DF9693291B4490 /* ServiceManagement.framework in Frameworks */,
+				A58F1326E1F2C3B2CADF160F /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +398,7 @@
 			);
 			name = ApexFlow;
 			packageProductDependencies = (
+				F3947596B3521A5549D9B9C1 /* Sparkle */,
 			);
 			productName = ApexFlow;
 			productReference = F1C7EFFE225005C357614EE3 /* ApexFlow.app */;
@@ -444,6 +447,9 @@
 			);
 			mainGroup = BE3C5CA282D88E7F4872442B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2C4A7988A76377F6EEB14BF2 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 42181FE73645392B7DEC998D /* Products */;
 			projectDirPath = "";
@@ -834,6 +840,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2C4A7988A76377F6EEB14BF2 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F3947596B3521A5549D9B9C1 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C4A7988A76377F6EEB14BF2 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 04D38D2A21E059CC8F8677B0 /* Project object */;
 }

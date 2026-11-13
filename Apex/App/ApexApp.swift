@@ -1,7 +1,22 @@
 import SwiftUI
+import Sparkle
+
+// MARK: - App Delegate
+
+@MainActor
+final class ApexAppDelegate: NSObject, NSApplicationDelegate {
+    /// Sparkle standard updater controller. Initialising it here wires the
+    /// "Check for Updates..." menu item and automatic background update checks.
+    let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true,
+        updaterDelegate: nil,
+        userDriverDelegate: nil
+    )
+}
 
 @main
 struct ApexApp: App {
+    @NSApplicationDelegateAdaptor(ApexAppDelegate.self) var appDelegate
     @State private var monitor = SystemMonitor()
     @State private var theme = ThemeStore.shared
 
