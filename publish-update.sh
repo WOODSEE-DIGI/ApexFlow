@@ -70,7 +70,7 @@ if [ -z "${GENERATE_APPCAST}" ]; then
     SPARKLE_VERSION="2.6.4"
     SPARKLE_TOOLS_DIR="./build/sparkle-tools"
     SPARKLE_ARCHIVE="${SPARKLE_TOOLS_DIR}/Sparkle-${SPARKLE_VERSION}.tar.xz"
-    GENERATE_APPCAST="${SPARKLE_TOOLS_DIR}/Sparkle-${SPARKLE_VERSION}/bin/generate_appcast"
+    GENERATE_APPCAST="${SPARKLE_TOOLS_DIR}/bin/generate_appcast"
 
     if [ ! -f "${GENERATE_APPCAST}" ]; then
         echo "⬇️  Downloading Sparkle ${SPARKLE_VERSION} tools..."
@@ -78,6 +78,7 @@ if [ -z "${GENERATE_APPCAST}" ]; then
         curl -L \
             "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" \
             -o "${SPARKLE_ARCHIVE}"
+        rm -rf "${SPARKLE_TOOLS_DIR}/bin" "${SPARKLE_TOOLS_DIR}/Sparkle.framework" "${SPARKLE_TOOLS_DIR}/Symbols"
         tar -xf "${SPARKLE_ARCHIVE}" -C "${SPARKLE_TOOLS_DIR}"
     fi
 fi
@@ -101,5 +102,5 @@ echo "     git push origin main"
 echo "3. Verify the feed is live at:"
 echo "   ${FEED_URL}"
 echo ""
-echo "⚠️  Remember to replace CODE_SIGN_IDENTITY with your real Developer ID"
-echo "   value before publishing."
+echo "⚠️  Ensure signing.config contains your real Developer ID values."
+echo "   signing.config is gitignored and will not be committed."
