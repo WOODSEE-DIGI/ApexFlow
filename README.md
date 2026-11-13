@@ -24,6 +24,10 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 </p>
 
 <p align="center">
+  <img src="Images/ApexFlow-System-Hog-Detected.gif" alt="Apex Flow system hog detected warning" width="100%">
+</p>
+
+<p align="center">
   <img src="Images/ApexFlow-AI-tags.png" alt="Apex Flow showing AI tags in the process list" width="100%">
 </p>
 
