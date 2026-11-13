@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     let monitor: SystemMonitor
 
-    @State private var layout = ApexWorkspaceLayoutState.shared
+    let layout = ApexWorkspaceLayoutState.shared
     @State private var showingThemeSettings = false
     @State private var showingSaveLayout = false
     @State private var showingDeleteLayout = false
@@ -20,28 +20,7 @@ struct ContentView: View {
 
                 Spacer()
 
-                panelToggleMenu
-
-                layoutMenu
-
-                Button {
-                    newLayoutName = ""
-                    showingSaveLayout = true
-                } label: {
-                    Image(systemName: "square.and.arrow.down")
-                        .foregroundStyle(theme.subtext1)
-                }
-                .buttonStyle(.plain)
-                .help("Save current layout")
-
-                Button {
-                    layout.isLocked.toggle()
-                } label: {
-                    Image(systemName: layout.isLocked ? "lock" : "lock.open")
-                        .foregroundStyle(theme.subtext1)
-                }
-                .buttonStyle(.plain)
-                .help(layout.isLocked ? "Unlock layout" : "Lock layout")
+                workspaceMenu
 
                 Button {
                     showingThemeSettings = true
@@ -88,42 +67,15 @@ struct ContentView: View {
         }
     }
 
-    private var panelToggleMenu: some View {
+    private var workspaceMenu: some View {
         Menu {
-            ForEach(ApexPanelKind.allCases) { kind in
-                Button {
-                    layout.toggle(kind)
-                } label: {
-                    Label(kind.title, systemImage: kind.icon)
-                    if layout.isOpen(kind) {
-                        Image(systemName: "checkmark")
-                    }
-                }
-            }
-        } label: {
-            Image(systemName: "rectangle.split.2x2")
-                .foregroundStyle(theme.subtext1)
-        }
-        .menuStyle(.borderlessButton)
-        .help("Toggle panels")
-    }
-
-    private var layoutMenu: some View {
-        Menu {
-            Button {
-                layout.resetDefaultLayout()
-            } label: {
-                Label("Reset to Default", systemImage: "arrow.counterclockwise")
-            }
-
-            if !layout.savedLayoutNames.isEmpty {
-                Divider()
-                ForEach(layout.savedLayoutNames, id: \.self) { name in
+            Section("Panels") {
+                ForEach(ApexPanelKind.allCases) { kind in
                     Button {
-                        layout.loadLayout(named: name)
+                        layout.toggle(kind)
                     } label: {
-                        Text(name)
-                        if layout.currentLayoutName == name {
+                        Label(kind.title, systemImage: kind.icon)
+                        if layout.isOpen(kind) {
                             Spacer()
                             Image(systemName: "checkmark")
                         }
@@ -131,32 +83,51 @@ struct ContentView: View {
                 }
             }
 
-            Divider()
-            Button {
-                // Present the sheet after the menu closes to avoid SwiftUI
-                // menu hit-testing issues on macOS.
-                DispatchQueue.main.async {
+            Section("Layouts") {
+                if !layout.savedLayoutNames.isEmpty {
+                    ForEach(layout.savedLayoutNames, id: \.self) { name in
+                        Button {
+                            layout.loadLayout(named: name)
+                        } label: {
+                            Text(name)
+                            if layout.currentLayoutName == name {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+
+                    Divider()
+                }
+
+                Button {
                     newLayoutName = ""
                     showingSaveLayout = true
+                } label: {
+                    Label("Save Current Layout...", systemImage: "square.and.arrow.down")
                 }
-            } label: {
-                Label("Save Current Layout...", systemImage: "square.and.arrow.down")
+
+                Button {
+                    showingDeleteLayout = true
+                } label: {
+                    Label("Delete Layout...", systemImage: "trash")
+                }
+                .disabled(layout.savedLayoutNames.isEmpty)
             }
 
-            Button {
-                DispatchQueue.main.async {
-                    showingDeleteLayout = true
+            Section("Workspace") {
+                Button {
+                    layout.isLocked.toggle()
+                } label: {
+                    Label(layout.isLocked ? "Unlock Workspace" : "Lock Workspace", systemImage: layout.isLocked ? "lock" : "lock.open")
                 }
-            } label: {
-                Label("Delete Layout...", systemImage: "trash")
             }
-            .disabled(layout.savedLayoutNames.isEmpty)
         } label: {
             Image(systemName: "square.grid.2x2")
                 .foregroundStyle(theme.subtext1)
         }
         .menuStyle(.borderlessButton)
-        .help("Layouts")
+        .help("Workspace")
     }
 }
 
