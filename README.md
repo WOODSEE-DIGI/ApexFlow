@@ -19,7 +19,13 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 
 ## Screenshots
 
-Screenshots will be added in a follow-up commit.
+<p align="center">
+  <video src="Images/Screen%20Recording%202026-11-13%20at%208.03.51%20pm.mov" controls width="100%"></video>
+</p>
+
+<p align="center">
+  <img src="Images/Screenshot%202026-11-13%20at%208.01.51%20pm%20%282%29.png" alt="Apex Flow showing AI tags in the process list" width="100%">
+</p>
 
 ---
 
