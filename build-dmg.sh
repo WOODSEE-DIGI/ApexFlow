@@ -8,15 +8,17 @@ set -e
 PROJECT_NAME="ApexFlow"
 SCHEME="ApexFlow"
 CONFIGURATION="Release"
-ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 EXPORT_PATH="./build/Release"
 APP_PATH="${EXPORT_PATH}/${PROJECT_NAME}.app"
-DMG_PATH="./build/${PROJECT_NAME}-Release.dmg"
 VOLUME_NAME="ApexFlow"
 
-# Developer ID signing identity from project.yml
+# Developer ID signing identity — replace with your own before running.
 CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
 DEVELOPMENT_TEAM="YOUR_TEAM_ID"
+
+# Read marketing version from Info.plist and use it in the DMG filename.
+VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "Apex/Info.plist" 2>/dev/null || echo "unknown")
+DMG_PATH="./build/${PROJECT_NAME}-${VERSION}.dmg"
 
 echo "🚀 ApexFlow Release DMG Builder"
 echo "================================"
@@ -72,15 +74,21 @@ cp -R "${APP_PATH}" "${STAGING_DIR}/"
 # Create a symlink to /Applications for drag-and-drop install
 ln -s /Applications "${STAGING_DIR}/Applications"
 
+# Remove any previous generic or versioned DMG so only the current one remains
+rm -f "./build/${PROJECT_NAME}-Release.dmg"
+
 # Create DMG
 echo "💿 Creating DMG..."
 hdiutil create \
-    -volname "${VOLUME_NAME}" \
+    -volname "${VOLUME_NAME} ${VERSION}" \
     -srcfolder "${STAGING_DIR}" \
     -ov \
     -format UDZO \
     -size 100m \
     "${DMG_PATH}"
+
+# Clean up the staging copy now that the DMG is built
+rm -rf "${STAGING_DIR}"
 
 # Sign the DMG
 echo "🔏 Signing DMG..."
