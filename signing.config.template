@@ -1,0 +1,6 @@
+# Local Apple Developer signing configuration
+# Copy this file to signing.config and fill in your real values.
+# signing.config is gitignored so your Developer ID never reaches the repo.
+
+CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
+DEVELOPMENT_TEAM="YOUR_TEAM_ID"

@@ -127,15 +127,20 @@ On first launch, macOS will prompt for:
 Apex Flow uses [Sparkle 2](https://sparkle-project.org/) for automatic updates, hosted entirely on GitHub Pages.
 
 1. Enable GitHub Pages in the repo settings: **Source = Deploy from a branch**, **Folder = `/docs`**.
-2. Build and sign a Release DMG:
+2. Create a local signing config from the template (this file is gitignored):
+   ```bash
+   cp signing.config.template signing.config
+   # Edit signing.config with your real Developer ID and Team ID
+   ```
+3. Build and sign a Release DMG:
    ```bash
    ./build-dmg.sh
    ```
-3. Publish the update archive and appcast:
+4. Publish the update archive and appcast:
    ```bash
    ./publish-update.sh
    ```
-4. Commit and push the generated files in `docs/updates/`:
+5. Commit and push the generated files in `docs/updates/`:
    ```bash
    git add docs/updates/
    git commit -m "release: ApexFlow 1.x"

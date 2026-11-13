@@ -12,9 +12,14 @@ EXPORT_PATH="./build/Release"
 APP_PATH="${EXPORT_PATH}/${PROJECT_NAME}.app"
 VOLUME_NAME="ApexFlow"
 
-# Developer ID signing identity — replace with your own before running.
-CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
-DEVELOPMENT_TEAM="YOUR_TEAM_ID"
+# Load local signing config if present (gitignored for safety).
+if [ -f "${SRCROOT:-.}/signing.config" ]; then
+    source "${SRCROOT:-.}/signing.config"
+fi
+
+# Fallback placeholders — replace via signing.config or edit locally.
+CODE_SIGN_IDENTITY="${CODE_SIGN_IDENTITY:-Developer ID Application: YOUR NAME (YOUR_TEAM_ID)}"
+DEVELOPMENT_TEAM="${DEVELOPMENT_TEAM:-YOUR_TEAM_ID}"
 
 # Read marketing version from Info.plist and use it in the DMG filename.
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "Apex/Info.plist" 2>/dev/null || echo "unknown")

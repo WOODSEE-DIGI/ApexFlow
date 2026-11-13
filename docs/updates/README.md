@@ -20,12 +20,19 @@ https://WOODSEE-DIGI.github.io/ApexFlow/updates/appcast.xml
 
 ## Publish an update
 
-```bash
-./build-dmg.sh
-./publish-update.sh
-git add docs/updates/
-git commit -m "release: ApexFlow 1.x"
-git push origin main
-```
+1. Set up your local signing config once (never committed):
+   ```bash
+   cp signing.config.template signing.config
+   # Edit signing.config with your real Developer ID and Team ID
+   ```
+
+2. Build and publish:
+   ```bash
+   ./build-dmg.sh
+   ./publish-update.sh
+   git add docs/updates/
+   git commit -m "release: ApexFlow 1.x"
+   git push origin main
+   ```
 
 GitHub Pages will redeploy automatically and installed apps will be prompted to update.

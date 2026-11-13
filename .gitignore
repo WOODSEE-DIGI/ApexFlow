@@ -39,3 +39,6 @@ Icon?
 # ai-context MCP server files
 .ai-context*
 .ai-context/
+
+# Local signing identity — never commit real Developer ID values
+signing.config

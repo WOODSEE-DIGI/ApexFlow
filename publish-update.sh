@@ -19,12 +19,18 @@ APP_NAME="ApexFlow.app"
 APP_PATH="./build/Release/${APP_NAME}"
 UPDATES_DIR="./docs/updates"
 
+# Load local signing config if present (gitignored for safety).
+if [ -f "./signing.config" ]; then
+    source "./signing.config"
+fi
+
+# Fallback placeholders — replace via signing.config or edit locally.
+CODE_SIGN_IDENTITY="${CODE_SIGN_IDENTITY:-Developer ID Application: YOUR NAME (YOUR_TEAM_ID)}"
+DEVELOPMENT_TEAM="${DEVELOPMENT_TEAM:-YOUR_TEAM_ID}"
+
 # Read version from Info.plist
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "Apex/Info.plist" 2>/dev/null || echo "unknown")
 BUILD=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "Apex/Info.plist" 2>/dev/null || echo "0")
-
-# Developer ID signing identity — replace with your own before distributing.
-CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
 
 # Public GitHub Pages URL where appcast.xml is hosted.
 FEED_URL=$(/usr/libexec/PlistBuddy -c "Print SUFeedURL" "Apex/Info.plist" 2>/dev/null || echo "https://WOODSEE-DIGI.github.io/ApexFlow/updates/appcast.xml")
