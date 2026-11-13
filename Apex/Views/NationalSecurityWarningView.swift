@@ -6,6 +6,7 @@ import SwiftUI
 /// remaining dramatic.
 struct NationalSecurityWarningView: View {
     let threats: [ThreatAssessment]
+    let networkLeakData: NetworkLeakData?
     let onDismiss: () -> Void
     let onKill: (Int32) -> Void
 
@@ -90,21 +91,12 @@ struct NationalSecurityWarningView: View {
                                             .fixedSize(horizontal: false, vertical: true)
 
                                         if threat.isWANLeak {
-                                            VStack(alignment: .leading, spacing: 1) {
-                                                if let endpoint = threat.remoteEndpoint {
-                                                    Text("Endpoint: \(endpoint)")
-                                                }
-                                                if let risk = threat.wanRisk {
-                                                    Text("Risk: \(risk.rawValue)")
-                                                }
-                                                if let advice = threat.wanAdvice {
-                                                    Text(advice)
-                                                        .lineLimit(nil)
-                                                        .fixedSize(horizontal: false, vertical: true)
-                                                }
-                                            }
-                                            .font(.system(size: 10, design: .monospaced))
-                                            .foregroundStyle(.white.opacity(0.8))
+                                            WANLeakDetailsView(
+                                                threat: threat,
+                                                networkLeakData: networkLeakData,
+                                                onKill: onKill,
+                                                onDismiss: onDismiss
+                                            )
                                         } else if threat.reason == .systemPressure {
                                             Text("System memory usage: \(threat.formattedMemory) / \(threat.memoryPercent, specifier: "%.1f")%")
                                                 .font(.system(size: 10, design: .monospaced))
@@ -191,6 +183,182 @@ struct NationalSecurityWarningView: View {
             "dasd", "coreduetd", "powerd", "thermalmonitord", "watchdogd"
         ]
         return critical.contains(name)
+    }
+}
+
+// MARK: - WAN Leak Details View
+
+private struct WANLeakDetailsView: View {
+    let threat: ThreatAssessment
+    let networkLeakData: NetworkLeakData?
+    let onKill: (Int32) -> Void
+    let onDismiss: () -> Void
+
+    /// The original WAN alert, if it still exists in the data store.
+    private var alert: WANConnectionAlert? {
+        guard let alertID = threat.alertID else { return nil }
+        return networkLeakData?.alerts.first { $0.id == alertID }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            // Endpoint / risk / advice
+            VStack(alignment: .leading, spacing: 2) {
+                if let endpoint = threat.remoteEndpoint {
+                    Text("Endpoint: \(endpoint)")
+                }
+                if let risk = threat.wanRisk {
+                    Text("Risk: \(risk.rawValue)")
+                }
+                if let advice = threat.wanAdvice {
+                    Text(advice)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .font(.system(size: 10, design: .monospaced))
+            .foregroundStyle(.white.opacity(0.8))
+
+            // Investigation findings
+            if let report = alert?.investigation {
+                VStack(alignment: .leading, spacing: 2) {
+                    if let bundleName = report.bundleName {
+                        Text("App: \(bundleName)")
+                    } else if let bundleID = report.bundleIdentifier {
+                        Text("Bundle: \(bundleID)")
+                    }
+                    if let path = report.executablePath {
+                        Text("Path: \(path)")
+                    }
+                    if let cmd = report.commandLine {
+                        Text("Command: \(cmd)")
+                    }
+                    if !report.configFindings.isEmpty {
+                        ForEach(report.configFindings) { finding in
+                            Text("\(finding.source): \(finding.detail)")
+                        }
+                    }
+                    Text(report.summary)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.9))
+                .padding(8)
+                .background(.black.opacity(0.35))
+                .cornerRadius(4)
+            } else {
+                HStack(spacing: 6) {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .frame(width: 12, height: 12)
+                    Text("Investigating process...")
+                        .font(.system(size: 10, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+            }
+
+            // Action buttons
+            HStack(spacing: 10) {
+                if let alert = alert {
+                    Button {
+                        networkLeakData?.approve(alert)
+                        onDismiss()
+                    } label: {
+                        Text("ALWAYS ALLOW")
+                            .font(.system(size: 10, weight: .black, design: .monospaced))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
+                    .help("Trust this app and stop warning about it")
+
+                    Button {
+                        networkLeakData?.silenceEndpoint(alert)
+                        onDismiss()
+                    } label: {
+                        Text("SILENCE ENDPOINT")
+                            .font(.system(size: 10, weight: .black, design: .monospaced))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
+                    .help("Stop warning about this endpoint")
+                }
+
+                if threat.pid > 0 && !isCriticalSystemProcess(name: threat.name) {
+                    Button {
+                        onKill(threat.pid)
+                        onDismiss()
+                    } label: {
+                        Text("KILL")
+                            .font(.system(size: 10, weight: .black, design: .monospaced))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                    .help("Terminate the process")
+                }
+
+                Button {
+                    onDismiss()
+                } label: {
+                    Text("DISMISS")
+                        .font(.system(size: 10, weight: .black, design: .monospaced))
+                }
+                .buttonStyle(.bordered)
+                .tint(.gray)
+
+                Spacer()
+
+                if let gateway = defaultGatewayIP() {
+                    Button {
+                        openGateway(gateway)
+                    } label: {
+                        Label("Gateway", systemImage: "network")
+                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Open router/firewall at \(gateway)")
+                }
+            }
+        }
+    }
+
+    private func isCriticalSystemProcess(name: String) -> Bool {
+        let critical = [
+            "WindowServer", "kernel_task", "launchd", "loginwindow",
+            "securityd", "trustd", "akd", "cloudd", "nsattributedstringagent",
+            "dasd", "coreduetd", "powerd", "thermalmonitord", "watchdogd"
+        ]
+        return critical.contains(name)
+    }
+
+    private func defaultGatewayIP() -> String? {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/netstat")
+        task.arguments = ["-rn", "-f", "inet"]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = FileHandle.nullDevice
+        do {
+            try task.run()
+        } catch { return nil }
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        task.waitUntilExit()
+        guard task.terminationStatus == 0,
+              let output = String(data: data, encoding: .utf8) else { return nil }
+        for line in output.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed.hasPrefix("default"),
+               let gateway = trimmed.components(separatedBy: .whitespaces).dropFirst().first,
+               !gateway.isEmpty {
+                return gateway
+            }
+        }
+        return nil
+    }
+
+    private func openGateway(_ gateway: String) {
+        guard let url = URL(string: "http://\(gateway)") else { return }
+        NSWorkspace.shared.open(url)
     }
 }
 

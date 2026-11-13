@@ -18,9 +18,12 @@ final class NationalSecurityWarningManager {
     /// Present a full-screen warning on the display where ApexFlow lives.
     /// - Parameters:
     ///   - threats: One or more resource threats to display.
+    ///   - networkLeakData: Optional WAN leak data store for investigation and
+    ///     user actions when a threat is a WAN leak.
     ///   - onDismiss: Called when the user dismisses the warning.
     func present(
         threats: [ThreatAssessment],
+        networkLeakData: NetworkLeakData? = nil,
         onDismiss: @escaping () -> Void
     ) {
         guard window == nil, !threats.isEmpty else { return }
@@ -29,6 +32,7 @@ final class NationalSecurityWarningManager {
 
         let content = NationalSecurityWarningView(
             threats: threats,
+            networkLeakData: networkLeakData,
             onDismiss: { [weak self] in
                 self?.dismiss()
             },

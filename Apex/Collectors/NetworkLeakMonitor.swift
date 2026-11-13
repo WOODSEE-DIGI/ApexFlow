@@ -86,7 +86,10 @@ actor NetworkLeakMonitor {
                     reason: .wanLeak,
                     wanRisk: alert.risk,
                     remoteEndpoint: "\(alert.remoteAddress):\(alert.remotePort)",
-                    wanAdvice: alert.advice
+                    wanAdvice: alert.advice,
+                    alertID: alert.id,
+                    bundleID: alert.bundleID,
+                    commandLine: alert.commandLine
                 )
                 await MainActor.run {
                     SystemThreatMonitor.shared.reportWANLeak(threat)

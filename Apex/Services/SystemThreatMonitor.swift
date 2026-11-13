@@ -35,6 +35,10 @@ final class SystemThreatMonitor {
     /// so a single report is enough to trigger the warning.
     let wanConfirmationThreshold = 1
 
+    /// Reference to the WAN leak data store so investigation and user actions
+    /// (approve/silence/kill) can be wired into the warning UI.
+    weak var networkLeakData: NetworkLeakData?
+
     private init() {}
 
     // MARK: - Lifecycle
@@ -160,7 +164,10 @@ final class SystemThreatMonitor {
     private func presentWarning(threats: [ThreatAssessment]) {
         warningPresented = true
         stop()
-        NationalSecurityWarningManager.shared.present(threats: threats) { [weak self] in
+        NationalSecurityWarningManager.shared.present(
+            threats: threats,
+            networkLeakData: networkLeakData
+        ) { [weak self] in
             self?.warningPresented = false
             self?.seenThreats.removeAll()
             self?.seenWANLeaks.removeAll()
@@ -174,6 +181,13 @@ final class SystemThreatMonitor {
     /// from the red system-hog theme.
     func reportWANLeak(_ threat: ThreatAssessment) {
         guard !warningPresented else { return }
+
+        // Kick off background investigation so findings are ready by the time
+        // the warning UI appears or shortly after.
+        if let alertID = threat.alertID,
+           let alert = networkLeakData?.alerts.first(where: { $0.id == alertID }) {
+            Task { await networkLeakData?.investigate(alert) }
+        }
 
         let key = "\(threat.pid)-\(threat.remoteEndpoint ?? "unknown")"
         seenWANLeaks[key, default: 0] += 1

@@ -189,6 +189,10 @@ final class SystemMonitor {
         // WAN Leak Monitor — lightweight outbound-connection watcher (10s poll)
         Task { await leakMonitor.start(reportingTo: networkLeak) }
 
+        // Give the system threat monitor access to WAN leak data so it can
+        // enrich warnings with investigation findings and handle user actions.
+        SystemThreatMonitor.shared.networkLeakData = networkLeak
+
         // MARK: - SwiftMaestro Distributed Notifications
         // Observe AI activity broadcasts from SwiftMaestro via NSDistributedNotificationCenter.
         // These notifications carry token rates, request lifecycle, and tool call events

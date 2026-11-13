@@ -17,6 +17,9 @@ struct ThreatAssessment: Identifiable, Hashable {
     let wanRisk: WANAlertRisk?
     let remoteEndpoint: String?
     let wanAdvice: String?
+    let alertID: String?
+    let bundleID: String?
+    let commandLine: String?
 
     init(
         pid: Int32,
@@ -28,7 +31,10 @@ struct ThreatAssessment: Identifiable, Hashable {
         timestamp: Date = Date(),
         wanRisk: WANAlertRisk? = nil,
         remoteEndpoint: String? = nil,
-        wanAdvice: String? = nil
+        wanAdvice: String? = nil,
+        alertID: String? = nil,
+        bundleID: String? = nil,
+        commandLine: String? = nil
     ) {
         self.pid = pid
         self.name = name
@@ -40,6 +46,9 @@ struct ThreatAssessment: Identifiable, Hashable {
         self.wanRisk = wanRisk
         self.remoteEndpoint = remoteEndpoint
         self.wanAdvice = wanAdvice
+        self.alertID = alertID
+        self.bundleID = bundleID
+        self.commandLine = commandLine
     }
 
     /// Memory as a percentage of total system RAM.
