@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var layout = ApexWorkspaceLayoutState.shared
     @State private var showingThemeSettings = false
     @State private var showingSaveLayout = false
+    @State private var showingDeleteLayout = false
     @State private var newLayoutName = ""
     @Environment(ThemeStore.self) private var theme
 
@@ -69,6 +70,12 @@ struct ContentView: View {
             }
             .environment(theme)
         }
+        .sheet(isPresented: $showingDeleteLayout) {
+            DeleteLayoutSheet(layoutNames: layout.savedLayoutNames) { name in
+                layout.deleteLayout(named: name)
+            }
+            .environment(theme)
+        }
     }
 
     private var panelToggleMenu: some View {
@@ -121,6 +128,13 @@ struct ContentView: View {
             } label: {
                 Label("Save Current Layout...", systemImage: "square.and.arrow.down")
             }
+
+            Button {
+                showingDeleteLayout = true
+            } label: {
+                Label("Delete Layout...", systemImage: "trash")
+            }
+            .disabled(layout.savedLayoutNames.isEmpty)
         } label: {
             Image(systemName: "square.grid.2x2")
                 .foregroundStyle(theme.subtext1)
@@ -162,6 +176,69 @@ private struct SaveLayoutSheet: View {
         }
         .padding(20)
         .frame(width: 300)
+        .background(theme.base)
+    }
+}
+
+// MARK: - Delete Layout Sheet
+
+private struct DeleteLayoutSheet: View {
+    let layoutNames: [String]
+    let onDelete: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @Environment(ThemeStore.self) private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Delete layout")
+                .font(.system(size: 14, weight: .bold))
+
+            if layoutNames.isEmpty {
+                Text("No saved layouts to delete.")
+                    .font(.system(size: 12))
+                    .foregroundStyle(theme.subtext1)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 20)
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(layoutNames, id: \.self) { name in
+                            HStack {
+                                Text(name)
+                                    .font(.system(size: 13, design: .monospaced))
+                                    .foregroundStyle(theme.text)
+
+                                Spacer()
+
+                                Button {
+                                    onDelete(name)
+                                    if layoutNames.count == 1 {
+                                        dismiss()
+                                    }
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .foregroundStyle(.red)
+                                }
+                                .buttonStyle(.borderless)
+                                .help("Delete '\(name)'")
+                            }
+                            .padding(8)
+                            .background(theme.surface0)
+                            .cornerRadius(6)
+                        }
+                    }
+                }
+                .frame(maxHeight: 220)
+            }
+
+            HStack {
+                Spacer()
+                Button("Done") { dismiss() }
+                    .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding(20)
+        .frame(width: 320)
         .background(theme.base)
     }
 }
