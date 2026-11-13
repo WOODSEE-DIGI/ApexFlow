@@ -20,7 +20,7 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 ## Screenshots
 
 <p align="center">
-  <video src="Images/Screen%20Recording%202026-11-13%20at%208.03.51%20pm.mov" controls width="100%"></video>
+  <img src="Images/ApexFlow-AI-preview.gif" alt="Apex Flow AI model and process monitoring in action" width="100%">
 </p>
 
 <p align="center">
