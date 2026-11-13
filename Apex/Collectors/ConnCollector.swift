@@ -92,6 +92,9 @@ actor ConnCollector {
     }
 
     // MARK: - Thunderbolt via IOKit (sandbox-safe, all ports + connected devices)
+    // Run on the main actor: IOKit registry walks can trigger subsystem logging
+    // that is not always safe from Swift actor/global cooperative threads.
+    @MainActor
     func collectThunderbolt() -> [TBDevice] {
         // Strategy: each IOThunderboltController owns one physical port.
         // Under each controller → switch → Port@1 is the user-facing connector.
@@ -127,6 +130,7 @@ actor ConnCollector {
 
     /// Walks from a controller down to its Port@1 (user-facing connector)
     /// and returns a TBDevice with connection state and device info.
+    @MainActor
     private func findUserFacingPort(controller: io_service_t, portIndex: Int, controllerID: UInt64) -> TBDevice? {
         // Step 1: Find the controller's child IOThunderboltPort (the host interface port@7)
         guard let hostPort = findFirstChild(of: controller, matching: { _, props in
@@ -208,6 +212,7 @@ actor ConnCollector {
     }
 
     /// Finds the first child of `parent` whose properties satisfy `predicate`.
+    @MainActor
     private func findFirstChild(
         of parent: io_service_t,
         matching predicate: (io_service_t, [String: Any]) -> Bool
@@ -232,6 +237,7 @@ actor ConnCollector {
     }
 
     // MARK: - USB via IOKit
+    @MainActor
     func collectUSB() -> [USBDevice] {
         // IOUSBHostDevice is the correct class on macOS 11+.
         // Also check IOUSBDevice for any legacy devices still on old stack.
@@ -292,8 +298,9 @@ actor ConnCollector {
     func collect() async -> ConnSnapshot {
         let wifi = await collectWiFi()
         let bt   = await collectBluetooth()
-        let tb   = collectThunderbolt()
-        let usb  = collectUSB()
+        // IOKit walks run on the main actor for stability.
+        let tb   = await collectThunderbolt()
+        let usb  = await collectUSB()
         return ConnSnapshot(wifi: wifi, bluetoothDevices: bt,
                             thunderboltDevices: tb, usbDevices: usb,
                             midiDevices: [])

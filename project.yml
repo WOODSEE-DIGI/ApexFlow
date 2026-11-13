@@ -16,14 +16,14 @@ configs:
   Release:
     type: release
     settings:
-      CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
+      CODE_SIGN_IDENTITY: "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
       CODE_SIGN_STYLE: Manual
-      DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+      DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
   AppStore:
     type: release
     settings:
       CODE_SIGN_STYLE: Automatic
-      DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+      DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
 
 settings:
   base:
@@ -64,9 +64,9 @@ targets:
         Release:
           SWIFT_OPTIMIZATION_LEVEL: "-O"
           DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
-          CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
+          CODE_SIGN_IDENTITY: "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
           CODE_SIGN_STYLE: Manual
-          DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+          DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
           CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
           OTHER_CODE_SIGN_FLAGS: "--timestamp"
     dependencies:
@@ -128,8 +128,8 @@ targets:
           DEVELOPMENT_TEAM: ""
         Release:
           SWIFT_OPTIMIZATION_LEVEL: "-O"
-          CODE_SIGN_IDENTITY: "Developer ID Application: Alastair Woods (3BMZ2ULZ54)"
+          CODE_SIGN_IDENTITY: "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
           CODE_SIGN_STYLE: Manual
-          DEVELOPMENT_TEAM: "3BMZ2ULZ54"
+          DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
           CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
           OTHER_CODE_SIGN_FLAGS: "--timestamp"

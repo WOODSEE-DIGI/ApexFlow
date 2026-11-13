@@ -11,11 +11,15 @@
 		029692205975A3A9C941FA15 /* DiskHealthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560DD1FEBF814EF7BC5E1BF9 /* DiskHealthService.swift */; };
 		08F3C520E92D34569859E5B5 /* DiskCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */; };
 		09403A5D1930DC9C229F444B /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64D97B18E4D18BB5FB0DDA /* ThemeStore.swift */; };
+		09FB2D4A7638FD2216EB0F14 /* NationalSecurityWarningManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1851C5377677044A3C546A14 /* NationalSecurityWarningManager.swift */; };
 		0DCA83E2A95B8D83EACECAD9 /* AIModelCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */; };
+		115CDF0CA8C6ED420FA9FCA7 /* ThreatAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE215F8BDFB5676D014660C /* ThreatAssessment.swift */; };
 		1227167994917FD9166E711C /* HelperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537FD002B2A17E7FDA0894F /* HelperManager.swift */; };
 		155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */; };
 		163E0302AA4821372E5E2BD9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B597857C4D86B4287CEE4BF /* main.swift */; };
+		182FBC0FA0CAEBE244F1DD00 /* SystemThreatMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD150ACA8E0232AEBF2F773 /* SystemThreatMonitor.swift */; };
 		1C39179B21F631B52372CE35 /* NetworkLeakData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC10C21BB8AF22F23AFA7301 /* NetworkLeakData.swift */; };
+		21F7BBC628E96040C94E5C44 /* NationalSecurityWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FB1428F9D529A589394670 /* NationalSecurityWarningView.swift */; };
 		273915CB7B994CFA9D384E17 /* CPUView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */; };
 		275A7E97159F2F03C4FB7575 /* MIDICollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23201D5FB3BA5E35F7447616 /* MIDICollector.swift */; };
 		2E7A7910C86E6126EFD9C9F5 /* ApexWorkspaceLayoutState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */; };
@@ -35,6 +39,8 @@
 		4C0F07C938F5B74BF4C9BB6B /* ApexCanvasWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949A1DE7B6D006C0ED111834 /* ApexCanvasWorkspaceView.swift */; };
 		5397A99AAC252B2B44096A97 /* ThemeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2A8D1363E025A334E316D0 /* ThemeSettingsView.swift */; };
 		547BEB203F2BED198AB518D8 /* SANDBOX_FIXES.md in Resources */ = {isa = PBXBuildFile; fileRef = 5C345A3D17CA73A02CED6F82 /* SANDBOX_FIXES.md */; };
+		5A58941EAA2A6AA249873329 /* EmergencyWarningManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45186D9F1CD0AE0B1468D5A /* EmergencyWarningManager.swift */; };
+		61113A0CF8AB7DC310FFFC5D /* ApexThemeSwatches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424500FFA110C8D2CD67EE8 /* ApexThemeSwatches.swift */; };
 		643BC9EE70684837683A0BC7 /* DiskHealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C8F3AE7808050528600A0B /* DiskHealth.swift */; };
 		65EF0DEE43D7A1B3E6333A9B /* MemoryCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F645DC409564C9DC2F68AF /* MemoryCollector.swift */; };
 		75515351378A3B5D859403D4 /* CPUCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292C61E09FEB6EF4AD4C1EC4 /* CPUCollector.swift */; };
@@ -42,6 +48,7 @@
 		7730275F238FC91571782815 /* AIModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4961B12D2BE79647FD9737EC /* AIModelView.swift */; };
 		7BDC7DA92B3875F3CC353916 /* ThemePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4347F6E48246CFAFB831E39C /* ThemePreset.swift */; };
 		7D9392C324C8F42F3A759D92 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F00BFCEDE97A5192880BA118 /* CoreMIDI.framework */; };
+		7F118D6693DC1B2D37A0EF50 /* EmergencyWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A62D2A4E79EA1732DEA2AD /* EmergencyWarningView.swift */; };
 		84C5F3D52B1429360087CA3E /* SwiftMaestroIntegration.md in Resources */ = {isa = PBXBuildFile; fileRef = C6AB36708BDE86FD57F7AAE7 /* SwiftMaestroIntegration.md */; };
 		869D781525446160C2854E29 /* APP_STORE_READY.md in Resources */ = {isa = PBXBuildFile; fileRef = 06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */; };
 		89BAF7D6886D4DEAAF19E8AA /* ConnData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0809B6E239B24B9F342CACB /* ConnData.swift */; };
@@ -52,6 +59,7 @@
 		987930B41D070B693BE366E6 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */; };
 		A0734FD6E63549CAFE76A378 /* test-thunderbolt.sh in Resources */ = {isa = PBXBuildFile; fileRef = 4B7A8C7EB1CF4D0A30796A2C /* test-thunderbolt.sh */; };
 		A3D4BEFC5213A1D2BCEFC877 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28730CC0CD85C0CB18C148A2 /* NetworkView.swift */; };
+		A64ABD0AB5CDE906B462B711 /* AppHealthWatchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19679B0A7C856AE9FE12A3A5 /* AppHealthWatchdog.swift */; };
 		AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC4A47C24F1E2643338678F /* NetworkCollector.swift */; };
 		B1BD26FFADC654AED4438C5A /* DiskData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22124BCE3012710EAA2F3CE /* DiskData.swift */; };
 		B753701ED649C5A9A0076CEE /* ApexPanelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3EDAA5A32BE674F2738435 /* ApexPanelContainer.swift */; };
@@ -71,6 +79,7 @@
 		F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D5E3623F4524F97BABBB59 /* ProcessView.swift */; };
 		F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */; };
 		F6129DA32C565E33C680C850 /* InvestigationProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054C79F2DB75F358B4098143 /* InvestigationProfiles.swift */; };
+		F6FE708023FE59E822844779 /* AIActivityFallbackCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5315FB5A77B5DEA16B2FE48 /* AIActivityFallbackCollector.swift */; };
 		FAA8C023B55B629DBA0E4F43 /* CPUData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0AE68DC4E22CC645240621 /* CPUData.swift */; };
 		FD4FDEEBC98F702F99389ABF /* exportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1A833296B7FB6FF34395FEF /* exportOptions.plist */; };
 /* End PBXBuildFile section */
@@ -86,10 +95,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0424500FFA110C8D2CD67EE8 /* ApexThemeSwatches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexThemeSwatches.swift; sourceTree = "<group>"; };
 		054C79F2DB75F358B4098143 /* InvestigationProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestigationProfiles.swift; sourceTree = "<group>"; };
 		06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = APP_STORE_READY.md; sourceTree = "<group>"; };
 		0D48E1D8348E548E199892BA /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		0F741FA34705451DDB01BCC8 /* MemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryView.swift; sourceTree = "<group>"; };
+		10FB1428F9D529A589394670 /* NationalSecurityWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalSecurityWarningView.swift; sourceTree = "<group>"; };
+		1851C5377677044A3C546A14 /* NationalSecurityWarningManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalSecurityWarningManager.swift; sourceTree = "<group>"; };
+		19679B0A7C856AE9FE12A3A5 /* AppHealthWatchdog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHealthWatchdog.swift; sourceTree = "<group>"; };
 		1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUView.swift; sourceTree = "<group>"; };
 		22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelCollector.swift; sourceTree = "<group>"; };
 		23201D5FB3BA5E35F7447616 /* MIDICollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDICollector.swift; sourceTree = "<group>"; };
@@ -99,6 +112,7 @@
 		2BAFB1702EB7E564167DC9EF /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
 		3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
 		3D9ACC66688F75E8EEBCB7F5 /* ApexPanelContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexPanelContentView.swift; sourceTree = "<group>"; };
+		3DE215F8BDFB5676D014660C /* ThreatAssessment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreatAssessment.swift; sourceTree = "<group>"; };
 		3F537B3E6B42CD2BBC22A2DD /* CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHECKLIST.md; sourceTree = "<group>"; };
 		4347F6E48246CFAFB831E39C /* ThemePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreset.swift; sourceTree = "<group>"; };
 		448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskHealthView.swift; sourceTree = "<group>"; };
@@ -115,6 +129,7 @@
 		5FB8823279479366FB5E0938 /* ConnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnView.swift; sourceTree = "<group>"; };
 		60019682F09D27BCA0531CDA /* NetworkLeakMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakMonitor.swift; sourceTree = "<group>"; };
 		603103A7164954939A7AB6D0 /* build-appstore.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-appstore.sh"; sourceTree = "<group>"; };
+		63A62D2A4E79EA1732DEA2AD /* EmergencyWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyWarningView.swift; sourceTree = "<group>"; };
 		68A74D0699EA2CEA8308C9E4 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
 		76364981C638AC0D963FDF2A /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		79E4A7C13B74AD8FCD7AAC46 /* ProcessCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessCollector.swift; sourceTree = "<group>"; };
@@ -131,6 +146,7 @@
 		980FC2072EBD76FF90D354AB /* com.woodsee-digi.ApexFlowHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = "com.woodsee-digi.ApexFlowHelper"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A52005BE92E34654129D805 /* ApexHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApexHelper.entitlements; sourceTree = "<group>"; };
 		9B597857C4D86B4287CEE4BF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		9BD150ACA8E0232AEBF2F773 /* SystemThreatMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemThreatMonitor.swift; sourceTree = "<group>"; };
 		9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakView.swift; sourceTree = "<group>"; };
 		9D4126D557FAA2A14EC90B5C /* NetworkLeakInvestigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLeakInvestigator.swift; sourceTree = "<group>"; };
 		A1A833296B7FB6FF34395FEF /* exportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = exportOptions.plist; sourceTree = "<group>"; };
@@ -140,6 +156,7 @@
 		A6F6A0A62DCBFC3E0D4B1AE5 /* RESUME_HERE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RESUME_HERE.md; sourceTree = "<group>"; };
 		AAD20992547C0F4DA981CB9E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		AD3CDEB478054658257FF3B9 /* AIModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIModelData.swift; sourceTree = "<group>"; };
+		B5315FB5A77B5DEA16B2FE48 /* AIActivityFallbackCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIActivityFallbackCollector.swift; sourceTree = "<group>"; };
 		BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessData.swift; sourceTree = "<group>"; };
 		C0809B6E239B24B9F342CACB /* ConnData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnData.swift; sourceTree = "<group>"; };
 		C6AB36708BDE86FD57F7AAE7 /* SwiftMaestroIntegration.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SwiftMaestroIntegration.md; sourceTree = "<group>"; };
@@ -147,6 +164,7 @@
 		D8CCF18C782E91DBE0E470CD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E22124BCE3012710EAA2F3CE /* DiskData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskData.swift; sourceTree = "<group>"; };
 		E41E1E0C4FCE4CC7AEAC250C /* ApexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexApp.swift; sourceTree = "<group>"; };
+		E45186D9F1CD0AE0B1468D5A /* EmergencyWarningManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyWarningManager.swift; sourceTree = "<group>"; };
 		E5C8F3AE7808050528600A0B /* DiskHealth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskHealth.swift; sourceTree = "<group>"; };
 		E670FAC8ED0A251A1CB77E28 /* DiskCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCollector.swift; sourceTree = "<group>"; };
 		E98C93258D43D7EEE5C85C94 /* ApexWorkspaceLayoutState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApexWorkspaceLayoutState.swift; sourceTree = "<group>"; };
@@ -199,6 +217,7 @@
 		15431EC42AD956ACA3F75524 /* Collectors */ = {
 			isa = PBXGroup;
 			children = (
+				B5315FB5A77B5DEA16B2FE48 /* AIActivityFallbackCollector.swift */,
 				22D3B655ED5C9BBC21B3E35B /* AIModelCollector.swift */,
 				06871CD3A23ADE07E06B2169 /* APP_STORE_READY.md */,
 				603103A7164954939A7AB6D0 /* build-appstore.sh */,
@@ -257,6 +276,7 @@
 				EC10C21BB8AF22F23AFA7301 /* NetworkLeakData.swift */,
 				BEAB9BC986C2AB53B08C8513 /* ProcessData.swift */,
 				4347F6E48246CFAFB831E39C /* ThemePreset.swift */,
+				3DE215F8BDFB5676D014660C /* ThreatAssessment.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -285,7 +305,9 @@
 				5FB8823279479366FB5E0938 /* ConnView.swift */,
 				1CDC51BFA8081A6C7E9139B5 /* CPUView.swift */,
 				448EDB7F6CAE0135472E5153 /* DiskHealthView.swift */,
+				63A62D2A4E79EA1732DEA2AD /* EmergencyWarningView.swift */,
 				0F741FA34705451DDB01BCC8 /* MemoryView.swift */,
+				10FB1428F9D529A589394670 /* NationalSecurityWarningView.swift */,
 				9C98D19A221D4A4072E4036A /* NetworkLeakView.swift */,
 				28730CC0CD85C0CB18C148A2 /* NetworkView.swift */,
 				A4D5E3623F4524F97BABBB59 /* ProcessView.swift */,
@@ -297,6 +319,7 @@
 		A4BC4F7F0DC0D84F326BCE33 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				0424500FFA110C8D2CD67EE8 /* ApexThemeSwatches.swift */,
 				3CD9B1629A9F2347375E29F7 /* HelperProtocol.swift */,
 				0D48E1D8348E548E199892BA /* SharedViews.swift */,
 				CC033E8540F88B0A1AC42561 /* Theme.swift */,
@@ -307,7 +330,11 @@
 		A6A34E7F14B7CD01460C7DEF /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				19679B0A7C856AE9FE12A3A5 /* AppHealthWatchdog.swift */,
 				560DD1FEBF814EF7BC5E1BF9 /* DiskHealthService.swift */,
+				E45186D9F1CD0AE0B1468D5A /* EmergencyWarningManager.swift */,
+				1851C5377677044A3C546A14 /* NationalSecurityWarningManager.swift */,
+				9BD150ACA8E0232AEBF2F773 /* SystemThreatMonitor.swift */,
 				4E64D97B18E4D18BB5FB0DDA /* ThemeStore.swift */,
 			);
 			path = Services;
@@ -476,6 +503,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FE708023FE59E822844779 /* AIActivityFallbackCollector.swift in Sources */,
 				0DCA83E2A95B8D83EACECAD9 /* AIModelCollector.swift in Sources */,
 				C3EE237F67EA2DE65880B2C7 /* AIModelData.swift in Sources */,
 				4A16968A98D14F8868211C5C /* AIModelRegistry.swift in Sources */,
@@ -485,7 +513,9 @@
 				B753701ED649C5A9A0076CEE /* ApexPanelContainer.swift in Sources */,
 				D3776807216C943B8CEC7108 /* ApexPanelContentView.swift in Sources */,
 				46D5C72F6A2474873D76DE63 /* ApexPanelKind.swift in Sources */,
+				61113A0CF8AB7DC310FFFC5D /* ApexThemeSwatches.swift in Sources */,
 				2E7A7910C86E6126EFD9C9F5 /* ApexWorkspaceLayoutState.swift in Sources */,
+				A64ABD0AB5CDE906B462B711 /* AppHealthWatchdog.swift in Sources */,
 				75515351378A3B5D859403D4 /* CPUCollector.swift in Sources */,
 				FAA8C023B55B629DBA0E4F43 /* CPUData.swift in Sources */,
 				273915CB7B994CFA9D384E17 /* CPUView.swift in Sources */,
@@ -498,6 +528,8 @@
 				643BC9EE70684837683A0BC7 /* DiskHealth.swift in Sources */,
 				029692205975A3A9C941FA15 /* DiskHealthService.swift in Sources */,
 				155F5C37A10039646EBB1EBC /* DiskHealthView.swift in Sources */,
+				5A58941EAA2A6AA249873329 /* EmergencyWarningManager.swift in Sources */,
+				7F118D6693DC1B2D37A0EF50 /* EmergencyWarningView.swift in Sources */,
 				1227167994917FD9166E711C /* HelperManager.swift in Sources */,
 				C880F64CA185E0AFA737125F /* HelperProtocol.swift in Sources */,
 				F6129DA32C565E33C680C850 /* InvestigationProfiles.swift in Sources */,
@@ -506,6 +538,8 @@
 				65EF0DEE43D7A1B3E6333A9B /* MemoryCollector.swift in Sources */,
 				96DCB844D35B340B70AFC372 /* MemoryData.swift in Sources */,
 				E564704100A4CA9A8197D3E8 /* MemoryView.swift in Sources */,
+				09FB2D4A7638FD2216EB0F14 /* NationalSecurityWarningManager.swift in Sources */,
+				21F7BBC628E96040C94E5C44 /* NationalSecurityWarningView.swift in Sources */,
 				AF7A24FD6072C559451A00FC /* NetworkCollector.swift in Sources */,
 				C3508A8FCA3DC6942FB28CC0 /* NetworkData.swift in Sources */,
 				1C39179B21F631B52372CE35 /* NetworkLeakData.swift in Sources */,
@@ -519,10 +553,12 @@
 				F08D95CE283C9EC76EBEB654 /* ProcessView.swift in Sources */,
 				CD7EFC8F7D5C731D16D1DC0E /* SharedViews.swift in Sources */,
 				F1AFD2F26946AA66D9FD9736 /* SystemMonitor.swift in Sources */,
+				182FBC0FA0CAEBE244F1DD00 /* SystemThreatMonitor.swift in Sources */,
 				421A42C50072362B0D41B579 /* Theme.swift in Sources */,
 				7BDC7DA92B3875F3CC353916 /* ThemePreset.swift in Sources */,
 				5397A99AAC252B2B44096A97 /* ThemeSettingsView.swift in Sources */,
 				09403A5D1930DC9C229F444B /* ThemeStore.swift in Sources */,
+				115CDF0CA8C6ED420FA9FCA7 /* ThreatAssessment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,12 +667,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Apex/Apex.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Alastair Woods (3BMZ2ULZ54)";
+				CODE_SIGN_IDENTITY = "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 3BMZ2ULZ54;
+				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Apex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -657,11 +693,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ApexHelper/ApexHelper.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Alastair Woods (3BMZ2ULZ54)";
+				CODE_SIGN_IDENTITY = "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 3BMZ2ULZ54;
+				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)/ApexFlow.app/Contents/MacOS";
 				LD_RUNPATH_SEARCH_PATHS = (

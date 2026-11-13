@@ -10,55 +10,51 @@ struct ContentView: View {
     @Environment(ThemeStore.self) private var theme
 
     var body: some View {
-        ZStack {
-            ApexCanvasWorkspaceView(monitor: monitor)
-
-            VStack {
-                HStack {
-                    Text("Apex Flow")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        .foregroundStyle(theme.text)
-                        .padding(.leading, 12)
-
-                    Spacer()
-
-                    panelToggleMenu
-
-                    layoutMenu
-
-                    Button {
-                        layout.isLocked.toggle()
-                    } label: {
-                        Image(systemName: layout.isLocked ? "lock" : "lock.open")
-                            .foregroundStyle(theme.subtext1)
-                    }
-                    .buttonStyle(.plain)
-                    .help(layout.isLocked ? "Unlock layout" : "Lock layout")
-
-                    Button {
-                        showingThemeSettings = true
-                    } label: {
-                        Image(systemName: "paintbrush")
-                            .foregroundStyle(theme.subtext1)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Customize theme")
-
-                    Button {
-                        layout.resetDefaultLayout()
-                    } label: {
-                        Image(systemName: "arrow.counterclockwise")
-                            .foregroundStyle(theme.subtext1)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Reset default layout")
-                    .padding(.trailing, 12)
-                }
-                .padding(.vertical, 8)
-                .background(theme.base.opacity(0.85))
+        VStack(spacing: 0) {
+            HStack {
+                Text("Apex Flow")
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundStyle(theme.text)
+                    .padding(.leading, 12)
 
                 Spacer()
+
+                panelToggleMenu
+
+                layoutMenu
+
+                Button {
+                    layout.isLocked.toggle()
+                } label: {
+                    Image(systemName: layout.isLocked ? "lock" : "lock.open")
+                        .foregroundStyle(theme.subtext1)
+                }
+                .buttonStyle(.plain)
+                .help(layout.isLocked ? "Unlock layout" : "Lock layout")
+
+                Button {
+                    showingThemeSettings = true
+                } label: {
+                    Image(systemName: "paintbrush")
+                        .foregroundStyle(theme.subtext1)
+                }
+                .buttonStyle(.plain)
+                .help("Customize theme")
+
+                Button {
+                    layout.resetDefaultLayout()
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .foregroundStyle(theme.subtext1)
+                }
+                .buttonStyle(.plain)
+                .help("Reset default layout")
+                .padding(.trailing, 12)
             }
+            .padding(.vertical, 8)
+            .background(theme.base)
+
+            ApexCanvasWorkspaceView(monitor: monitor)
         }
         .background(theme.base)
         .frame(minWidth: 1050, minHeight: 750)

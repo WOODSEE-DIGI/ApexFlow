@@ -23,7 +23,9 @@ actor NetworkLeakMonitor {
         Task { [weak self] in
             while await self?.isRunning == true, !Task.isCancelled {
                 await self?.scanOnce(data: data)
-                try? await Task.sleep(for: .seconds(1))
+                // 10-second poll is plenty for a 24/7 outbound-connection watcher;
+                // 1-second lsof scans were a major CPU drain.
+                try? await Task.sleep(for: .seconds(10))
             }
         }
     }
@@ -312,14 +314,43 @@ actor NetworkLeakMonitor {
 
 // MARK: - IPv4 helper
 
+/// Conservative IPv4 parser used only for private-range classification.
+/// Avoids `String.split` and `compactMap` on raw address strings so malformed
+/// or unexpected input cannot trigger collection/allocator edge cases.
 private struct IPv4 {
     let octets: [UInt8]
+
     init?(_ string: String) {
-        let parts = string.split(separator: ".", omittingEmptySubsequences: false)
-        guard parts.count == 4,
-              let o = parts.compactMap({ UInt8($0) }) as [UInt8]?,
-              o.count == 4 else { return nil }
-        octets = o
+        var octets: [UInt8] = []
+        octets.reserveCapacity(4)
+
+        var current: UInt16 = 0
+        var digitCount = 0
+
+        for character in string {
+            if character == "." {
+                guard digitCount > 0,
+                      let value = UInt8(exactly: current),
+                      octets.count < 4 else { return nil }
+                octets.append(value)
+                current = 0
+                digitCount = 0
+            } else if let digit = character.wholeNumberValue {
+                current = current * 10 + UInt16(digit)
+                digitCount += 1
+                guard current <= 255, digitCount <= 3 else { return nil }
+            } else {
+                // Non-digit, non-dot: not a plain IPv4 address.
+                return nil
+            }
+        }
+
+        guard digitCount > 0,
+              let value = UInt8(exactly: current),
+              octets.count == 3 else { return nil }
+        octets.append(value)
+
+        self.octets = octets
     }
 
     func isIn(_ a: UInt8, _ b: UInt8, _ c: UInt8, _ d: UInt8, _ prefix: Int) -> Bool {

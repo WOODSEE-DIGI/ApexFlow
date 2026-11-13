@@ -19,13 +19,7 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 
 ## Screenshots
 
-| Main dashboard | Panel picker |
-|---|---|
-| ![Apex Flow main dashboard](Screenshots/ApexFlow-Main%20Ui.png) | ![Apex Flow panel picker](Screenshots/ApexFlow-Show%20Panels.png) |
-
-| Theme presets | Theme customisation |
-|---|---|
-| ![Apex Flow theme presets](Screenshots/ApexFlow-Themes-1.png) | ![Apex Flow theme customisation](Screenshots/ApexFlow-Themes-2.png) |
+Screenshots will be added in a follow-up commit.
 
 ---
 

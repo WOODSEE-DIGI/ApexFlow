@@ -25,6 +25,16 @@ final actor AIModelCollector {
         "--mcp", "@modelcontextprotocol"
     ]
 
+    /// Strong signals that a process is actually serving/running a model
+    /// (as opposed to just being an AI-related app). These take precedence
+    /// over the generic client list so LM Studio's inference workers, for
+    /// example, are labelled Model instead of Client.
+    private static let strongModelEngineMarkers: Set<String> = [
+        "--model", ".gguf", "llama-server", "llama.cpp", "ollama",
+        "vllm", "text-generation-webui", "gpt4all", "open-webui",
+        "anything-llm", "localai", "koboldcpp", "omlx-server", "mlx"
+    ]
+
     /// Tokens that indicate a local/online model inference engine.
     private static let modelEngineMarkers: Set<String> = [
         "--model", ".gguf", "mlx", "omlx", "omlx-server", "llama-server", "llama.cpp",
@@ -148,15 +158,26 @@ final actor AIModelCollector {
         if Self.mcpMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
             return .mcpServer
         }
+
+        // Strong model-engine signals (loaded model file, inference server,
+        // etc.) take precedence so LM Studio / ollama show as Model rather
+        // than Client.
+        if Self.strongModelEngineMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
+            return .modelEngine
+        }
+
         if isKnownClient(process) {
             return .client
         }
+
         if isOnlineService(process) {
             return .onlineService
         }
+
         if Self.modelEngineMarkers.contains(where: { lowerName.contains($0) || cl.contains($0) }) {
             return .modelEngine
         }
+
         if isChildOfAI {
             return process.name.hasSuffix("d") ? .daemon : .helper
         }

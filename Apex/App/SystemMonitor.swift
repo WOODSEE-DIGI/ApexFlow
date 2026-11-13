@@ -23,6 +23,7 @@ final class SystemMonitor {
     private let midiCollector     = MIDICollector()
     private let oscCollector      = OSCCollector()
     private let aiModelCollector  = AIModelCollector()  // AI process collector
+    private let aiActivityFallback = AIActivityFallbackCollector()  // Fallback when token notifications fail
     private let leakMonitor       = NetworkLeakMonitor()
 
     private var tasks: [Task<Void, Never>] = []
@@ -88,14 +89,14 @@ final class SystemMonitor {
             }
         })
 
-        // Processes — 2s
+        // Processes — 5s (was 2s) to keep 24/7 CPU use low.
         tasks.append(Task { [weak self] in
             while !Task.isCancelled {
                 guard let self else { continue }
                 let snaps = await self.procCollector.collect()
                 let flagged = self.flagAIFamily(in: snaps)
                 self.processes.update(from: flagged.snapshots, aiPIDs: flagged.aiPIDs, aiRoles: flagged.aiRoles)
-                try? await Task.sleep(for: .seconds(2))
+                try? await Task.sleep(for: .seconds(5))
             }
         })
 
@@ -139,6 +140,29 @@ final class SystemMonitor {
                 guard let self else { continue }
                 let snaps = await self.aiModelCollector.collect()
                 self.aiModel.updateProcesses(from: snaps)
+                // Fallback activity detection in case SwiftMaestro's distributed
+                // token-rate notifications are not reaching us. Keep the
+                // decision off the main actor and apply any token on the main
+                // actor so we never pass the @MainActor model data across
+                // isolation boundaries.
+                let requestActive = self.aiModel.currentResponse.isAwaitingResponse
+                    || self.aiModel.currentResponse.hasReceivedTokens
+                    || self.aiModel.isActive
+                if let fallback = await self.aiActivityFallback.update(
+                    with: snaps,
+                    requestActive: requestActive
+                ) {
+                    self.aiModel.recordToken(
+                        tokensPerSecond: fallback.tokensPerSecond,
+                        totalTokens: nil
+                    )
+                    NSLog(
+                        "[ApexFlow] 🔧 Fallback activity detected via %@ (%.1f%% CPU) -> estimated %.1f tks/s",
+                        fallback.name,
+                        fallback.cpuPercent,
+                        fallback.tokensPerSecond
+                    )
+                }
                 try? await Task.sleep(for: .seconds(2))
             }
         })
@@ -162,7 +186,7 @@ final class SystemMonitor {
             }
         })
 
-        // WAN Leak Monitor — lightweight outbound-connection watcher (1s poll)
+        // WAN Leak Monitor — lightweight outbound-connection watcher (10s poll)
         Task { await leakMonitor.start(reportingTo: networkLeak) }
 
         // MARK: - SwiftMaestro Distributed Notifications
@@ -184,6 +208,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.generationStarted"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 generationStarted: %@", note.userInfo?.description ?? "nil")
             if let appName = note.userInfo?["appName"] as? String {
                 self?.aiModel.broadcastingAppName = appName
             }
@@ -196,6 +221,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.generationCompleted"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 generationCompleted: %@", note.userInfo?.description ?? "nil")
             if let appName = note.userInfo?["appName"] as? String {
                 self?.aiModel.broadcastingAppName = appName
             }
@@ -208,6 +234,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.generationFailed"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 generationFailed: %@", note.userInfo?.description ?? "nil")
             if let appName = note.userInfo?["appName"] as? String {
                 self?.aiModel.broadcastingAppName = appName
             }
@@ -220,6 +247,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.generationCancelled"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 generationCancelled: %@", note.userInfo?.description ?? "nil")
             if let appName = note.userInfo?["appName"] as? String {
                 self?.aiModel.broadcastingAppName = appName
             }
@@ -232,18 +260,19 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.tokenRateUpdate"),
             object: nil, queue: .main
         ) { [weak self] note in
-            guard let userInfo = note.userInfo else { return }
+            guard let userInfo = note.userInfo else {
+                NSLog("[ApexFlow] 🔔 tokenRateUpdate: nil userInfo")
+                return
+            }
+            NSLog("[ApexFlow] 🔔 tokenRateUpdate: %@", userInfo.description)
             if let appName = userInfo["appName"] as? String {
                 self?.aiModel.broadcastingAppName = appName
             }
-            if let tps = userInfo["tokensPerSecond"] as? Double {
-                self?.aiModel.tokenActivity.tokensPerSecond = tps
-            }
-            if let total = userInfo["totalTokens"] as? Int {
-                self?.aiModel.tokenActivity.totalTokens = total
-            }
-            // Record individual tokens for the activity tracker
-            self?.aiModel.recordToken()
+            // Accept a few common key spellings so we do not miss the update
+            // if SwiftMaestro uses a shorter key name.
+            let tps: Double? = Self.readDouble(from: userInfo, keys: ["tokensPerSecond", "tps", "tokenRate", "rate"])
+            let total: Int? = Self.readInt(from: userInfo, keys: ["totalTokens", "tokens", "total"])
+            self?.aiModel.recordToken(tokensPerSecond: tps, totalTokens: total)
         }
         notificationObservers.append(tokenObs)
 
@@ -252,6 +281,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.toolStarted"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 toolStarted: %@", note.userInfo?.description ?? "nil")
             guard let userInfo = note.userInfo,
                   let name = userInfo["toolName"] as? String,
                   let id = userInfo["toolID"] as? String else { return }
@@ -264,6 +294,7 @@ final class SystemMonitor {
             forName: Notification.Name("com.woodseedigi.swiftmaestro.toolCompleted"),
             object: nil, queue: .main
         ) { [weak self] note in
+            NSLog("[ApexFlow] 🔔 toolCompleted: %@", note.userInfo?.description ?? "nil")
             guard let userInfo = note.userInfo,
                   let id = userInfo["toolID"] as? String else { return }
             let duration = userInfo["duration"] as? TimeInterval ?? 0
@@ -288,6 +319,38 @@ final class SystemMonitor {
         oscCollector.stop()
         stopObservingSwiftMaestroNotifications()
         Task { await leakMonitor.stop() }
+    }
+
+    // MARK: - Notification payload helpers
+
+    private nonisolated static func readDouble(from userInfo: [AnyHashable: Any], keys: [String]) -> Double? {
+        for key in keys {
+            if let value = userInfo[key] as? Double {
+                return value
+            }
+            if let value = userInfo[key] as? NSNumber {
+                return value.doubleValue
+            }
+            if let value = userInfo[key] as? String, let parsed = Double(value) {
+                return parsed
+            }
+        }
+        return nil
+    }
+
+    private nonisolated static func readInt(from userInfo: [AnyHashable: Any], keys: [String]) -> Int? {
+        for key in keys {
+            if let value = userInfo[key] as? Int {
+                return value
+            }
+            if let value = userInfo[key] as? NSNumber {
+                return value.intValue
+            }
+            if let value = userInfo[key] as? String, let parsed = Int(value) {
+                return parsed
+            }
+        }
+        return nil
     }
 
     // MARK: - TB/USB/Disk correlation

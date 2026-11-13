@@ -1,0 +1,2630 @@
+[
+  {
+    "id": "system-default",
+    "name": "System Default",
+    "description": "Follows the system accent and the built-in Catppuccin/Mocha palette.",
+    "appearance": "system",
+    "swatches": [
+      {
+        "name": "Base",
+        "hex": "1E1E2EFF"
+      },
+      {
+        "name": "Mantle",
+        "hex": "181825FF"
+      },
+      {
+        "name": "Crust",
+        "hex": "11111BFF"
+      },
+      {
+        "name": "Surface 0",
+        "hex": "313244FF"
+      },
+      {
+        "name": "Surface 1 (60%)",
+        "hex": "31324499"
+      },
+      {
+        "name": "Surface 2",
+        "hex": "45475AFF"
+      },
+      {
+        "name": "Text",
+        "hex": "CDD6F4FF"
+      },
+      {
+        "name": "Subtext 1",
+        "hex": "BAC2DEFF"
+      },
+      {
+        "name": "Subtext 0",
+        "hex": "A6ADC8FF"
+      },
+      {
+        "name": "Overlay 0",
+        "hex": "6C7086FF"
+      },
+      {
+        "name": "Accent",
+        "hex": "89B4FAFF"
+      },
+      {
+        "name": "Blue",
+        "hex": "89B4FAFF"
+      },
+      {
+        "name": "Lavender",
+        "hex": "B4BEFEFF"
+      },
+      {
+        "name": "Mauve",
+        "hex": "CBA6F7FF"
+      },
+      {
+        "name": "Pink",
+        "hex": "F5C2E7FF"
+      },
+      {
+        "name": "Red",
+        "hex": "F38BA8FF"
+      },
+      {
+        "name": "Maroon",
+        "hex": "EBA0ACFF"
+      },
+      {
+        "name": "Peach",
+        "hex": "FAB387FF"
+      },
+      {
+        "name": "Yellow",
+        "hex": "F9E2AFFF"
+      },
+      {
+        "name": "Green",
+        "hex": "A6E3A1FF"
+      },
+      {
+        "name": "Teal",
+        "hex": "94E2D5FF"
+      },
+      {
+        "name": "Sky",
+        "hex": "89DCEBFF"
+      },
+      {
+        "name": "Sapphire",
+        "hex": "74C7ECFF"
+      }
+    ]
+  },
+  {
+    "id": "matrix-dark",
+    "name": "Matrix Dark",
+    "description": "Terminal green on black.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "Background",
+        "hex": "050A05FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "0F1F0FFF"
+      },
+      {
+        "name": "Text",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "red",
+        "hex": "FF3333FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "CCFF00FF"
+      },
+      {
+        "name": "green",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "teal",
+        "hex": "00F0A0FF"
+      },
+      {
+        "name": "sky",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "mem",
+        "hex": "00E060FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "00E060FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "00E060FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "bt",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "tb",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "usb",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "proc",
+        "hex": "00FF41FF"
+      },
+      {
+        "name": "ai",
+        "hex": "00FF41FF"
+      }
+    ]
+  },
+  {
+    "id": "matrix-light",
+    "name": "Matrix Light",
+    "description": "Terminal green on a clean white-green field.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "Background",
+        "hex": "F0FFF4FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "D8F5D8FF"
+      },
+      {
+        "name": "Text",
+        "hex": "004D00FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "007A00FF"
+      },
+      {
+        "name": "red",
+        "hex": "CC0000FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "88CC00FF"
+      },
+      {
+        "name": "green",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "teal",
+        "hex": "00A060FF"
+      },
+      {
+        "name": "sky",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "mem",
+        "hex": "00A060FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "00A060FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "00A060FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "bt",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "tb",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "usb",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "proc",
+        "hex": "00B22DFF"
+      },
+      {
+        "name": "ai",
+        "hex": "00B22DFF"
+      }
+    ]
+  },
+  {
+    "id": "cyberpunk-neon-dark",
+    "name": "Cyberpunk Neon Dark",
+    "description": "Hot pink and electric blue on a dark cityscape.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "Background",
+        "hex": "120A1FFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "1F1135FF"
+      },
+      {
+        "name": "Text",
+        "hex": "FFFFFFFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "C0B0D0FF"
+      },
+      {
+        "name": "blue",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "red",
+        "hex": "FF0055FF"
+      },
+      {
+        "name": "peach",
+        "hex": "F5A623FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "F5A623FF"
+      },
+      {
+        "name": "green",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "teal",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "sky",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "mem",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "bt",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "tb",
+        "hex": "F5A623FF"
+      },
+      {
+        "name": "usb",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "ai",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "memory",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "network",
+        "hex": "F5A623FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "00F0FFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "processes",
+        "hex": "00F0FFFF"
+      }
+    ]
+  },
+  {
+    "id": "cyberpunk-neon-light",
+    "name": "Cyberpunk Neon Light",
+    "description": "Hot pink and electric blue on a pale cityscape.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "Background",
+        "hex": "FFF5FCFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "F0E6FFFF"
+      },
+      {
+        "name": "Text",
+        "hex": "1A0A2EFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "5A4A6EFF"
+      },
+      {
+        "name": "blue",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "red",
+        "hex": "D00050FF"
+      },
+      {
+        "name": "peach",
+        "hex": "E09000FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "E09000FF"
+      },
+      {
+        "name": "green",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "teal",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "sky",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "mem",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "bt",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "tb",
+        "hex": "E09000FF"
+      },
+      {
+        "name": "usb",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "ai",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "memory",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "network",
+        "hex": "E09000FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "B85CFFFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "00B0CCFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "FF00D2FF"
+      },
+      {
+        "name": "processes",
+        "hex": "00B0CCFF"
+      }
+    ]
+  },
+  {
+    "id": "hello-kitty-pinks-light",
+    "name": "Hello Kitty Pinks Light",
+    "description": "Soft pastels and candy pinks.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF1493FF"
+      },
+      {
+        "name": "Background",
+        "hex": "FFF5F9FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "FFD1E0FF"
+      },
+      {
+        "name": "Text",
+        "hex": "C2185BFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "F06292FF"
+      },
+      {
+        "name": "blue",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF1493FF"
+      },
+      {
+        "name": "red",
+        "hex": "F06292FF"
+      },
+      {
+        "name": "peach",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "FFD54FFF"
+      },
+      {
+        "name": "green",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "teal",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "sky",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "mem",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "bt",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "tb",
+        "hex": "FFD54FFF"
+      },
+      {
+        "name": "usb",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF1493FF"
+      },
+      {
+        "name": "ai",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "memory",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "network",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "FF1493FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "F06292FF"
+      },
+      {
+        "name": "processes",
+        "hex": "FF69B4FF"
+      }
+    ]
+  },
+  {
+    "id": "hello-kitty-pinks-dark",
+    "name": "Hello Kitty Pinks Dark",
+    "description": "Candy pinks on a deep magenta night.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "Background",
+        "hex": "2A0A1AFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "3D0F26FF"
+      },
+      {
+        "name": "Text",
+        "hex": "FFFFFFCC"
+      },
+      {
+        "name": "Subtext",
+        "hex": "F8BBD0FF"
+      },
+      {
+        "name": "blue",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "red",
+        "hex": "F06292FF"
+      },
+      {
+        "name": "peach",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "FFD54FFF"
+      },
+      {
+        "name": "green",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "teal",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "sky",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "mem",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "FFAB91FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "bt",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "tb",
+        "hex": "FFD54FFF"
+      },
+      {
+        "name": "usb",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "ai",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "memory",
+        "hex": "DDA0DDFF"
+      },
+      {
+        "name": "network",
+        "hex": "FF85C0FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "FF69B4FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "F48FB1FF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "F06292FF"
+      },
+      {
+        "name": "processes",
+        "hex": "FF69B4FF"
+      }
+    ]
+  },
+  {
+    "id": "rainbows-and-unicorns-light",
+    "name": "Rainbows and Unicorns Light",
+    "description": "Vibrant rainbow panels on a light cloud background.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF0080FF"
+      },
+      {
+        "name": "Background",
+        "hex": "F8F4FFFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "E6F7FFFF"
+      },
+      {
+        "name": "Text",
+        "hex": "1565C0FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "1976D2FF"
+      },
+      {
+        "name": "blue",
+        "hex": "0000FFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "9400D3FF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF0080FF"
+      },
+      {
+        "name": "red",
+        "hex": "FF0000FF"
+      },
+      {
+        "name": "peach",
+        "hex": "FF7F00FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "FFFF00FF"
+      },
+      {
+        "name": "green",
+        "hex": "00FF00FF"
+      },
+      {
+        "name": "teal",
+        "hex": "00FFFFFF"
+      },
+      {
+        "name": "sky",
+        "hex": "00FFFFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "0000FFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF0000FF"
+      },
+      {
+        "name": "mem",
+        "hex": "FF7F00FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "00FF00FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FFFF00FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "00FFFFFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "0000FFFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "9400D3FF"
+      },
+      {
+        "name": "bt",
+        "hex": "FF0080FF"
+      },
+      {
+        "name": "tb",
+        "hex": "FF7F00FF"
+      },
+      {
+        "name": "usb",
+        "hex": "00FF00FF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF0000FF"
+      },
+      {
+        "name": "ai",
+        "hex": "9400D3FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF0000FF"
+      },
+      {
+        "name": "memory",
+        "hex": "FF7F00FF"
+      },
+      {
+        "name": "network",
+        "hex": "FFFF00FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "00FF00FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "0000FFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "9400D3FF"
+      },
+      {
+        "name": "processes",
+        "hex": "FF0080FF"
+      }
+    ]
+  },
+  {
+    "id": "rainbows-and-unicorns-dark",
+    "name": "Rainbows and Unicorns Dark",
+    "description": "Vibrant rainbow panels on a dark night background.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "FF00A0FF"
+      },
+      {
+        "name": "Background",
+        "hex": "1A0A2AFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "251035FF"
+      },
+      {
+        "name": "Text",
+        "hex": "FFFFFFCC"
+      },
+      {
+        "name": "Subtext",
+        "hex": "D0B0E0FF"
+      },
+      {
+        "name": "blue",
+        "hex": "3333FFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "CC33FFFF"
+      },
+      {
+        "name": "pink",
+        "hex": "FF00A0FF"
+      },
+      {
+        "name": "red",
+        "hex": "FF3333FF"
+      },
+      {
+        "name": "peach",
+        "hex": "FF9933FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "FFFF33FF"
+      },
+      {
+        "name": "green",
+        "hex": "33FF33FF"
+      },
+      {
+        "name": "teal",
+        "hex": "33FFFFFF"
+      },
+      {
+        "name": "sky",
+        "hex": "33FFFFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "3333FFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF3333FF"
+      },
+      {
+        "name": "mem",
+        "hex": "FF9933FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "33FF33FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FFFF33FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "33FFFFFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "3333FFFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "CC33FFFF"
+      },
+      {
+        "name": "bt",
+        "hex": "FF00A0FF"
+      },
+      {
+        "name": "tb",
+        "hex": "FF9933FF"
+      },
+      {
+        "name": "usb",
+        "hex": "33FF33FF"
+      },
+      {
+        "name": "proc",
+        "hex": "FF3333FF"
+      },
+      {
+        "name": "ai",
+        "hex": "CC33FFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "FF3333FF"
+      },
+      {
+        "name": "memory",
+        "hex": "FF9933FF"
+      },
+      {
+        "name": "network",
+        "hex": "FFFF33FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "33FF33FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "3333FFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "CC33FFFF"
+      },
+      {
+        "name": "processes",
+        "hex": "FF00A0FF"
+      }
+    ]
+  },
+  {
+    "id": "clean-and-minimal-light",
+    "name": "Clean and Minimal Light",
+    "description": "Soft grays with a restrained accent.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "5A7D9AFF"
+      },
+      {
+        "name": "Background",
+        "hex": "F5F5F7FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "EBEBF0FF"
+      },
+      {
+        "name": "Text",
+        "hex": "1D1D1FFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "5A5A5EFF"
+      },
+      {
+        "name": "blue",
+        "hex": "5A7D9AFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "8A7D9AFF"
+      },
+      {
+        "name": "pink",
+        "hex": "B85C9AFF"
+      },
+      {
+        "name": "red",
+        "hex": "D65A5AFF"
+      },
+      {
+        "name": "peach",
+        "hex": "D69E5AFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "D6B85AFF"
+      },
+      {
+        "name": "green",
+        "hex": "5AA67DFF"
+      },
+      {
+        "name": "teal",
+        "hex": "5A9E9EFF"
+      },
+      {
+        "name": "sky",
+        "hex": "5A7D9AFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "5A7DB8FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "5A7D9AFF"
+      },
+      {
+        "name": "mem",
+        "hex": "8A7D9AFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "5A9E9EFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "D69E5AFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "5AA67DFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "D69E5AFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "5A7D9AFF"
+      },
+      {
+        "name": "bt",
+        "hex": "8A7D9AFF"
+      },
+      {
+        "name": "tb",
+        "hex": "D6B85AFF"
+      },
+      {
+        "name": "usb",
+        "hex": "5A9E9EFF"
+      },
+      {
+        "name": "proc",
+        "hex": "B85C9AFF"
+      },
+      {
+        "name": "ai",
+        "hex": "5A7D9AFF"
+      }
+    ]
+  },
+  {
+    "id": "clean-and-minimal-dark",
+    "name": "Clean and Minimal Dark",
+    "description": "Soft grays with a restrained accent, dark mode.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "8BA4B8FF"
+      },
+      {
+        "name": "Background",
+        "hex": "1D1D1FFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "2C2C32FF"
+      },
+      {
+        "name": "Text",
+        "hex": "FFFFFFCC"
+      },
+      {
+        "name": "Subtext",
+        "hex": "A0A0A8FF"
+      },
+      {
+        "name": "blue",
+        "hex": "8BA4B8FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "A08BA4FF"
+      },
+      {
+        "name": "pink",
+        "hex": "B88BA4FF"
+      },
+      {
+        "name": "red",
+        "hex": "D68888FF"
+      },
+      {
+        "name": "peach",
+        "hex": "D6B08BFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "D6C88BFF"
+      },
+      {
+        "name": "green",
+        "hex": "8BB8A4FF"
+      },
+      {
+        "name": "teal",
+        "hex": "8BB8B8FF"
+      },
+      {
+        "name": "sky",
+        "hex": "8BA4B8FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "8BA4D6FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "8BA4B8FF"
+      },
+      {
+        "name": "mem",
+        "hex": "A08BA4FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "8BB8B8FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "D6B08BFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "8BB8A4FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "D6B08BFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "8BA4B8FF"
+      },
+      {
+        "name": "bt",
+        "hex": "A08BA4FF"
+      },
+      {
+        "name": "tb",
+        "hex": "D6C88BFF"
+      },
+      {
+        "name": "usb",
+        "hex": "8BB8B8FF"
+      },
+      {
+        "name": "proc",
+        "hex": "B88BA4FF"
+      },
+      {
+        "name": "ai",
+        "hex": "8BA4B8FF"
+      }
+    ]
+  },
+  {
+    "id": "professional-light",
+    "name": "Professional Light",
+    "description": "Navy, slate, and crisp white. Boardroom-ready.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "1A3C6EFF"
+      },
+      {
+        "name": "Background",
+        "hex": "F7F9FCFF"
+      },
+      {
+        "name": "Surface",
+        "hex": "E1E8F0FF"
+      },
+      {
+        "name": "Text",
+        "hex": "1F2D3DFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "4A5A6AFF"
+      },
+      {
+        "name": "blue",
+        "hex": "1A3C6EFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "3C1A6EFF"
+      },
+      {
+        "name": "pink",
+        "hex": "6E1A3CFF"
+      },
+      {
+        "name": "red",
+        "hex": "8B1A1AFF"
+      },
+      {
+        "name": "peach",
+        "hex": "8B5A1AFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "8B7B1AFF"
+      },
+      {
+        "name": "green",
+        "hex": "1A6E3CFF"
+      },
+      {
+        "name": "teal",
+        "hex": "1A6E6EFF"
+      },
+      {
+        "name": "sky",
+        "hex": "1A3C6EFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "1A4A8BFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "1A3C6EFF"
+      },
+      {
+        "name": "mem",
+        "hex": "3C1A6EFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "1A6E6EFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "8B5A1AFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "1A6E3CFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "8B5A1AFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "1A3C6EFF"
+      },
+      {
+        "name": "bt",
+        "hex": "3C1A6EFF"
+      },
+      {
+        "name": "tb",
+        "hex": "8B7B1AFF"
+      },
+      {
+        "name": "usb",
+        "hex": "1A6E6EFF"
+      },
+      {
+        "name": "proc",
+        "hex": "6E1A3CFF"
+      },
+      {
+        "name": "ai",
+        "hex": "1A3C6EFF"
+      }
+    ]
+  },
+  {
+    "id": "professional-dark",
+    "name": "Professional Dark",
+    "description": "Navy, slate, and crisp white. Boardroom-ready.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "Background",
+        "hex": "0F1720FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "1E2D3DFF"
+      },
+      {
+        "name": "Text",
+        "hex": "FFFFFFCC"
+      },
+      {
+        "name": "Subtext",
+        "hex": "8A9AABFF"
+      },
+      {
+        "name": "blue",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "8A5ACBFF"
+      },
+      {
+        "name": "pink",
+        "hex": "CB5A8CFF"
+      },
+      {
+        "name": "red",
+        "hex": "CB5A5AFF"
+      },
+      {
+        "name": "peach",
+        "hex": "CB8B5AFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "CBAE5AFF"
+      },
+      {
+        "name": "green",
+        "hex": "5ACB8CFF"
+      },
+      {
+        "name": "teal",
+        "hex": "5ACBCBFF"
+      },
+      {
+        "name": "sky",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "mem",
+        "hex": "8A5ACBFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "5ACBCBFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "CB8B5AFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "5ACB8CFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "CB8B5AFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "5A8CCBFF"
+      },
+      {
+        "name": "bt",
+        "hex": "8A5ACBFF"
+      },
+      {
+        "name": "tb",
+        "hex": "CBAE5AFF"
+      },
+      {
+        "name": "usb",
+        "hex": "5ACBCBFF"
+      },
+      {
+        "name": "proc",
+        "hex": "CB5A8CFF"
+      },
+      {
+        "name": "ai",
+        "hex": "5A8CCBFF"
+      }
+    ]
+  },
+  {
+    "id": "btop-tokyo-night",
+    "name": "btop Tokyo Night",
+    "description": "Cyan highlights on the deep blue of the Tokyo night skyline.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "Background",
+        "hex": "1A1B26FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "1F2335FF"
+      },
+      {
+        "name": "Text",
+        "hex": "CFC9C2FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "565F89FF"
+      },
+      {
+        "name": "blue",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "BB9AF7FF"
+      },
+      {
+        "name": "pink",
+        "hex": "F7768EFF"
+      },
+      {
+        "name": "red",
+        "hex": "F7768EFF"
+      },
+      {
+        "name": "peach",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "green",
+        "hex": "9ECE6AFF"
+      },
+      {
+        "name": "teal",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "sky",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "7AA2F7FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "mem",
+        "hex": "BB9AF7FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "9ECE6AFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "bt",
+        "hex": "BB9AF7FF"
+      },
+      {
+        "name": "tb",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "usb",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "proc",
+        "hex": "F7768EFF"
+      },
+      {
+        "name": "ai",
+        "hex": "BB9AF7FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "memory",
+        "hex": "BB9AF7FF"
+      },
+      {
+        "name": "network",
+        "hex": "E0AF68FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "F7768EFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "7DCFFFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "9ECE6AFF"
+      },
+      {
+        "name": "processes",
+        "hex": "7DCFFFFF"
+      }
+    ]
+  },
+  {
+    "id": "btop-nord-dark",
+    "name": "btop Nord Dark",
+    "description": "Arctic blues and frost accents from the north.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "Background",
+        "hex": "2E3440FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "3B4252FF"
+      },
+      {
+        "name": "Text",
+        "hex": "D8DEE9FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "4C566AFF"
+      },
+      {
+        "name": "blue",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "pink",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "red",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "peach",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "green",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "teal",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "sky",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "mem",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "bt",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "tb",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "usb",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "proc",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "ai",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "memory",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "network",
+        "hex": "EBCB8BFF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "88C0D0FF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "processes",
+        "hex": "88C0D0FF"
+      }
+    ]
+  },
+  {
+    "id": "btop-nord-light",
+    "name": "btop Nord Light",
+    "description": "Polar white fields with frost accents.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "Background",
+        "hex": "ECEFF4FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "D8DEE9FF"
+      },
+      {
+        "name": "Text",
+        "hex": "2E3440FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "4C566AFF"
+      },
+      {
+        "name": "blue",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "pink",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "red",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "peach",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "green",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "teal",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "sky",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "mem",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "bt",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "tb",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "usb",
+        "hex": "8FBCBBFF"
+      },
+      {
+        "name": "proc",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "ai",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "memory",
+        "hex": "B48EADFF"
+      },
+      {
+        "name": "network",
+        "hex": "D08770FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "BF616AFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "5E81ACFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "A3BE8CFF"
+      },
+      {
+        "name": "processes",
+        "hex": "5E81ACFF"
+      }
+    ]
+  },
+  {
+    "id": "btop-solarized-dark",
+    "name": "btop Solarized Dark",
+    "description": "Ethan Schoonover's precision colors on a deep teal field.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "Background",
+        "hex": "002B36FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "073642FF"
+      },
+      {
+        "name": "Text",
+        "hex": "EEE8D5FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "586E75FF"
+      },
+      {
+        "name": "blue",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "pink",
+        "hex": "D33682FF"
+      },
+      {
+        "name": "red",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "peach",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "green",
+        "hex": "859900FF"
+      },
+      {
+        "name": "teal",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "sky",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "mem",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "859900FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "bt",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "tb",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "usb",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "proc",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "ai",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "memory",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "network",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "859900FF"
+      },
+      {
+        "name": "processes",
+        "hex": "268BD2FF"
+      }
+    ]
+  },
+  {
+    "id": "btop-solarized-light",
+    "name": "btop Solarized Light",
+    "description": "Warm paper tones with the same precision palette.",
+    "appearance": "light",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "Background",
+        "hex": "FDF6E3FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "EEE8D5FF"
+      },
+      {
+        "name": "Text",
+        "hex": "586E75FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "93A1A1FF"
+      },
+      {
+        "name": "blue",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "lavender",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "pink",
+        "hex": "D33682FF"
+      },
+      {
+        "name": "red",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "peach",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "yellow",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "green",
+        "hex": "859900FF"
+      },
+      {
+        "name": "teal",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "sky",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "mem",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "netDown",
+        "hex": "859900FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "CB4B16FF"
+      },
+      {
+        "name": "wifi",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "bt",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "tb",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "usb",
+        "hex": "2AA198FF"
+      },
+      {
+        "name": "proc",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "ai",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "cpu",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "memory",
+        "hex": "6C71C4FF"
+      },
+      {
+        "name": "network",
+        "hex": "B58900FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "DC322FFF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "268BD2FF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "859900FF"
+      },
+      {
+        "name": "processes",
+        "hex": "268BD2FF"
+      }
+    ]
+  },
+  {
+    "id": "btop-one-dark",
+    "name": "btop One Dark",
+    "description": "Atom's iconic editor palette, blue highlights on charcoal.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "Background",
+        "hex": "282C34FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "2C313CFF"
+      },
+      {
+        "name": "Text",
+        "hex": "ABB2BFFF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "5C6370FF"
+      },
+      {
+        "name": "blue",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "C678DDFF"
+      },
+      {
+        "name": "pink",
+        "hex": "E06C75FF"
+      },
+      {
+        "name": "red",
+        "hex": "E06C75FF"
+      },
+      {
+        "name": "peach",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "green",
+        "hex": "98C379FF"
+      },
+      {
+        "name": "teal",
+        "hex": "56B6C2FF"
+      },
+      {
+        "name": "sky",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "mem",
+        "hex": "C678DDFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "56B6C2FF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "98C379FF"
+      },
+      {
+        "name": "netUp",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "bt",
+        "hex": "C678DDFF"
+      },
+      {
+        "name": "tb",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "usb",
+        "hex": "56B6C2FF"
+      },
+      {
+        "name": "proc",
+        "hex": "E06C75FF"
+      },
+      {
+        "name": "ai",
+        "hex": "C678DDFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "memory",
+        "hex": "C678DDFF"
+      },
+      {
+        "name": "network",
+        "hex": "E5C07BFF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "E06C75FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "61AFEFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "98C379FF"
+      },
+      {
+        "name": "processes",
+        "hex": "61AFEFFF"
+      }
+    ]
+  },
+  {
+    "id": "btop-monokai",
+    "name": "btop Monokai",
+    "description": "Hot pink and lime on near-black, straight from the editor classic.",
+    "appearance": "dark",
+    "swatches": [
+      {
+        "name": "Accent",
+        "hex": "F92672FF"
+      },
+      {
+        "name": "Background",
+        "hex": "121310FF"
+      },
+      {
+        "name": "Surface",
+        "hex": "1E1F1CFF"
+      },
+      {
+        "name": "Text",
+        "hex": "F8F8F2FF"
+      },
+      {
+        "name": "Subtext",
+        "hex": "75715EFF"
+      },
+      {
+        "name": "blue",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "lavender",
+        "hex": "AE81FFFF"
+      },
+      {
+        "name": "pink",
+        "hex": "F92672FF"
+      },
+      {
+        "name": "red",
+        "hex": "F92672FF"
+      },
+      {
+        "name": "peach",
+        "hex": "FD971FFF"
+      },
+      {
+        "name": "yellow",
+        "hex": "E6DB74FF"
+      },
+      {
+        "name": "green",
+        "hex": "A6E22EFF"
+      },
+      {
+        "name": "teal",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "sky",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "sapphire",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "mem",
+        "hex": "AE81FFFF"
+      },
+      {
+        "name": "diskRead",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "diskWrite",
+        "hex": "FD971FFF"
+      },
+      {
+        "name": "netDown",
+        "hex": "A6E22EFF"
+      },
+      {
+        "name": "netUp",
+        "hex": "FD971FFF"
+      },
+      {
+        "name": "wifi",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "bt",
+        "hex": "AE81FFFF"
+      },
+      {
+        "name": "tb",
+        "hex": "E6DB74FF"
+      },
+      {
+        "name": "usb",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "proc",
+        "hex": "F92672FF"
+      },
+      {
+        "name": "ai",
+        "hex": "AE81FFFF"
+      },
+      {
+        "name": "cpu",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "memory",
+        "hex": "AE81FFFF"
+      },
+      {
+        "name": "network",
+        "hex": "E6DB74FF"
+      },
+      {
+        "name": "connectivity",
+        "hex": "F92672FF"
+      },
+      {
+        "name": "aiModel",
+        "hex": "66D9EFFF"
+      },
+      {
+        "name": "diskHealth",
+        "hex": "A6E22EFF"
+      },
+      {
+        "name": "processes",
+        "hex": "66D9EFFF"
+      }
+    ]
+  }
+]

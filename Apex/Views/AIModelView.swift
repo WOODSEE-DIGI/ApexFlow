@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct AIModelView: View {
-    let aiModel: AIModelData
-    
+    @Bindable var aiModel: AIModelData
+
     var body: some View {
         VStack(spacing: 6) {
                 // Token Activity Header with Enhanced State Indicators
@@ -285,46 +285,63 @@ private struct StreamingStateBadge: View {
 
 // MARK: - AI Process List View
 private struct AIProcessListView: View {
-    let aiModel: AIModelData
-    
+    @Bindable var aiModel: AIModelData
+
+    /// Currently active sort. `nil` means the collector's default order.
+    @State private var sort: SortOrder? = nil
+
+    private enum SortKey {
+        case pid, name, kind, cpu, memory, ports, clients
+    }
+
+    private struct SortOrder {
+        let key: SortKey
+        let ascending: Bool
+
+        func toggled() -> SortOrder {
+            SortOrder(key: key, ascending: !ascending)
+        }
+    }
+
+    /// Processes ordered by the user's current sort selection.
+    private var sortedProcesses: [AIModelSnapshot] {
+        guard let sort else { return aiModel.aiProcesses }
+        return aiModel.aiProcesses.sorted { lhs, rhs in
+            let ascending = sort.ascending
+            switch sort.key {
+            case .pid:
+                return ascending ? lhs.id < rhs.id : lhs.id > rhs.id
+            case .name:
+                let result = lhs.name.localizedStandardCompare(rhs.name)
+                return ascending ? result == .orderedAscending : result == .orderedDescending
+            case .kind:
+                let result = lhs.kind.rawValue.localizedStandardCompare(rhs.kind.rawValue)
+                return ascending ? result == .orderedAscending : result == .orderedDescending
+            case .cpu:
+                return ascending ? lhs.cpuPercent < rhs.cpuPercent : lhs.cpuPercent > rhs.cpuPercent
+            case .memory:
+                return ascending ? lhs.memoryBytes < rhs.memoryBytes : lhs.memoryBytes > rhs.memoryBytes
+            case .ports:
+                return ascending ? lhs.ports.count < rhs.ports.count : lhs.ports.count > rhs.ports.count
+            case .clients:
+                return ascending
+                    ? lhs.connectedClients.count < rhs.connectedClients.count
+                    : lhs.connectedClients.count > rhs.connectedClients.count
+            }
+        }
+    }
+
     var body: some View {
         VStack(spacing: 4) {
             // Header row — must match data row frame structure exactly
             HStack(spacing: 0) {
-                Text("PID")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 45, alignment: .leading)
-
-                Text("Name")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Text("Kind")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 42, alignment: .leading)
-
-                Text("CPU%")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 42, alignment: .leading)
-
-                Text("Memory")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 60, alignment: .leading)
-
-                Text("Ports")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 55, alignment: .leading)
-
-                Text("Clients")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Theme.overlay0)
-                    .frame(width: 70, alignment: .leading)
+                sortableHeader("PID", key: .pid, width: 45)
+                sortableHeader("Name", key: .name, flexible: true)
+                sortableHeader("Kind", key: .kind, width: 42)
+                sortableHeader("CPU%", key: .cpu, width: 42)
+                sortableHeader("Memory", key: .memory, width: 60)
+                sortableHeader("Ports", key: .ports, width: 55)
+                sortableHeader("Clients", key: .clients, width: 70)
             }
             .padding(.horizontal, 6)
 
@@ -333,7 +350,7 @@ private struct AIProcessListView: View {
             // Process list
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(spacing: 1) {
-                    ForEach(aiModel.aiProcesses) { proc in
+                    ForEach(sortedProcesses) { proc in
                         AIProcessRow(proc: proc, isSelected: aiModel.selectedPID == proc.id)
                             .onTapGesture {
                                 aiModel.selectedPID = proc.id
@@ -342,6 +359,42 @@ private struct AIProcessListView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func sortableHeader(
+        _ title: String,
+        key: SortKey,
+        width: CGFloat? = nil,
+        flexible: Bool = false
+    ) -> some View {
+        let isActive = sort?.key == key
+        Button {
+            withAnimation(.easeInOut(duration: 0.15)) {
+                if let current = sort, current.key == key {
+                    sort = current.toggled()
+                } else {
+                    sort = SortOrder(key: key, ascending: true)
+                }
+            }
+        } label: {
+            HStack(spacing: 2) {
+                Text(title)
+                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                if isActive {
+                    Image(systemName: sort?.ascending == true ? "arrow.up" : "arrow.down")
+                        .font(.system(size: 8, weight: .bold))
+                }
+            }
+            .foregroundStyle(isActive ? Theme.text : Theme.overlay0)
+            .frame(
+                minWidth: width,
+                maxWidth: flexible ? .infinity : width,
+                alignment: .leading
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 

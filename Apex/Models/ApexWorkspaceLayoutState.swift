@@ -257,12 +257,38 @@ final class ApexWorkspaceLayoutState {
 
     func loadLayout(named name: String) {
         let layouts = savedLayoutsDictionary()
-        guard let data = layouts[name],
-              let decoded = try? JSONDecoder().decode([ApexCanvasTile].self, from: data)
-        else { return }
-        tiles = decoded
-        currentLayoutName = name
-        save()
+        guard let data = layouts[name] else { return }
+
+        do {
+            let decoded = try JSONDecoder().decode([ApexCanvasTile].self, from: data)
+            tiles = decoded
+            currentLayoutName = name
+            clampTilesToCanvas(CGSize(width: 1200, height: 1000))
+            save()
+        } catch {
+            // A saved layout may reference a panel kind that no longer exists
+            // (e.g. an old layout saved before a panel was renamed or removed).
+            // Fall back to decoding tile-by-tile and drop any invalid tiles
+            // rather than leaving the workspace stuck on the previous layout.
+            NSLog("[ApexFlow] Failed to decode layout '\(name)': \(error)")
+            guard let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return }
+            var validTiles: [ApexCanvasTile] = []
+            for dict in jsonArray {
+                guard let tileData = try? JSONSerialization.data(withJSONObject: dict),
+                      let tile = try? JSONDecoder().decode(ApexCanvasTile.self, from: tileData)
+                else { continue }
+                validTiles.append(tile)
+            }
+            guard !validTiles.isEmpty else {
+                NSLog("[ApexFlow] Layout '\(name)' contained no valid tiles; deleting corrupted entry")
+                deleteLayout(named: name)
+                return
+            }
+            tiles = validTiles
+            currentLayoutName = name
+            clampTilesToCanvas(CGSize(width: 1200, height: 1000))
+            save()
+        }
     }
 
     func deleteLayout(named name: String) {

@@ -3,7 +3,7 @@ import Observation
 
 // MARK: - AI Model Snapshot
 /// Represents an AI model process being monitored
-struct AIModelSnapshot: Identifiable, Hashable {
+struct AIModelSnapshot: Identifiable, Hashable, Sendable {
     let id: Int32               // PID
     let parentPID: Int32?       // Parent PID (for spotting spawned daemons/MCP servers)
     let name: String            // Process name (e.g., "LM Studio", "ollama")
@@ -17,7 +17,7 @@ struct AIModelSnapshot: Identifiable, Hashable {
     let connectedClients: [String] // App names of clients connected to this server's ports
     let isActiveServer: Bool    // True if the process has listening port(s) with established client connections
 
-    enum ProcessStatus: String, Codable {
+    enum ProcessStatus: String, Codable, Sendable {
         case running = "Running"
         case sleeping = "Sleeping"
         case idle = "Idle"
@@ -214,33 +214,52 @@ final class AIModelData {
     
     // MARK: - Token tracking
     
-    /// Record a new token received (call this when tokens stream in)
-    func recordToken() {
+    /// Record token activity. Prefer broadcaster-supplied metrics when available
+    /// (e.g. from SwiftMaestro notifications) so the displayed rate/count is accurate.
+    /// Always refresh `lastTokenTime` so idle/timeout detection reflects real activity.
+    func recordToken(tokensPerSecond: Double? = nil, totalTokens: Int? = nil) {
         let now = Date()
-        tokenActivity.totalTokens += 1
-        
-        // Calculate tokens per second over a 1-second window
-        let elapsed = now.timeIntervalSince(lastTokenTimestamp)
-        if elapsed >= 1.0 {
-            let delta = tokenActivity.totalTokens - previousTokenCount
-            tokenActivity.tokensPerSecond = Double(delta) / elapsed
-            previousTokenCount = tokenActivity.totalTokens
+
+        if let total = totalTokens {
+            tokenActivity.totalTokens = total
+        } else {
+            tokenActivity.totalTokens += 1
+        }
+
+        if let tps = tokensPerSecond {
+            tokenActivity.tokensPerSecond = tps
+        }
+
+        // This is the key fix: without refreshing lastTokenTime, the panel
+        // would permanently report a hard timeout after 120s even while streaming.
+        tokenActivity.lastTokenTime = now
+
+        // Local TPS calculation only when the broadcaster did not supply one.
+        if tokensPerSecond == nil {
+            let elapsed = now.timeIntervalSince(lastTokenTimestamp)
+            if elapsed >= 1.0 {
+                let delta = tokenActivity.totalTokens - previousTokenCount
+                tokenActivity.tokensPerSecond = max(0, Double(delta) / elapsed)
+                previousTokenCount = tokenActivity.totalTokens
+                lastTokenTimestamp = now
+
+                tokenHistory.append((now, tokenActivity.totalTokens))
+                if tokenHistory.count > 60 {
+                    tokenHistory.removeFirst()
+                }
+            }
+        } else {
+            // External update: keep rolling history and local baseline in sync.
             lastTokenTimestamp = now
-            
-            // Add to history (keep last 60 entries)
+            previousTokenCount = tokenActivity.totalTokens
             tokenHistory.append((now, tokenActivity.totalTokens))
             if tokenHistory.count > 60 {
                 tokenHistory.removeFirst()
             }
         }
-        
-        // Update response state
+
         currentResponse.recordToken()
-        
-        // Update streaming state
         updateStreamingState()
-        
-        // Update idle/timeout status
         updateActivityStatus()
     }
     
@@ -260,9 +279,7 @@ final class AIModelData {
     /// Call when model response is complete
     func completeModelRequest() {
         currentResponse.completeRequest()
-        if tokenActivity.tokensPerSecond == 0 {
-            tokenActivity.streamingState = .idle
-        }
+        updateStreamingState()
     }
     
     // MARK: - MCP Tool tracking
@@ -386,12 +403,14 @@ final class AIModelData {
     private func updateStreamingState() {
         if currentResponse.isAwaitingResponse {
             tokenActivity.streamingState = .connecting
-        } else if currentResponse.hasReceivedTokens && !currentResponse.isAwaitingResponse {
+        } else if currentResponse.hasReceivedTokens && isActive {
+            // Only report streaming while tokens are actually arriving.
             tokenActivity.streamingState = .streaming
-        } else if !isActive && currentResponse.hasReceivedTokens {
-            tokenActivity.streamingState = .processing
         } else if hasHardTimeout {
             tokenActivity.streamingState = .timeout
+        } else if currentResponse.hasReceivedTokens {
+            // Tokens arrived previously but have gone quiet (between idle and hard timeout).
+            tokenActivity.streamingState = .processing
         } else {
             tokenActivity.streamingState = .idle
         }
