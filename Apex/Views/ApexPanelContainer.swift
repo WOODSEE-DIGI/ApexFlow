@@ -14,6 +14,7 @@ struct ApexPanelContainer<Content: View, HeaderTrailing: View>: View {
 
     @State private var layout = ApexWorkspaceLayoutState.shared
     @Environment(ThemeStore.self) private var theme
+    @State private var flash = false
 
     init(
         kind: ApexPanelKind,
@@ -40,6 +41,17 @@ struct ApexPanelContainer<Content: View, HeaderTrailing: View>: View {
                 .clipped()
         }
         .background(theme.surface0.opacity(0.6))
+        .overlay(
+            Rectangle()
+                .stroke(theme.panelAccent(for: kind).opacity(flash ? 1.0 : 0.0), lineWidth: 3)
+                .animation(.easeInOut(duration: 0.4).repeatCount(6, autoreverses: true), value: flash)
+        )
+        .onChange(of: layout.highlightedKinds) { _, updated in
+            flash = updated.contains(kind)
+        }
+        .onAppear {
+            flash = layout.highlightedKinds.contains(kind)
+        }
     }
 
     private var header: some View {

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import AppKit
 import Darwin.Mach
 
@@ -162,6 +163,26 @@ final class SystemThreatMonitor {
     }
 
     private func presentWarning(threats: [ThreatAssessment]) {
+        switch WarningSettings.shared.displayMode {
+        case .fullScreen:
+            presentFullScreenWarning(threats: threats)
+        case .cornerNotification:
+            presentCornerNotification(threats: threats)
+        case .mainWindowOnly:
+            // No popup; highlight the relevant panel in the main window so the
+            // user notices the new alert or process.
+            NSLog("[ApexFlow] Warning display mode is main-window-only; highlighting panels for %d threats", threats.count)
+            if threats.allSatisfy(\.isWANLeak) {
+                ApexWorkspaceLayoutState.shared.highlightPanel(.networkLeak)
+            } else {
+                ApexWorkspaceLayoutState.shared.highlightPanel(.processes)
+            }
+            seenThreats.removeAll()
+            seenWANLeaks.removeAll()
+        }
+    }
+
+    private func presentFullScreenWarning(threats: [ThreatAssessment]) {
         warningPresented = true
         stop()
         NationalSecurityWarningManager.shared.present(
@@ -172,6 +193,34 @@ final class SystemThreatMonitor {
             self?.seenThreats.removeAll()
             self?.seenWANLeaks.removeAll()
         }
+    }
+
+    private func presentCornerNotification(threats: [ThreatAssessment]) {
+        guard let first = threats.first else { return }
+
+        let title: String
+        let body: String
+        let color: Color
+
+        if threats.allSatisfy(\.isWANLeak) {
+            title = "WAN LEAK DETECTED"
+            body = "\(first.name) connected to \(first.remoteEndpoint ?? "unknown")"
+            color = .orange
+        } else {
+            title = "SYSTEM HOG DETECTED"
+            body = "\(first.name) is consuming high resources"
+            color = .red
+        }
+
+        CornerNotificationManager.shared.present(
+            title: title,
+            body: body,
+            themeColor: color
+        )
+
+        // Reset state so future threats can trigger another notification.
+        seenThreats.removeAll()
+        seenWANLeaks.removeAll()
     }
 
     // MARK: - WAN leak reporting

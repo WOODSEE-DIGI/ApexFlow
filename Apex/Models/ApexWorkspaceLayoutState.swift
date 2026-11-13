@@ -80,9 +80,11 @@ final class ApexWorkspaceLayoutState {
     var isLocked = false
     private(set) var savedLayoutNames: [String] = []
     private(set) var currentLayoutName: String? = nil
+    private(set) var highlightedKinds: Set<ApexPanelKind> = []
 
     private let defaultsKey = "apex.workspace.layout.v2"
     private let savedLayoutsKey = "apex.workspace.savedLayouts.v1"
+    private var highlightTimer: Timer?
 
     init() {
         loadSavedLayoutNames()
@@ -194,6 +196,24 @@ final class ApexWorkspaceLayoutState {
         guard let idx = tiles.firstIndex(where: { $0.id == id }) else { return }
         let maxZ = tiles.map(\.z).max() ?? 0
         tiles[idx].z = maxZ + 1
+    }
+
+    // MARK: - Highlighting
+
+    func highlightPanel(_ kind: ApexPanelKind, for duration: TimeInterval = 5.0) {
+        highlightedKinds.insert(kind)
+        highlightTimer?.invalidate()
+        highlightTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.highlightedKinds.remove(kind)
+            }
+        }
+    }
+
+    func clearHighlights() {
+        highlightedKinds.removeAll()
+        highlightTimer?.invalidate()
+        highlightTimer = nil
     }
 
     func clampTilesToCanvas(_ size: CGSize) {

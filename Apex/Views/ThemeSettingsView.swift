@@ -5,6 +5,7 @@ import SwiftUI
 /// background, surface, and text colors.
 struct ThemeSettingsView: View {
     @Bindable var theme = ThemeStore.shared
+    @Bindable var warningSettings = WarningSettings.shared
     @Environment(\.dismiss) private var dismiss
 
     private let presets = ThemePreset.allBuiltIns
@@ -13,6 +14,22 @@ struct ThemeSettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Threat Alerts") {
+                    Picker("Display Mode", selection: Binding(
+                        get: { warningSettings.displayMode },
+                        set: { warningSettings.setDisplayMode($0) }
+                    )) {
+                        ForEach(WarningDisplayMode.allCases) { mode in
+                            Text(mode.rawValue).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+
+                    Text(warningSettings.displayMode.description)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Presets") {
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(presets) { preset in
@@ -86,7 +103,7 @@ struct ThemeSettingsView: View {
                 }
             }
             .formStyle(.grouped)
-            .navigationTitle("Theme")
+            .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") { dismiss() }
