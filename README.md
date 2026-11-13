@@ -24,7 +24,7 @@ Panels live on a draggable, resizable canvas and the entire colour scheme can be
 </p>
 
 <p align="center">
-  <img src="Images/Screenshot%202026-11-13%20at%208.01.51%20pm%20%282%29.png" alt="Apex Flow showing AI tags in the process list" width="100%">
+  <img src="Images/ApexFlow-AI-tags.png" alt="Apex Flow showing AI tags in the process list" width="100%">
 </p>
 
 ---
