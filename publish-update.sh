@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# ApexFlow - Sparkle Update Publisher
-# Creates a signed .zip update archive and appcast.xml from an already-built
-# Release app. Run ./build-dmg.sh first to produce build/Release/ApexFlow.app.
+# ApexFlow - Sparkle Update Publisher (GitHub Pages edition)
+# Creates a signed .zip update archive and appcast.xml, then places them in
+# docs/updates/ so they can be served by GitHub Pages.
 #
 # Prerequisites:
 #   - generate_appcast from Sparkle in your PATH, or let this script download it.
-#   - A public URL to host appcast.xml and the update archive.
+#   - GitHub Pages enabled on the repo, serving from the /docs folder on main.
 #
 # Usage:
 #   ./build-dmg.sh
@@ -17,7 +17,7 @@ set -e
 PROJECT_NAME="ApexFlow"
 APP_NAME="ApexFlow.app"
 APP_PATH="./build/Release/${APP_NAME}"
-RELEASES_DIR="./build/releases"
+UPDATES_DIR="./docs/updates"
 
 # Read version from Info.plist
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "Apex/Info.plist" 2>/dev/null || echo "unknown")
@@ -26,8 +26,8 @@ BUILD=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "Apex/Info.plist" 2>/
 # Developer ID signing identity — replace with your own before distributing.
 CODE_SIGN_IDENTITY="Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
 
-# Public URL where you will host appcast.xml (set in Apex/Info.plist SUFeedURL).
-FEED_URL=$(/usr/libexec/PlistBuddy -c "Print SUFeedURL" "Apex/Info.plist" 2>/dev/null || echo "https://your-server.com/ApexFlow/appcast.xml")
+# Public GitHub Pages URL where appcast.xml is hosted.
+FEED_URL=$(/usr/libexec/PlistBuddy -c "Print SUFeedURL" "Apex/Info.plist" 2>/dev/null || echo "https://WOODSEE-DIGI.github.io/ApexFlow/updates/appcast.xml")
 
 echo "🚀 ApexFlow Update Publisher"
 echo "=============================="
@@ -43,12 +43,12 @@ if [ ! -d "${APP_PATH}" ]; then
     exit 1
 fi
 
-# Prepare releases directory
-mkdir -p "${RELEASES_DIR}"
+# Prepare updates directory
+mkdir -p "${UPDATES_DIR}"
 
 # Create a signed .zip archive for Sparkle updates
 ZIP_NAME="${PROJECT_NAME}-${VERSION}.zip"
-ZIP_PATH="${RELEASES_DIR}/${ZIP_NAME}"
+ZIP_PATH="${UPDATES_DIR}/${ZIP_NAME}"
 
 echo "🤐 Creating update archive: ${ZIP_PATH}"
 rm -f "${ZIP_PATH}"
@@ -76,21 +76,24 @@ if [ -z "${GENERATE_APPCAST}" ]; then
     fi
 fi
 
-# Generate appcast.xml
+# Generate appcast.xml in the updates directory
 echo "📡 Generating appcast.xml..."
-"${GENERATE_APPCAST}" "${RELEASES_DIR}"
+"${GENERATE_APPCAST}" "${UPDATES_DIR}"
 
 echo ""
 echo "✨ Update artifacts ready"
 echo "========================="
 echo "📦 Archive: ${ZIP_PATH}"
-echo "📡 Appcast: ${RELEASES_DIR}/appcast.xml"
+echo "📡 Appcast: ${UPDATES_DIR}/appcast.xml"
 echo ""
 echo "Next steps:"
-echo "1. Upload ${ZIP_PATH} and ${RELEASES_DIR}/appcast.xml to your server."
-echo "2. Ensure the URL in Apex/Info.plist SUFeedURL matches:"
+echo "1. Enable GitHub Pages in repo settings: Source = Deploy from a branch, Folder = /docs"
+echo "2. Commit and push the docs/updates/ folder:"
+echo "     git add docs/updates/${ZIP_NAME} docs/updates/appcast.xml"
+echo "     git commit -m \"release: ApexFlow ${VERSION}\""
+echo "     git push origin main"
+echo "3. Verify the feed is live at:"
 echo "   ${FEED_URL}"
-echo "3. Users running the previous version will be prompted to update."
 echo ""
 echo "⚠️  Remember to replace CODE_SIGN_IDENTITY with your real Developer ID"
 echo "   value before publishing."

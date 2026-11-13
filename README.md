@@ -124,13 +124,9 @@ On first launch, macOS will prompt for:
 
 ## Automatic Updates
 
-Apex Flow uses [Sparkle 2](https://sparkle-project.org/) for automatic updates.
+Apex Flow uses [Sparkle 2](https://sparkle-project.org/) for automatic updates, hosted entirely on GitHub Pages.
 
-1. Replace the placeholder feed URL in `Apex/Info.plist`:
-   ```xml
-   <key>SUFeedURL</key>
-   <string>https://your-server.com/ApexFlow/appcast.xml</string>
-   ```
+1. Enable GitHub Pages in the repo settings: **Source = Deploy from a branch**, **Folder = `/docs`**.
 2. Build and sign a Release DMG:
    ```bash
    ./build-dmg.sh
@@ -139,7 +135,18 @@ Apex Flow uses [Sparkle 2](https://sparkle-project.org/) for automatic updates.
    ```bash
    ./publish-update.sh
    ```
-4. Upload the generated files from `build/releases/` to the URL above.
+4. Commit and push the generated files in `docs/updates/`:
+   ```bash
+   git add docs/updates/
+   git commit -m "release: ApexFlow 1.x"
+   git push origin main
+   ```
+
+The update feed is served from:
+
+```
+https://WOODSEE-DIGI.github.io/ApexFlow/updates/appcast.xml
+```
 
 Users running an older version will be prompted to download and install the update automatically.
 
