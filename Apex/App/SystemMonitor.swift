@@ -11,7 +11,7 @@ final class SystemMonitor {
     let processes  = ProcessData()
     let conn       = ConnData()
     let aiModel    = AIModelData()  // AI model monitoring
-    let networkLeak = NetworkLeakData()
+    let networkLeak = NetworkLeakData.shared
 
     private let cpuCollector      = CPUCollector()
     private let memCollector      = MemoryCollector()

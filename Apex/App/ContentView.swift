@@ -46,11 +46,11 @@ struct ContentView: View {
                 Button {
                     showingThemeSettings = true
                 } label: {
-                    Image(systemName: "paintbrush")
+                    Image(systemName: "gearshape")
                         .foregroundStyle(theme.subtext1)
                 }
                 .buttonStyle(.plain)
-                .help("Customize theme")
+                .help("Settings")
 
                 Button {
                     layout.resetDefaultLayout()
@@ -70,7 +70,7 @@ struct ContentView: View {
         .background(theme.base)
         .frame(minWidth: 1050, minHeight: 750)
         .sheet(isPresented: $showingThemeSettings) {
-            ThemeSettingsView()
+            SettingsView()
                 .environment(theme)
         }
         .sheet(isPresented: $showingSaveLayout) {

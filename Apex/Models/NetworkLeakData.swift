@@ -93,6 +93,8 @@ struct NetworkLeakSettings: Codable {
 @Observable
 @MainActor
 final class NetworkLeakData {
+    static let shared = NetworkLeakData()
+
     var alerts: [WANConnectionAlert] = []
     var isEnabled = true
     var ignoredPrivate = true
