@@ -12,37 +12,40 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(spacing: 0) {
                 Text("Apex Flow")
                     .font(.system(size: 12, weight: .bold, design: .monospaced))
                     .foregroundStyle(theme.text)
                     .padding(.leading, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
+                HStack(spacing: 12) {
+                    workspaceMenu
 
-                workspaceMenu
+                    Button {
+                        showingThemeSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundStyle(theme.subtext1)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Settings")
 
-                Button {
-                    showingThemeSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                        .foregroundStyle(theme.subtext1)
+                    Button {
+                        layout.resetDefaultLayout()
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .foregroundStyle(theme.subtext1)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Reset default layout")
                 }
-                .buttonStyle(.plain)
-                .help("Settings")
-
-                Button {
-                    layout.resetDefaultLayout()
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .foregroundStyle(theme.subtext1)
-                }
-                .buttonStyle(.plain)
-                .help("Reset default layout")
+                .fixedSize()
                 .padding(.trailing, 12)
             }
             .padding(.vertical, 8)
             .background(theme.base)
+            .contentShape(Rectangle())
 
             ApexCanvasWorkspaceView(monitor: monitor)
         }
@@ -125,9 +128,12 @@ struct ContentView: View {
         } label: {
             Image(systemName: "square.grid.2x2")
                 .foregroundStyle(theme.subtext1)
+                .frame(width: 20, height: 20)
+                .contentShape(Rectangle())
         }
         .menuStyle(.borderlessButton)
         .help("Workspace")
+        .fixedSize()
     }
 }
 
